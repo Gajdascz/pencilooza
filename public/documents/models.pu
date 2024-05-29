@@ -1,0 +1,97 @@
+@startuml
+
+!theme carbon-gray
+
+!define model << (M,LightSalmon) >>
+!define schema << (S,LightBlue) >>
+
+
+title Data Models
+
+class Pricing schema {
+  + cost: Number
+  + retail: Number
+  + bulk_factors: [{min_quantity: Number, factor: Number}]
+}
+
+class Item model {
+  + category: String
+  + name: String
+  + description: String
+  + pricing: Pricing
+  + manufacturer: Manufacturer[1]
+  + made_in: String
+  + number_in_stock: Number
+  + stats: Stats
+  + sku: String
+  + tags: String[0..*]
+  == Virtual ==
+  + url: String
+}
+
+
+class Contact schema {
+  + website: String
+  + location: String
+  + email: String
+  + Phone: String
+}
+class Manufacturer model {
+  + name: String
+  + description: String
+  + contact: Contact
+  + products: Item[1..*]
+  == Virtual ==
+  + url: String
+}
+class SkuCounter model {
+  + prefix: String
+  + sku: Number
+  --
+  + next(): String
+  == Virtual ==
+  current: String
+}
+
+
+class StandardPencil model {
+  + lead_hardness: Number
+  + body_material: String
+  + eraser: String
+  + colors: String[1..*]
+}
+
+class MechanicalPencil model {
+  + body_material: String
+  + eraser: Eraser[1..*]
+  + graphite: Graphite[1..*]
+  + colors: String[1..*]
+}
+
+class Eraser model {
+  + type: String
+  + colors: String[1..*]
+}
+
+class Graphite model {
+  + type: String
+  + hardness: String
+  + width: Number
+}
+
+Contact ---* Manufacturer
+Manufacturer "1" --- "1..*" Item
+Pricing ---* Item
+Item <|-- StandardPencil
+Item <|-- MechanicalPencil
+Item <|-- Eraser
+Item <|-- Graphite
+StandardPencil ..> SkuCounter : uses
+MechanicalPencil ..> SkuCounter : uses
+Eraser ..> SkuCounter : uses
+Graphite ..> SkuCounter : uses
+MechanicalPencil "1..*" -- "1..*" Eraser
+MechanicalPencil "1..*" -- "1..*" Graphite
+
+
+@enduml
