@@ -8,7 +8,7 @@ const SkuCounterSchema = new Schema({
 });
 
 SkuCounterSchema.virtual('current').get(function () {
-  return `${this.prefix}-${String(this.sku).padStart(6, 0)}`;
+  return `${this.prefix}-${String(this.sku).padStart(7, 0)}`;
 });
 
 SkuCounterSchema.method('nextSku', async function () {

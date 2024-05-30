@@ -6,7 +6,6 @@ const ManufacturerSchema = new Schema({
   name: { type: String, required: true, maxLength: 100, minLength: 3 },
   description: { type: String, required: true, maxLength: 250, minLength: 3 },
   contact: ContactSchema,
-  products: [{ type: Schema.Types.ObjectId, ref: 'Item' }],
   time_created: { type: Date, default: Date.now() },
   time_updated: { type: Date, default: Date.now() },
 });

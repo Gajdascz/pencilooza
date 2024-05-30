@@ -2,107 +2,121 @@
 import mongoose from 'mongoose';
 import createDebug from 'debug';
 
-import ItemModel from '../../components/Item/Item.js';
-import CategoryModel from '../../components/Category/Category.js';
-import SubcategoryModel from '../../components/Subcategory/Subcategory.js';
+import Item from '../../models/item/Item.js';
+import Manufacturer from '../../models/manufacturer/Manufacturer.js';
 
-import { categoriesData, itemsData, subcategoriesData } from './documentData.js';
+import { pencilCo, pencilPrince } from './mfrData/index.js';
 
 // Get arguments passed on command line
 const mongouri = process.argv.find((arg) => arg.match('mongodb'));
-const debug = createDebug('indevtory:populatedb');
+const debug = createDebug('pencilooza:populatedb');
 
 debug(
-  'This script populates the InDevtory database with Item, Category, and Subcategory documents. Run command: node populatedb.js "mongodb_connection_string"'
+  'This script populates the Pencilooza database with Manufacturer and Product data. Run command: node populatedb.js "mongodb_connection_string". Pass [-r] flag to delete current data before populating (WARNING DANGEROUS)'
 );
 
 mongoose.set('strictQuery', false);
 
 const connect = async () => {
   try {
+    debug('connect ----- Connecting to MongoDB');
     await mongoose.connect(mongouri);
+    debug('connect ----- Success');
   } catch (err) {
+    debug('connect ----- Fail');
     throw new Error(`Connection to MongoDB Failed: ${err.message}`);
   }
 };
 
 const disconnect = async () => {
   try {
+    debug('disconnect ----- Disconnecting from MongoDB');
     await mongoose.connection.close();
+    debug('disconnect ----- Success');
   } catch (err) {
+    debug('disconnect ----- Fail');
     throw new Error(`Disconnect from MongoDB Failed: ${err.message}`);
   }
 };
 
-const categoriesIdMap = {};
-const createCategoryModel = (category) =>
-  new CategoryModel({
-    name: category.name,
-    description: category.description,
+const processOptionGroups = (optionGroups, itemIdMap) =>
+  optionGroups.map((group) => {
+    if (group.options && group.ref) {
+      throw new Error(
+        `Item Model Options cannot have a ref and options list: ${group.options} ${group.ref} `
+      );
+    }
+    if (group.options) return group;
+    if (group.ref) {
+      const refId = itemIdMap[group.ref];
+      if (!refId) {
+        throw new Error(
+          `Item optionsGroup Reference: ${group.ref} was not found in itemsIdMap. Are you trying to reference another item that has not been created yet?`
+        );
+      } else return { ...group, ref: refId };
+    }
+    throw new Error('Group does not have either options or ref: %O', group);
   });
 
-const createCategories = async () => {
+const createItemModel = async (mfrId, { category, sku_prefix, itemInfo }) => {
+  const itemIdMap = {};
+  const { name, description, made_in, stock, pricing, optionGroups } = itemInfo;
+  const item = new Item({
+    category,
+    sku_prefix,
+    name,
+    description,
+    made_in,
+    manufacturer: mfrId,
+    stock,
+    pricing,
+    optionGroups: processOptionGroups(optionGroups, itemIdMap),
+  });
+  itemIdMap[itemInfo.ref] = item._id;
   try {
-    const modelPromises = categoriesData.map(async (category) => {
-      debug(`Creating Category: ${category.name}`);
-      const model = createCategoryModel(category);
-      debug(`Mapping Category: ${category.ref} to ${model._id}`);
-      categoriesIdMap[category.ref] = model._id;
-      debug(`Saving Category: ${category.name} to Database`);
-      await model.save();
-    });
-    debug(`Ensuring all Category model save request promises are resolved.`);
-    await Promise.all(modelPromises);
+    debug('createItemModel: Creating Item Model');
+    await item.save();
+    debug('createItemModel: Success');
+    return item;
   } catch (err) {
-    throw new Error(`Failed to create and save Category models: ${err.message}`);
+    debug('createItemModel: Fail');
+    throw new Error(`createItemModel Error: ${err}`);
   }
 };
 
-const subcategoriesIdMap = {};
-const createSubcategoryModel = (subcategory) =>
-  new SubcategoryModel({
-    name: subcategory.name,
-    description: subcategory.description,
-    category: categoriesIdMap[subcategory.category],
-  });
-const createSubcategories = async () => {
+const createMfrModel = async (mfrInfo) => {
+  const mfr = new Manufacturer(mfrInfo);
   try {
-    const modelPromises = subcategoriesData.map(async (subcategory) => {
-      debug(`Creating Subcategory: ${subcategory.name}`);
-      const model = createSubcategoryModel(subcategory);
-      debug(`Mapping Subcategory: ${subcategory.ref} to ${model._id}`);
-      subcategoriesIdMap[subcategory.ref] = model._id;
-      debug(`Saving Subcategory: ${subcategory.name} to Database`);
-      await model.save();
-    });
-    debug(`Ensuring all Subcategory model save request promises are resolved.`);
-    await Promise.all(modelPromises);
+    debug('createMfrModel: Creating Mfr Model');
+    await mfr.save();
+    debug('createMfrModel: Success');
+    return mfr;
   } catch (err) {
-    throw new Error(`Failed to create and save Subcategory models: ${err.message}`);
+    debug('createMfrModel: Fail');
+    throw new Error(`createMfrModel Error: ${err}`);
   }
 };
-const createItemModel = (item) =>
-  new ItemModel({
-    name: item.name,
-    description: item.description,
-    category: categoriesIdMap[item.category],
-    subcategory: subcategoriesIdMap[item.subcategory],
-    price: item.price,
-    dynamic_attributes: item.dynamic_attributes,
-  });
-const createItems = async () => {
+
+const processMfrData = async (mfrData) => {
+  const { mfrInfo, productsInfo } = mfrData;
   try {
-    const modelPromises = itemsData.map(async (item) => {
-      debug(`Creating Item: ${item.name}`);
-      const model = createItemModel(item);
-      debug(`Saving Item: ${item.name} to Database`);
-      await model.save();
-    });
-    debug(`Ensuring all Item model save request promises are resolved.`);
-    await Promise.all(modelPromises);
+    debug('----- Creating Mfr Model -----');
+    const mfr = await createMfrModel(mfrInfo);
+    debug('------------------------------');
+    debug('----- Creating Item Models -----');
+    const productModelPromises = productsInfo.map(
+      async (productInfo) => await createItemModel(mfr._id, productInfo)
+    );
+    await Promise.all(productModelPromises);
+    debug('------------------------------');
   } catch (err) {
-    throw new Error(`Failed to create and save Item models: ${err.message}`);
+    throw new Error(`processMfrData Error: ${err}`);
   }
+};
+
+const deleteAllCollections = () => {
+  debug();
+  Object.values(mongoose.connection.collections).map((collection) => collection.deleteMany({}));
 };
 
 async function main() {

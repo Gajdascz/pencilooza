@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import Item from './item/Item';
-import SkuCounter from './SkuCounter';
+import Item from '../item/Item';
+import SkuCounter from '../SkuCounter';
 
 const Schema = mongoose.Schema;
 
@@ -14,6 +14,7 @@ const StandardPencilSchema = Item.discriminator(
     variations: [
       {
         lead_hardness: { type: String, required: true },
+        number_in_stock: { type: Number, required: true },
       },
     ],
   })

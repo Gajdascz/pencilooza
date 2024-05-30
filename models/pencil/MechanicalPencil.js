@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import Item from './item/Item';
-import SkuCounter from './SkuCounter';
+import Item from '../item/Item';
+import SkuCounter from '../SkuCounter';
 
 const Schema = mongoose.Schema;
 
@@ -16,7 +16,7 @@ const MechanicalPencilSchema = Item.discriminator(
 
 MechanicalPencilSchema.pre('save', async function (next) {
   if (!this.sku) {
-    const prefix = 'PNCL';
+    const prefix = 'MPNCL';
     let counter = SkuCounter.findOne({ prefix });
     if (!counter) {
       counter = new SkuCounter({ prefix });
