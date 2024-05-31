@@ -5,13 +5,14 @@
     "node": ">=20.13.1"
   },
   "private": true,
+  "type": "module",
   "scripts": {
     "lint": "eslint --fix --ext .js",
     "start": "node ./bin/www",
     "startDev": "nodemon ./bin/www",
-    "startDebug": "DEBUG=pencilooza:* npm run startDev"
+    "startDebug": "DEBUG=pencilooza:* npm run startDev",
+    "repopulateDb": "DEBUG=pencilooza:populatedb node ./public/javascripts/populatedb.js --reset"
   },
-  "type": "module",
   "dependencies": {
     "compression": "^1.7.4",
     "cookie-parser": "~1.4.4",

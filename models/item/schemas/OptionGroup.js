@@ -4,12 +4,12 @@ const Schema = mongoose.Schema;
 
 const OptionGroupSchema = new Schema({
   group: { type: String, required: true },
-  ref: { type: String, required: false },
+  refs: { type: [String], required: false },
   options: [
     {
       type: {
         option: { type: String, required: true },
-        cost_modifier: { type: Number, default: 0 },
+        costModifier: { type: Number, default: 0 },
       },
       required: false,
     },
@@ -17,9 +17,9 @@ const OptionGroupSchema = new Schema({
 });
 
 OptionGroupSchema.pre('validate', function (next) {
-  if (!this.ref && (!this.options || this.options.length === 0))
+  if (!this.refs && (!this.options || this.options.length === 0))
     return next(new Error(`Reference or Options must be provided.`));
-  if (this.ref && this.options && this.options.length > 0)
+  if (this.refs && this.refs.length > 0 && this.options && this.options.length > 0)
     return next(new Error(`Reference and Options cannot both be provided.`));
   return next();
 });

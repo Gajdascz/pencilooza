@@ -11,20 +11,29 @@ title Data Models
 class Pricing schema {
   + cost: Number
   + retail: Number
-  + bulk_factors: [{min_quantity: Number, factor: Number}]
+  + bulk_factors: [{quantity,costModifier}]
+  == Virtual ==
+  + getBulkPrices: [{quantity,costModifier}]
+  + getSuggestedRetail: Number
 }
-
+class OptionGroups schema {
+  + group: String
+  + refs: [String]
+  + options: [{String,Number}]
+}
 class Item model {
   + category: String
+  + skuPrefix: String
+  + type: String
   + name: String
   + description: String
-  + pricing: Pricing
+  + stock: Number
+  + madeIn: String
   + manufacturer: Manufacturer[1]
-  + made_in: String
-  + number_in_stock: Number
-  + stats: Stats
-  + sku: String
-  + tags: String[0..*]
+  + pricing: Pricing
+  + optionGroups: OptionGroups
+  + timeCreated: Date
+  + timeUpdated: Date
   == Virtual ==
   + url: String
 }
@@ -40,7 +49,8 @@ class Manufacturer model {
   + name: String
   + description: String
   + contact: Contact
-  + products: Item[1..*]
+  + timeCreated: Date
+  + timeUpdated: Date
   == Virtual ==
   + url: String
 }
@@ -48,50 +58,14 @@ class SkuCounter model {
   + prefix: String
   + sku: Number
   --
-  + next(): String
+  + nextSku(): String
   == Virtual ==
   current: String
 }
-
-
-class StandardPencil model {
-  + lead_hardness: Number
-  + body_material: String
-  + eraser: String
-  + colors: String[1..*]
-}
-
-class MechanicalPencil model {
-  + body_material: String
-  + eraser: Eraser[1..*]
-  + graphite: Graphite[1..*]
-  + colors: String[1..*]
-}
-
-class Eraser model {
-  + type: String
-  + colors: String[1..*]
-}
-
-class Graphite model {
-  + type: String
-  + hardness: String
-  + width: Number
-}
-
-Contact ---* Manufacturer
-Manufacturer "1" --- "1..*" Item
-Pricing ---* Item
-Item <|-- StandardPencil
-Item <|-- MechanicalPencil
-Item <|-- Eraser
-Item <|-- Graphite
-StandardPencil ..> SkuCounter : uses
-MechanicalPencil ..> SkuCounter : uses
-Eraser ..> SkuCounter : uses
-Graphite ..> SkuCounter : uses
-MechanicalPencil "1..*" -- "1..*" Eraser
-MechanicalPencil "1..*" -- "1..*" Graphite
-
+Contact --* Manufacturer
+Item  -- "1" Manufacturer
+Pricing --* Item
+OptionGroups --* Item
+Item .> SkuCounter : uses
 
 @enduml

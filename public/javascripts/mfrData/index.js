@@ -1,7 +1,4 @@
-import pencilCo from './pencilCo/pencilCo';
-import pencilPrince from './pencilPrince/pencilPrince';
+import pencilCo from './pencilCo/pencilCo.js';
+import pencilPrince from './pencilPrince/pencilPrince.js';
 
-export default {
-  pencilCo,
-  pencilPrince,
-};
+export default [pencilCo, pencilPrince];

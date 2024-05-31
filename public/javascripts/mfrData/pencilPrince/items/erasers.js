@@ -1,86 +1,77 @@
-const ERASER_TYPES = {
-  CAP: 'cap',
-  FIXED: 'fixed',
-  MECHANICAL: 'mechanical',
+import {
+  ITEM_ERASER,
+  ITEM_ERASER_REFS,
+  MFR_PENCIL_PRINCE_REF,
+} from '../../../helpers/constants.js';
+import { expandObjectKeyAbbrs } from '../../../helpers/abbrManager.js';
+import createGroup from '../../../helpers/createGroup.js';
+
+const eraser_bulk_cost_modifiers = expandObjectKeyAbbrs([
+  { qty: 100, cm: 0 },
+  { qty: 250, cm: 0.05 },
+  { qty: 500, cm: 0.1 },
+  { qty: 1000, cm: 0.15 },
+  { qty: 10000, cm: 0.2 },
+]);
+
+const eraser_color_group = createGroup('color', {
+  options: [
+    { opt: 'pink', cm: 0 },
+    { opt: 'white', cm: 0 },
+    { opt: 'black', cm: 0 },
+    { opt: 'red', cm: 0 },
+    { opt: 'blue', cm: 0 },
+    { opt: 'green', cm: 0 },
+    { opt: 'purple', cm: 0 },
+    { opt: 'gold', cm: 0 },
+    { opt: 'variety', cm: 0 },
+  ],
+});
+
+const eraser_material_group = createGroup('material', {
+  options: [
+    { opt: 'polymer', cm: 0 },
+    { opt: 'vinyl', cm: 0.25 },
+  ],
+});
+
+const eraser_option_groups = [eraser_color_group, eraser_material_group];
+
+const common = {
+  skuPrefix: ITEM_ERASER.SKU_PREFIX(MFR_PENCIL_PRINCE_REF),
+  category: ITEM_ERASER.CATEGORY,
+  madeIn: 'USA',
+  optionGroups: eraser_option_groups,
 };
 
-const ERASER_COLORS = [
-  { OPT: 'pink', MODIFIER: 0 },
-  { OPT: 'white', MODIFIER: 0 },
-  { OPT: 'black', MODIFIER: 0 },
-  { OPT: 'red', MODIFIER: 0 },
-  { OPT: 'blue', MODIFIER: 0 },
-  { OPT: 'green', MODIFIER: 0 },
-  { OPT: 'purple', MODIFIER: 0 },
-  { OPT: 'gold', MODIFIER: 0 },
-  { OPT: 'variety', MODIFIER: 0 },
-];
-
-const ERASER_MATERIALS = [
-  { OPT: 'polymer', MODIFIER: 0 },
-  { OPT: 'vinyl', MODIFIER: 0.25 },
-];
-
-const ERASER_BULK_COST_MODIFIERS = [
-  { QTY: 100, MODIFIER: 0 },
-  { QTY: 250, MODIFIER: 0.05 },
-  { QTY: 500, MODIFIER: 0.1 },
-  { QTY: 1000, MODIFIER: 0.15 },
-  { QTY: 10000, MODIFIER: 0.2 },
-];
-
-const ERASER_REFS = {
-  FIXED_STANDARD: 'fixedStandard',
-  MECHANICAL_STANDARD: 'mechanicalStandard',
-  CAP_STANDARD: 'capStandard',
-};
-
-const ERASER_OPTIONS = { COLOR: ERASER_COLORS, MATERIAL: ERASER_MATERIALS };
-
-const ERASERS = [
+const erasers = [
   {
-    TYPE: ERASER_TYPES.FIXED,
-    ITEMS: [
-      {
-        REF: ERASER_REFS.FIXED_STANDARD,
-        NAME: 'Pencil Prince Quality Fixed Eraser',
-        DESCRIPTION:
-          'High quality eraser fixed to the end of a wooden pencil. Used when configuring pencils for creation.',
-        MADE_IN: 'USA',
-        STOCK: Math.ceil(Math.random() * 10000),
-        PRICING: { COST: 0.02 },
-        OPTIONS: ERASER_OPTIONS,
-      },
-    ],
+    ...common,
+    ref: ITEM_ERASER_REFS.FIXED(MFR_PENCIL_PRINCE_REF),
+    type: ITEM_ERASER.TYPE.FIXED,
+    name: 'Pencil Prince Quality Fixed Eraser',
+    description:
+      'High quality eraser fixed to the end of a wooden pencil. Used when configuring pencils for creation.',
+    stock: Math.ceil(Math.random() * 10000) + 10000,
+    pricing: { cost: 0.02 },
   },
   {
-    TYPE: ERASER_TYPES.CAP,
-    ITEMS: [
-      {
-        REF: ERASER_REFS.CAP_STANDARD,
-        NAME: 'Pencil Prince Quality Cap Eraser',
-        DESCRIPTION: 'High quality reusable erasers placed on the end of a pencil.',
-        MADE_IN: 'USA',
-        STOCK: Math.ceil(Math.random() * 2500),
-        PRICING: { COST: 0.04, BULK_COST_MODIFIERS: ERASER_BULK_COST_MODIFIERS },
-        OPTIONS: ERASER_OPTIONS,
-      },
-    ],
+    ...common,
+    ref: ITEM_ERASER_REFS.FIXED(MFR_PENCIL_PRINCE_REF),
+    type: ITEM_ERASER.TYPE.FIXED,
+    name: 'Pencil Prince Quality Cap Eraser',
+    description: 'High quality reusable erasers placed on the end of a pencil.',
+    stock: Math.ceil(Math.random() * 2500) + 2500,
+    pricing: { cost: 0.04, bulkCostModifiers: eraser_bulk_cost_modifiers },
   },
   {
-    TYPE: ERASER_TYPES.MECHANICAL,
-    ITEMS: [
-      {
-        REF: ERASER_REFS.MECHANICAL_STANDARD,
-        NAME: 'Pencil Prince Quality Mechanical Pencil Eraser',
-        DESCRIPTION:
-          'High quality replacement eraser that fits all Pencil Prince Mechanical Pencils.',
-        MADE_IN: 'USA',
-        STOCK: Math.ceil(Math.random() * 10000),
-        PRICING: { COST: 0.02, BULK_COST_MODIFIERS: ERASER_BULK_COST_MODIFIERS },
-        OPTIONS: ERASER_OPTIONS,
-      },
-    ],
+    ...common,
+    ref: ITEM_ERASER_REFS.FIXED(MFR_PENCIL_PRINCE_REF),
+    type: ITEM_ERASER.TYPE.FIXED,
+    name: 'Pencil Prince Quality Mechanical Pencil Eraser',
+    description: 'High quality replacement eraser that fits all Pencil Prince Mechanical Pencils.',
+    stock: Math.ceil(Math.random() * 10000) + 10000,
+    pricing: { cost: 0.02, bulkCostModifiers: eraser_bulk_cost_modifiers },
   },
 ];
-export { ERASERS, ERASER_REFS };
+export default erasers;

@@ -1,78 +1,108 @@
-import { ERASER_REFS } from './erasers';
-import { GRAPHITE_REFS } from './graphites';
+import {
+  ITEM_PENCIL,
+  ITEM_PENCIL_REFS,
+  MFR_PENCIL_CO_REF,
+  ITEM_GRAPHITE_REFS,
+  ITEM_ERASER_REFS,
+} from '../../../helpers/constants.js';
 
-const PENCIL_REFS = {
-  WOOD_STANDARD: 'PNCLCO_woodStandard',
-  PLASTIC_MECHANICAL: 'PNCLCO_plasticMechanical',
-};
+import { expandObjectKeyAbbrs } from '../../../helpers/abbrManager.js';
+import createGroup from '../../../helpers/createGroup.js';
 
-const pencil_bulk_cost_modifiers = [
-  { quantity: 100, bulk_cost_modifier: 0 },
-  { quantity: 250, bulk_cost_modifier: 0.05 },
-  { quantity: 500, bulk_cost_modifier: 0.1 },
-  { quantity: 1000, bulk_cost_modifier: 0.15 },
-  { quantity: 10000, bulk_cost_modifier: 0.2 },
+const pencil_bulk_cost_modifiers = expandObjectKeyAbbrs([
+  { qty: 100, bcm: 0 },
+  { qty: 250, bcm: 0.05 },
+  { qty: 500, bcm: 0.1 },
+  { qty: 1000, bcm: 0.15 },
+  { qty: 10000, bcm: 0.2 },
+]);
+
+// #region Standard Pencil Groups
+const standard_pencil_color_group = createGroup('color', {
+  options: [
+    { opt: 'bare', cm: 0 },
+    { opt: 'yellow', cm: 0 },
+    { opt: 'custom', cm: 0.2 },
+  ],
+});
+
+const standard_pencil_hardness_grade_group = createGroup('hardness_grade', {
+  options: [
+    { opt: 'H', cm: 0 },
+    { opt: 'HB', cm: 0 },
+    { opt: 'B', cm: 0 },
+  ],
+});
+
+const standard_pencil_material_group = createGroup('material', {
+  options: [
+    { opt: 'basswood', cm: 0 },
+    { opt: 'incense cedar', cm: 0.5 },
+  ],
+});
+
+const standard_pencil_eraser_group = createGroup('eraser', {
+  refs: [ITEM_ERASER_REFS.FIXED(MFR_PENCIL_CO_REF)],
+});
+
+const standard_pencil_option_groups = [
+  standard_pencil_color_group,
+  standard_pencil_hardness_grade_group,
+  standard_pencil_material_group,
+  standard_pencil_eraser_group,
 ];
+// #endregion
+
+// #region Mechanical Pencil Groups
+const mechanical_pencil_color_group = createGroup('color', {
+  options: [
+    { opt: 'black', cm: 0 },
+    { opt: 'red', cm: 0 },
+    { opt: 'blue', cm: 0 },
+    { opt: 'green', cm: 0 },
+  ],
+});
+const mechanical_pencil_eraser_group = createGroup('eraser', {
+  refs: [ITEM_ERASER_REFS.MECHANICAL(MFR_PENCIL_CO_REF)],
+});
+const mechanical_pencil_graphite_group = createGroup('graphite', {
+  refs: [ITEM_GRAPHITE_REFS.STANDARD(MFR_PENCIL_CO_REF)],
+});
+
+const mechanical_pencil_option_groups = [
+  mechanical_pencil_color_group,
+  mechanical_pencil_graphite_group,
+  mechanical_pencil_eraser_group,
+];
+// #endregion
+
+const common = {
+  skuPrefix: ITEM_PENCIL.SKU_PREFIX(MFR_PENCIL_CO_REF),
+  category: ITEM_PENCIL.CATEGORY,
+  madeIn: 'China',
+};
 
 const pencils = [
   {
+    ...common,
+    ref: ITEM_PENCIL_REFS.STANDARD(MFR_PENCIL_CO_REF),
+    type: ITEM_PENCIL.TYPE.STANDARD,
     name: 'PencilCo Standard Wooden Pencil',
     description: 'Standard wooden pencil by PencilCo.',
-    made_in: 'China',
-    ref: PENCIL_REFS.WOOD_STANDARD,
-    stock: Math.ceil(Math.random() * 100000),
-    pricing: { cost: 0.12, bulk_cost_modifiers: pencil_bulk_cost_modifiers },
-    options: [
-      {
-        group: 'color',
-        options: [
-          { option: 'bare', cost_modifier: 0 },
-          { option: 'yellow', cost_modifier: 0 },
-          { option: 'custom', cost_modifier: 0.2 },
-        ],
-      },
-      {
-        group: 'hardness_grade',
-        options: [
-          { option: 'H', cost_modifier: 0 },
-          { option: 'HB', cost_modifier: 0 },
-          { option: 'B', cost_modifier: 0 },
-        ],
-      },
-      {
-        group: 'body_material',
-        options: [
-          { option: 'basswood', cost_modifier: 0 },
-          { option: 'incense cedar', cost_modifier: 0.5 },
-        ],
-      },
-      {
-        group: 'eraser',
-        options: ERASER_REFS.FIXED_STANDARD,
-      },
-    ],
+    stock: Math.ceil(Math.random() * 100000) + 100000,
+    pricing: { cost: 0.12, bulkCostModifiers: pencil_bulk_cost_modifiers },
+    optionGroups: standard_pencil_option_groups,
   },
   {
-    name: 'PencilCo Standard Plastic Mechanical Pencil',
+    ...common,
+    ref: ITEM_PENCIL_REFS.MECHANICAL(MFR_PENCIL_CO_REF),
+    type: ITEM_PENCIL.TYPE.MECHANICAL,
+    name: 'PencilCo Plastic Mechanical Pencil',
     description: 'Standard plastic mechanical pencil by PencilCo.',
-    made_in: 'China',
-    ref: PENCIL_REFS.PLASTIC_MECHANICAL,
-    stock: Math.ceil(Math.random() * 100000),
-    pricing: { COST: 0.04, bulk_cost_modifiers: pencil_bulk_cost_modifiers },
-    optionGroups: [
-      {
-        group: 'color',
-        options: [
-          { option: 'black', cost_modifier: 0 },
-          { option: 'red', cost_modifier: 0 },
-          { option: 'blue', cost_modifier: 0 },
-          { option: 'green', cost_modifier: 0 },
-        ],
-      },
-      { group: 'graphite', ref: GRAPHITE_REFS.STANDARD },
-      { group: 'eraser', ref: ERASER_REFS.MECHANICAL_STANDARD },
-    ],
+    stock: Math.ceil(Math.random() * 100000) + 100000,
+    pricing: { cost: 0.04, bulkCostModifiers: pencil_bulk_cost_modifiers },
+    optionGroups: mechanical_pencil_option_groups,
   },
 ];
 
-export { pencils, PENCIL_REFS };
+export default pencils;

@@ -1,18 +1,20 @@
-import { graphites } from './items/graphites';
-import { erasers } from './items/erasers';
-import { pencils } from './items/pencils';
+import pencils from './items/pencils.js';
+import erasers from './items/erasers.js';
+import graphites from './items/graphites.js';
 
-const mfrData = {
+const mfrInfo = {
   name: 'Pencil Prince',
   description: 'Artisan pencils worthy of royalty.',
   contact: {
-    website: 'https://pencilprince.com',
-    location: '042 Sharpen St, Scribble Town, ',
-    email: 'info@pencilprince.com',
-    phone: '888-444-4321',
+    website: 'https://example.com',
+    location: '042 Sharpen St, Scribble Town, USA',
+    email: 'info@pencilprince.pencil',
+    phone: '987-654-3210',
   },
 };
 
-const products = [pencils, graphites, erasers];
+const productGroups = [erasers, graphites, pencils];
 
-export default { mfrData, products };
+const mfrData = { mfrInfo, productGroups };
+
+export default mfrData;
