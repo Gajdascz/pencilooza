@@ -3,17 +3,68 @@ import mongoose from 'mongoose';
 import SkuCounter from '../SkuCounter.js';
 import PricingSchema from './schemas/Pricing.js';
 import OptionGroupSchema from './schemas/OptionGroup.js';
+import {
+  ITEM_GENERAL,
+  ITEM_PENCIL,
+  ITEM_ERASER,
+  ITEM_GRAPHITE,
+} from '../../public/javascripts/utils/constants.js';
 
 const Schema = mongoose.Schema;
 
+const typesByCategory = {
+  [ITEM_PENCIL.CATEGORY]: Object.values(ITEM_PENCIL.TYPES),
+  [ITEM_ERASER.CATEGORY]: Object.values(ITEM_ERASER.TYPES),
+  [ITEM_GRAPHITE.CATEGORY]: Object.values(ITEM_GRAPHITE.TYPES),
+};
+
+const categoryBySkuCode = {
+  [ITEM_PENCIL.SKU_CODE]: ITEM_PENCIL.CATEGORY,
+  [ITEM_ERASER.SKU_CODE]: ITEM_ERASER.CATEGORY,
+  [ITEM_GRAPHITE.SKU_CODE]: ITEM_GRAPHITE.CATEGORY,
+};
+
 const ItemSchema = new Schema({
-  category: { type: String, required: true },
-  skuPrefix: { type: String, required: true, maxLength: 13 },
-  type: { type: String, required: true },
-  name: { type: String, required: true },
+  category: { type: String, required: true, enum: Object.values(ITEM_GENERAL.CATEGORIES) },
+  skuPrefix: {
+    type: String,
+    required: true,
+    uppercase: true,
+    maxLength: 13,
+    validate: [
+      {
+        validator: function (value) {
+          // eslint-disable-next-line no-unused-vars
+          const [mfrRef, itemCode] = value.split('-');
+          return this.category === categoryBySkuCode[itemCode];
+        },
+        message: (props) => `${props.value} does not match the category of the item.`,
+      },
+      {
+        validator: async function (value) {
+          const [mfrRef] = value.split('-');
+          const mfr = await mongoose.model('Mfr').findById(this.manufacturer);
+          return mfr && mfr.ref === mfrRef;
+        },
+        message: (props) =>
+          `Manufacturer reference in SKU prefix ${props.value} does not match the associated manufacturer`,
+      },
+    ],
+  },
+  type: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function (value) {
+        return typesByCategory[this.category].includes(value);
+      },
+      message: (props) => `${props.value} is not a valid type for the category ${this.category}`,
+    },
+  },
+  name: { type: String, required: true, maxLength: 100, mingLength: 3 },
   description: { type: String, required: true, maxLength: 500, minLength: 3 },
   stock: { type: Number, required: true },
-  madeIn: { type: String, required: true },
+  madeIn: { type: String, required: true, length: 2 },
   manufacturer: { type: Schema.Types.ObjectId, ref: 'Manufacturer', required: true },
   pricing: { type: PricingSchema, required: true },
   optionGroups: { type: [OptionGroupSchema], required: false },
@@ -35,7 +86,8 @@ ItemSchema.pre('save', async function (next) {
 });
 
 ItemSchema.virtual('url').get(function () {
-  return `/inventory/${this._id}`;
+  return `/inventory/item/${this._id}`;
 });
+ItemSchema.index({ category: 1, type: 1 });
 
 export default mongoose.model('Item', ItemSchema);

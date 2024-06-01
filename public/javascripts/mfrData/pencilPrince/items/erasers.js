@@ -1,12 +1,8 @@
-import {
-  ITEM_ERASER,
-  ITEM_ERASER_REFS,
-  MFR_PENCIL_PRINCE_REF,
-} from '../../../helpers/constants.js';
-import { expandObjectKeyAbbrs } from '../../../helpers/abbrManager.js';
-import createGroup from '../../../helpers/createGroup.js';
+import { ITEM_ERASER, MFR_REFS } from '../../../utils/constants.js';
+import { expandObjectKeyAbbrs } from '../../../utils/abbrManager.js';
+import createGroup from '../../../utils/createGroup.js';
 
-const eraser_bulk_cost_modifiers = expandObjectKeyAbbrs([
+const eraserBulkCostModifiers = expandObjectKeyAbbrs([
   { qty: 100, cm: 0 },
   { qty: 250, cm: 0.05 },
   { qty: 500, cm: 0.1 },
@@ -14,7 +10,7 @@ const eraser_bulk_cost_modifiers = expandObjectKeyAbbrs([
   { qty: 10000, cm: 0.2 },
 ]);
 
-const eraser_color_group = createGroup('color', {
+const eraserColorGroup = createGroup('color', {
   options: [
     { opt: 'pink', cm: 0 },
     { opt: 'white', cm: 0 },
@@ -28,27 +24,27 @@ const eraser_color_group = createGroup('color', {
   ],
 });
 
-const eraser_material_group = createGroup('material', {
+const eraserMaterialGroup = createGroup('material', {
   options: [
     { opt: 'polymer', cm: 0 },
     { opt: 'vinyl', cm: 0.25 },
   ],
 });
 
-const eraser_option_groups = [eraser_color_group, eraser_material_group];
+const eraserOptionGroups = [eraserColorGroup, eraserMaterialGroup];
 
 const common = {
-  skuPrefix: ITEM_ERASER.SKU_PREFIX(MFR_PENCIL_PRINCE_REF),
+  skuPrefix: ITEM_ERASER.SKU_PREFIX(MFR_REFS.PENCIL_PRINCE),
   category: ITEM_ERASER.CATEGORY,
-  madeIn: 'USA',
-  optionGroups: eraser_option_groups,
+  madeIn: 'US',
+  optionGroups: eraserOptionGroups,
 };
 
 const erasers = [
   {
     ...common,
-    ref: ITEM_ERASER_REFS.FIXED(MFR_PENCIL_PRINCE_REF),
-    type: ITEM_ERASER.TYPE.FIXED,
+    ref: ITEM_ERASER.REFS.FIXED(MFR_REFS.PENCIL_PRINCE),
+    type: ITEM_ERASER.TYPES.FIXED,
     name: 'Pencil Prince Quality Fixed Eraser',
     description:
       'High quality eraser fixed to the end of a wooden pencil. Used when configuring pencils for creation.',
@@ -57,21 +53,21 @@ const erasers = [
   },
   {
     ...common,
-    ref: ITEM_ERASER_REFS.FIXED(MFR_PENCIL_PRINCE_REF),
-    type: ITEM_ERASER.TYPE.FIXED,
+    ref: ITEM_ERASER.REFS.FIXED(MFR_REFS.PENCIL_PRINCE),
+    type: ITEM_ERASER.TYPES.FIXED,
     name: 'Pencil Prince Quality Cap Eraser',
     description: 'High quality reusable erasers placed on the end of a pencil.',
     stock: Math.ceil(Math.random() * 2500) + 2500,
-    pricing: { cost: 0.04, bulkCostModifiers: eraser_bulk_cost_modifiers },
+    pricing: { cost: 0.04, bulkCostModifiers: eraserBulkCostModifiers },
   },
   {
     ...common,
-    ref: ITEM_ERASER_REFS.FIXED(MFR_PENCIL_PRINCE_REF),
-    type: ITEM_ERASER.TYPE.FIXED,
+    ref: ITEM_ERASER.REFS.FIXED(MFR_REFS.PENCIL_PRINCE),
+    type: ITEM_ERASER.TYPES.FIXED,
     name: 'Pencil Prince Quality Mechanical Pencil Eraser',
     description: 'High quality replacement eraser that fits all Pencil Prince Mechanical Pencils.',
     stock: Math.ceil(Math.random() * 10000) + 10000,
-    pricing: { cost: 0.02, bulkCostModifiers: eraser_bulk_cost_modifiers },
+    pricing: { cost: 0.02, bulkCostModifiers: eraserBulkCostModifiers },
   },
 ];
 export default erasers;

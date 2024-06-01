@@ -1,10 +1,12 @@
 import pencils from './items/pencils.js';
 import erasers from './items/erasers.js';
 import graphites from './items/graphites.js';
+import { MFR_REFS } from '../../utils/constants.js';
 
 const mfrInfo = {
   name: 'Pencil Prince',
   description: 'Artisan pencils worthy of royalty.',
+  ref: MFR_REFS.PENCIL_PRINCE,
   contact: {
     website: 'https://example.com',
     location: '042 Sharpen St, Scribble Town, USA',

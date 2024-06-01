@@ -1,4 +1,4 @@
-import { expandObjectKeyAbbrs } from '../helpers/abbrManager.js';
+import { expandObjectKeyAbbrs } from './abbrManager.js';
 
 const createGroup = (groupName, { options = [], refs = null, abbr = true }) => {
   if (!groupName || groupName.length <= 0) throw new Error(`Invalid groupName: ${groupName}`);

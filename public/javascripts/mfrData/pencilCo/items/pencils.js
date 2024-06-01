@@ -1,15 +1,9 @@
-import {
-  ITEM_PENCIL,
-  ITEM_PENCIL_REFS,
-  MFR_PENCIL_CO_REF,
-  ITEM_GRAPHITE_REFS,
-  ITEM_ERASER_REFS,
-} from '../../../helpers/constants.js';
+import { ITEM_PENCIL, ITEM_GRAPHITE, ITEM_ERASER, MFR_REFS } from '../../../utils/constants.js';
 
-import { expandObjectKeyAbbrs } from '../../../helpers/abbrManager.js';
-import createGroup from '../../../helpers/createGroup.js';
+import { expandObjectKeyAbbrs } from '../../../utils/abbrManager.js';
+import createGroup from '../../../utils/createGroup.js';
 
-const pencil_bulk_cost_modifiers = expandObjectKeyAbbrs([
+const pencilBulkCostModifiers = expandObjectKeyAbbrs([
   { qty: 100, bcm: 0 },
   { qty: 250, bcm: 0.05 },
   { qty: 500, bcm: 0.1 },
@@ -18,7 +12,7 @@ const pencil_bulk_cost_modifiers = expandObjectKeyAbbrs([
 ]);
 
 // #region Standard Pencil Groups
-const standard_pencil_color_group = createGroup('color', {
+const standardPencilColorGroup = createGroup('color', {
   options: [
     { opt: 'bare', cm: 0 },
     { opt: 'yellow', cm: 0 },
@@ -26,7 +20,7 @@ const standard_pencil_color_group = createGroup('color', {
   ],
 });
 
-const standard_pencil_hardness_grade_group = createGroup('hardness_grade', {
+const standardPencilHardnessGradeGroup = createGroup('hardnessGrade', {
   options: [
     { opt: 'H', cm: 0 },
     { opt: 'HB', cm: 0 },
@@ -34,27 +28,27 @@ const standard_pencil_hardness_grade_group = createGroup('hardness_grade', {
   ],
 });
 
-const standard_pencil_material_group = createGroup('material', {
+const standardPencilMaterialGroup = createGroup('material', {
   options: [
     { opt: 'basswood', cm: 0 },
     { opt: 'incense cedar', cm: 0.5 },
   ],
 });
 
-const standard_pencil_eraser_group = createGroup('eraser', {
-  refs: [ITEM_ERASER_REFS.FIXED(MFR_PENCIL_CO_REF)],
+const standardPencilEraserGroup = createGroup('eraser', {
+  refs: [ITEM_ERASER.REFS.FIXED(MFR_REFS.PENCIL_CO)],
 });
 
-const standard_pencil_option_groups = [
-  standard_pencil_color_group,
-  standard_pencil_hardness_grade_group,
-  standard_pencil_material_group,
-  standard_pencil_eraser_group,
+const standardPencilOptionGroups = [
+  standardPencilColorGroup,
+  standardPencilHardnessGradeGroup,
+  standardPencilMaterialGroup,
+  standardPencilEraserGroup,
 ];
 // #endregion
 
 // #region Mechanical Pencil Groups
-const mechanical_pencil_color_group = createGroup('color', {
+const mechanicalPencilColorGroup = createGroup('color', {
   options: [
     { opt: 'black', cm: 0 },
     { opt: 'red', cm: 0 },
@@ -62,45 +56,45 @@ const mechanical_pencil_color_group = createGroup('color', {
     { opt: 'green', cm: 0 },
   ],
 });
-const mechanical_pencil_eraser_group = createGroup('eraser', {
-  refs: [ITEM_ERASER_REFS.MECHANICAL(MFR_PENCIL_CO_REF)],
+const mechanicalPencilEraserGroup = createGroup('eraser', {
+  refs: [ITEM_ERASER.REFS.MECHANICAL(MFR_REFS.PENCIL_CO)],
 });
-const mechanical_pencil_graphite_group = createGroup('graphite', {
-  refs: [ITEM_GRAPHITE_REFS.STANDARD(MFR_PENCIL_CO_REF)],
+const mechanicalPencilGraphiteGroup = createGroup('graphite', {
+  refs: [ITEM_GRAPHITE.REFS.STANDARD(MFR_REFS.PENCIL_CO)],
 });
 
 const mechanical_pencil_option_groups = [
-  mechanical_pencil_color_group,
-  mechanical_pencil_graphite_group,
-  mechanical_pencil_eraser_group,
+  mechanicalPencilColorGroup,
+  mechanicalPencilGraphiteGroup,
+  mechanicalPencilEraserGroup,
 ];
 // #endregion
 
 const common = {
-  skuPrefix: ITEM_PENCIL.SKU_PREFIX(MFR_PENCIL_CO_REF),
+  skuPrefix: ITEM_PENCIL.SKU_PREFIX(MFR_REFS.PENCIL_CO),
   category: ITEM_PENCIL.CATEGORY,
-  madeIn: 'China',
+  madeIn: 'CN',
 };
 
 const pencils = [
   {
     ...common,
-    ref: ITEM_PENCIL_REFS.STANDARD(MFR_PENCIL_CO_REF),
-    type: ITEM_PENCIL.TYPE.STANDARD,
+    ref: ITEM_PENCIL.REFS.STANDARD(MFR_REFS.PENCIL_CO),
+    type: ITEM_PENCIL.TYPES.STANDARD,
     name: 'PencilCo Standard Wooden Pencil',
     description: 'Standard wooden pencil by PencilCo.',
     stock: Math.ceil(Math.random() * 100000) + 100000,
-    pricing: { cost: 0.12, bulkCostModifiers: pencil_bulk_cost_modifiers },
-    optionGroups: standard_pencil_option_groups,
+    pricing: { cost: 0.12, bulkCostModifiers: pencilBulkCostModifiers },
+    optionGroups: standardPencilOptionGroups,
   },
   {
     ...common,
-    ref: ITEM_PENCIL_REFS.MECHANICAL(MFR_PENCIL_CO_REF),
-    type: ITEM_PENCIL.TYPE.MECHANICAL,
+    ref: ITEM_PENCIL.REFS.MECHANICAL(MFR_REFS.PENCIL_CO),
+    type: ITEM_PENCIL.TYPES.MECHANICAL,
     name: 'PencilCo Plastic Mechanical Pencil',
     description: 'Standard plastic mechanical pencil by PencilCo.',
     stock: Math.ceil(Math.random() * 100000) + 100000,
-    pricing: { cost: 0.04, bulkCostModifiers: pencil_bulk_cost_modifiers },
+    pricing: { cost: 0.04, bulkCostModifiers: pencilBulkCostModifiers },
     optionGroups: mechanical_pencil_option_groups,
   },
 ];

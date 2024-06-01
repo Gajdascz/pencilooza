@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 import createDebug from 'debug';
 import Item from '../../models/item/Item.js';
-import Manufacturer from '../../models/manufacturer/Manufacturer.js';
+import Mfr from '../../models/manufacturer/Mfr.js';
 import mfrs from './mfrData/index.js';
 import 'dotenv/config';
 
@@ -103,7 +103,7 @@ const createItemModel = async (mfrId, itemInfo) => {
 
 const createMfrModel = async (mfrInfo) => {
   const message = `- Building Manufacturer Model`;
-  const mfr = new Manufacturer(mfrInfo);
+  const mfr = new Mfr(mfrInfo);
   try {
     await mfr.save();
     debug(`${message}: ${SUCCESS}`);
