@@ -23,7 +23,6 @@ const categoryBySkuCode = {
   [ITEM_ERASER.SKU_CODE]: ITEM_ERASER.CATEGORY,
   [ITEM_GRAPHITE.SKU_CODE]: ITEM_GRAPHITE.CATEGORY,
 };
-
 const ItemSchema = new Schema({
   category: { type: String, required: true, enum: Object.values(ITEM_GENERAL.CATEGORIES) },
   skuPrefix: {
@@ -51,6 +50,7 @@ const ItemSchema = new Schema({
       },
     ],
   },
+  sku: { type: String, unique: true },
   type: {
     type: String,
     required: true,
@@ -65,7 +65,7 @@ const ItemSchema = new Schema({
   description: { type: String, required: true, maxLength: 500, minLength: 3 },
   stock: { type: Number, required: true },
   madeIn: { type: String, required: true, length: 2 },
-  manufacturer: { type: Schema.Types.ObjectId, ref: 'Manufacturer', required: true },
+  manufacturer: { type: Schema.Types.ObjectId, ref: 'Mfr', required: true },
   pricing: { type: PricingSchema, required: true },
   optionGroups: { type: [OptionGroupSchema], required: false },
   timeCreated: { type: Date, default: Date.now() },

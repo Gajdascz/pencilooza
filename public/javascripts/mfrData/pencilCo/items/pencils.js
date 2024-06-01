@@ -4,11 +4,11 @@ import { expandObjectKeyAbbrs } from '../../../utils/abbrManager.js';
 import createGroup from '../../../utils/createGroup.js';
 
 const pencilBulkCostModifiers = expandObjectKeyAbbrs([
-  { qty: 100, bcm: 0 },
-  { qty: 250, bcm: 0.05 },
-  { qty: 500, bcm: 0.1 },
-  { qty: 1000, bcm: 0.15 },
-  { qty: 10000, bcm: 0.2 },
+  { qty: 100, cm: 0 },
+  { qty: 250, cm: 0.05 },
+  { qty: 500, cm: 0.1 },
+  { qty: 1000, cm: 0.15 },
+  { qty: 10000, cm: 0.2 },
 ]);
 
 // #region Standard Pencil Groups

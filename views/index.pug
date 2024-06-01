@@ -7,3 +7,24 @@ block content
       p Welcome to Pencilooza, the #1 online destination for pencil manufacturers and wholesalers. We draw the line between manufacturers and wholesalers, offering an intuitive platform for registration, product submission, and order placement.
       p Our platform sharpens interactions and transactions. Manufacturers can easily register and submit their products to connect with our wholesalers. Wholesalers can browse our inventory, connect with manufacturers, and place orders.
       p Whether you're a manufacturer looking to up wholesale orders or a wholesaler looking for inventory from quality and reliable manufacturers, Pencilooza is your go-to platform. Join our network today and connect with the pencil-partner of your dreams.
+    section.index-overview
+      h1 Current Inventory Overview
+      ul.index-overview-list
+        li
+          span.ul-span-label &bull; Manufacturers: 
+          | !{totalMfrs}
+        li 
+          span.ul-span-label &bull; Item Totals
+          ul 
+            li
+              span.ul-span-label &bull; All:
+              |   !{totalItems}
+            li 
+              span.ul-span-label &bull; Stock:
+              |   !{totalStock}
+            li 
+              span.ul-span-label &bull; Categories:
+              |   !{totalCategories}
+            li 
+              span.ul-span-label &bull; Types:
+              |   !{totalTypes}

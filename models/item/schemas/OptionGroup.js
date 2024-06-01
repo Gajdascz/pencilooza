@@ -2,19 +2,22 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const OptionGroupSchema = new Schema({
-  group: { type: String, required: true },
-  refs: { type: [String], required: false },
-  options: [
-    {
-      type: {
-        option: { type: String, required: true },
-        costModifier: { type: Number, default: 0 },
+const OptionGroupSchema = new Schema(
+  {
+    group: { type: String, required: true },
+    refs: { type: [String], required: false },
+    options: [
+      {
+        type: {
+          option: { type: String, required: true },
+          costModifier: { type: Number, default: 0 },
+        },
+        required: false,
       },
-      required: false,
-    },
-  ],
-});
+    ],
+  },
+  { _id: false }
+);
 
 OptionGroupSchema.pre('validate', function (next) {
   if (!this.refs && (!this.options || this.options.length === 0))

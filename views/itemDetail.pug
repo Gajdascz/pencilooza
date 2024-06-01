@@ -1,0 +1,44 @@
+extends layout
+
+block content
+  h1 #{name}
+  ul 
+    li 
+      span.ul-span-label Category:
+      |   #{category}
+    li
+      span.ul-span-label Type:
+      |   #{type}
+    li
+      span.ul-span-label Description:
+      |   #{description}
+    li
+      span.ul-span-label Stock:
+      |   #{stock}
+    li
+      span.ul-span-label Made In:
+      |   #{madeIn}
+    li
+      span.ul-span-label SKU:
+      |   #{sku}
+    li
+      span.ul-span-label Manufacturer:
+      a(href=manufacturer.url)  #{manufacturer.name}
+    li
+      span.ul-span-label Pricing:
+      ul 
+        li PPU: #{pricing.cost}
+        li MSRP: #{pricing.suggestedRetail}
+        for bcm in pricing.bulkCostModifiers 
+          li #{bcm}
+    if optionGroups.length
+      each group in optionGroups  
+        li
+          span.ul-span-label #{group.group}:
+          ul
+            if optionGroups.options
+              each option in optionGroups.options
+                li #{option}
+            else if optionGroups.refs
+              each ref in optionGroups.refs 
+                li #{ref}

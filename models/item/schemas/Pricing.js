@@ -2,20 +2,28 @@ import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
 
-const PricingSchema = new Schema({
-  cost: { type: Number, required: true },
-  bulkCostModifiers: [{ quantity: { type: Number }, costModifier: { type: Number } }],
-  wholesaleContact: { type: String, required: false },
-});
+const PricingSchema = new Schema(
+  {
+    cost: { type: Number, required: true },
+    bulkCostModifiers: [
+      {
+        quantity: { type: Number, required: true },
+        costModifier: { type: Number, required: true },
+      },
+    ],
+    wholesaleContact: { type: String, required: false },
+  },
+  { _id: false }
+);
 
-PricingSchema.virtual('getBulkPrices').get(function () {
+PricingSchema.virtual('bulkPrices').get(function () {
   return this.bulkCostModifiers.map((bulkModifier) => ({
     quantity: bulkModifier.quantity,
     price: bulkModifier.costModifier * this.cost * bulkModifier.quantity,
   }));
 });
 
-PricingSchema.virtual('getSuggestedRetail').get(function () {
+PricingSchema.virtual('suggestedRetail').get(function () {
   return this.cost * 2;
 });
 

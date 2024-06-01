@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= title
+  if items.length
+    ul
+      each item in items
+        li &bull; 
+          a(href=item.url) #{item.name}
+          |  (#{item.manufacturer.name})
+
+  else
+    p No items found in inventory.
