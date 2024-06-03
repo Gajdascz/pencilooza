@@ -2,35 +2,39 @@ import { expandObjectKeyAbbrs } from '../../../utils/abbrManager.js';
 import { ITEM_GRAPHITE, MFR_REFS } from '../../../utils/constants.js';
 import createGroup from '../../../utils/createGroup.js';
 
-const graphite_bulk_cost_modifiers = expandObjectKeyAbbrs([
-  { qty: 100, cm: 0 },
-  { qty: 250, cm: 0.05 },
-  { qty: 500, cm: 0.1 },
-  { qty: 1000, cm: 0.15 },
-  { qty: 10000, cm: 0.2 },
+const graphiteQuantityPricingGroup = expandObjectKeyAbbrs([
+  { opt: 100, cm: 0 },
+  { opt: 250, cm: 0.05 },
+  { opt: 500, cm: 0.1 },
+  { opt: 1000, cm: 0.15 },
+  { opt: 10000, cm: 0.2 },
 ]);
 
 // #region Graphite Option Groups
-const graphite_hardness_grade_group = createGroup('hardnessGrade', {
+const graphiteHardnessGradeGroup = createGroup('grade', {
   options: [
-    { option: '2H', cm: 0 },
-    { option: 'H', cm: 0 },
-    { option: 'HB', cm: 0 },
-    { option: 'B', cm: 0 },
-    { option: '2B', cm: 0 },
+    { opt: '2H', cm: 0 },
+    { opt: 'H', cm: 0 },
+    { opt: 'HB', cm: 0 },
+    { opt: 'B', cm: 0 },
+    { opt: '2B', cm: 0 },
   ],
 });
 
-const graphite_width_group = createGroup('width', {
+const graphiteWidthGroup = createGroup('width', {
   options: [
-    { option: '0.3mm', cm: 0 },
-    { option: '0.5mm', cm: 0 },
-    { option: '0.7mm', cm: 0 },
-    { option: '0.9mm', cm: 0.01 },
+    { opt: '0.3mm', cm: 0 },
+    { opt: '0.5mm', cm: 0 },
+    { opt: '0.7mm', cm: 0 },
+    { opt: '0.9mm', cm: 0.01 },
   ],
 });
 
-const graphite_option_groups = [graphite_hardness_grade_group, graphite_width_group];
+const graphite_option_groups = [
+  graphiteQuantityPricingGroup,
+  graphiteHardnessGradeGroup,
+  graphiteWidthGroup,
+];
 // #endregion
 
 const common = {
@@ -49,7 +53,7 @@ const graphites = [
     description:
       'Standard replacement lead using a precise blend of high-purity graphite and quality binders. Each package comes with 50 pieces.',
     stock: Math.ceil(Math.random() * 10000) + 10000,
-    pricing: { cost: 0.08, bulkCostModifiers: graphite_bulk_cost_modifiers },
+    basePpu: 0.06,
   },
   {
     ...common,
@@ -59,7 +63,7 @@ const graphites = [
     description:
       'Premium-quality replacement lead that uses a specialty mixture including high-purity graphite. Each package comes with 50 pieces.',
     stock: Math.ceil(Math.random() * 5000) + 5000,
-    pricing: { cost: 0.1, bulkCostModifiers: graphite_bulk_cost_modifiers },
+    basePpu: 0.1,
   },
   {
     ...common,
@@ -69,7 +73,7 @@ const graphites = [
     description:
       'Royal-quality replacement lead crafted using a research-backed proprietary mixture including only the highest quality materials. Each package comes with 50 pieces.',
     stock: Math.ceil(Math.random() * 5000) + 5000,
-    pricing: { cost: 0.15, bulkCostModifiers: graphite_bulk_cost_modifiers },
+    basePpu: 0.18,
   },
 ];
 

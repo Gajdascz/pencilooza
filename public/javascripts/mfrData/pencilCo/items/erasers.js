@@ -3,12 +3,11 @@ import { ITEM_ERASER, MFR_REFS } from '../../../utils/constants.js';
 import createGroup from '../../../utils/createGroup.js';
 
 // #region Eraser Groups
-const eraserBulkCostModifiers = expandObjectKeyAbbrs([
-  { qty: 100, cm: 0 },
-  { qty: 250, cm: 0.05 },
-  { qty: 500, cm: 0.1 },
-  { qty: 1000, cm: 0.15 },
-  { qty: 10000, cm: 0.2 },
+const eraserQuantityPricingGroup = expandObjectKeyAbbrs([
+  { opt: 250, cm: 0 },
+  { opt: 500, cm: 0.05 },
+  { opt: 1000, cm: 0.1 },
+  { opt: 10000, cm: 0.2 },
 ]);
 
 const eraserColorGroup = createGroup('color', {
@@ -29,7 +28,7 @@ const eraserMaterialGroup = createGroup('material', {
   ],
 });
 
-const eraserOptionGroups = [eraserColorGroup, eraserMaterialGroup];
+const eraserOptionGroups = [eraserQuantityPricingGroup, eraserColorGroup, eraserMaterialGroup];
 // #endregion
 
 const common = {
@@ -48,7 +47,7 @@ const erasers = [
     description:
       'Eraser fixed to the end of a standard wooden pencil. Used when configuring pencils for creation.',
     stock: Math.ceil(Math.random() * 100000) + 100000,
-    pricing: { cost: 0.01 },
+    basePpu: 0.01,
   },
   {
     ...common,
@@ -57,7 +56,7 @@ const erasers = [
     name: 'PencilCo Cap Eraser',
     description: 'Reusable erasers placed on the end of a pencil.',
     stock: Math.ceil(Math.random() * 100000) + 100000,
-    pricing: { cost: 0.02, bulkCostModifiers: eraserBulkCostModifiers },
+    basePpu: 0.03,
   },
   {
     ...common,
@@ -66,7 +65,7 @@ const erasers = [
     name: 'PencilCo Mechanical Pencil Eraser',
     description: 'Replacement eraser that fits all PencilCo mechanical pencils',
     stock: Math.ceil(Math.random() * 100000) + 100000,
-    pricing: { cost: 0.01, bulkCostModifiers: eraserBulkCostModifiers },
+    basePpu: 0.01,
   },
 ];
 

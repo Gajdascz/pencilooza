@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
 import SkuCounter from '../SkuCounter.js';
-import PricingSchema from './schemas/Pricing.js';
 import OptionGroupSchema from './schemas/OptionGroup.js';
 import {
   ITEM_GENERAL,
@@ -66,8 +65,8 @@ const ItemSchema = new Schema({
   stock: { type: Number, required: true },
   madeIn: { type: String, required: true, length: 2 },
   manufacturer: { type: Schema.Types.ObjectId, ref: 'Mfr', required: true },
-  pricing: { type: PricingSchema, required: true },
-  optionGroups: { type: [OptionGroupSchema], required: false },
+  basePpu: { type: Number, required: true },
+  optionGroups: { type: [OptionGroupSchema], required: true },
   timeCreated: { type: Date, default: Date.now() },
   timeUpdated: { type: Date, default: Date.now() },
 });
@@ -88,6 +87,40 @@ ItemSchema.pre('save', async function (next) {
 ItemSchema.virtual('url').get(function () {
   return `/inventory/item/${this._id}`;
 });
+
 ItemSchema.index({ category: 1, type: 1 });
+
+ItemSchema.method('getProcessedData', async function () {
+  const computeOptions = (options, basePpu) =>
+    options.map((option) => ({
+      ...option.toObject(),
+      ppuDiff: Math.round(basePpu - basePpu * option.costModifier * 1000) / 1000,
+    }));
+  const populateRefs = async (refs) => Promise.all(refs.map(async (ref) => ref.findById(ref.id)));
+
+  const getPpuDiff = (basePpu) => basePpu -
+
+  await this.populate(['manufacturer']);
+
+  const processOptionGroups = async () => {
+    return await Promise.all(
+      this.optionGroups.map(async (optionGroup) => {
+        const { options, refs, quantityPricing, group } = optionGroup;
+        let processedOptions;
+
+        if (options && options.length > 0)
+          processedOptions = computeOptions(options, this.pricing.basePpu);
+        if (refs && refs.length > 0) processedOptions = await populateRefs(refs);
+        return { group, options: processedOptions };
+      })
+    );
+  };
+
+  return {
+    ...this.toObject(),
+    pricing: this.pricing.computedPrices,
+    optionGroups: await processOptionGroups(),
+  };
+});
 
 export default mongoose.model('Item', ItemSchema);

@@ -17,8 +17,8 @@
   --color-blue-light: #E3F2FD;
   --color-gray-graphite: #4A4A4A;
   --color-gray-graphite-darker: #333333;
-  --color-yellow-pencil: #f4cc09;
-  --color-brown-wood: #D7C39E;
+  --color-yellow-pencil: #b69d23;
+  --color-brown-wood: #503a11;
   --color-pink-eraser: #d7888f;
   --color-blue-paper-line: #2F3FD0;
   --color-red-paper-margin-line: #AA0000;
@@ -62,12 +62,100 @@ a:visited {
 ul {
   list-style-type: none;
 }
-ul > li > ul {
+ul.nested-list {
   margin-left: 1em;
-}
-.ul-span-label {
+} 
+.span-label,
+.ul-p-label {
   font-weight: bold;
 }
+.label-value-wrapper {
+  display: flex;
+  gap: 0.5em;
+}
+.ul-horizontal {
+  display: flex;
+  gap: 0.5em;
+  align-items: center;
+}
+.ul-horizontal-options-label {
+  font-weight: bold;
+  flex: 1;
+}
+.ul-horizontal-options-container {
+  display: flex;
+  flex:1;
+  gap: 0.25em;
+}
+
+
+
+.ul-horizontal-option {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: .25em;
+  background-color: transparent;
+  border-radius: 10px;
+  padding: 0.25em;
+  min-width: 50px;
+  border: 2px solid var(--color-gray-graphite-darker);
+  width: 100%;
+}
+.ul-horizontal-option.selected {
+  background-color: var(--color-white-paper);
+  box-shadow: var(--shadow);
+  border-color: var(--color-blue-paper-line);
+}
+
+.item-detail-container {
+  display: flex;
+  flex-direction: column;
+  gap: 2em;
+}
+.item-detail-header {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+.item-detail-basic-info-list {
+  display: grid;
+  grid-template-areas: 
+    'cat type mfr' 
+    'stock madeIn sku';
+  grid-auto-columns: max-content;
+  gap: 0.5em;
+  width: min-content;
+}
+.item-detail-category { grid-area: cat;}
+.item-detail-type {grid-area: type;}
+.item-detail-mfr {grid-area: mfr;}
+.item-detail-stock {grid-area: stock};
+.item-detail-ppu {grid-area:ppu}
+.item-detail-sku {grid-area:sku}
+
+.item-detail-options-current {
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+}
+
+.option-groups-container {
+  display: flex;
+  flex-direction: column;
+  width: max-content;
+  justify-content: space-between;
+  gap: 0.5em;
+}
+
+section.item-detail-options {
+  display: flex;
+  flex-direction: column;
+  flex:1;
+}
+
 
 /* #region Layout Sidebar Navigation Menu */
 .primary-nav {

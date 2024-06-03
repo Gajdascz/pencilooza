@@ -28,7 +28,7 @@ router.post('/manufacturer/create', mfrController.mfrPostCreate);
 router.get('/items', itemController.itemList);
 
 router.get('/item/:id', itemController.itemDetail);
-
+router.post('item/:id', itemController.itemUpdateDetail);
 router.get('/item/create', itemController.itemGetCreate);
 router.post('/item/create', itemController.itemPostCreate);
 

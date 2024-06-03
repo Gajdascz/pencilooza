@@ -3,12 +3,11 @@ import { ITEM_PENCIL, ITEM_GRAPHITE, ITEM_ERASER, MFR_REFS } from '../../../util
 import { expandObjectKeyAbbrs } from '../../../utils/abbrManager.js';
 import createGroup from '../../../utils/createGroup.js';
 
-const pencilBulkCostModifiers = expandObjectKeyAbbrs([
-  { qty: 100, cm: 0 },
-  { qty: 250, cm: 0.05 },
-  { qty: 500, cm: 0.1 },
-  { qty: 1000, cm: 0.15 },
-  { qty: 10000, cm: 0.2 },
+const pencilQuantityPricingGroup = expandObjectKeyAbbrs([
+  { opt: 250, cm: 0 },
+  { opt: 500, cm: 0.05 },
+  { opt: 1000, cm: 0.1 },
+  { opt: 10000, cm: 0.2 },
 ]);
 
 // #region Standard Pencil Groups
@@ -20,7 +19,7 @@ const standardPencilColorGroup = createGroup('color', {
   ],
 });
 
-const standardPencilHardnessGradeGroup = createGroup('hardnessGrade', {
+const standardPencilGradeGroup = createGroup('grade', {
   options: [
     { opt: 'H', cm: 0 },
     { opt: 'HB', cm: 0 },
@@ -40,8 +39,9 @@ const standardPencilEraserGroup = createGroup('eraser', {
 });
 
 const standardPencilOptionGroups = [
+  pencilQuantityPricingGroup,
   standardPencilColorGroup,
-  standardPencilHardnessGradeGroup,
+  standardPencilGradeGroup,
   standardPencilMaterialGroup,
   standardPencilEraserGroup,
 ];
@@ -63,7 +63,8 @@ const mechanicalPencilGraphiteGroup = createGroup('graphite', {
   refs: [ITEM_GRAPHITE.REFS.STANDARD(MFR_REFS.PENCIL_CO)],
 });
 
-const mechanical_pencil_option_groups = [
+const mechanicalPencilOptionGroups = [
+  pencilQuantityPricingGroup,
   mechanicalPencilColorGroup,
   mechanicalPencilGraphiteGroup,
   mechanicalPencilEraserGroup,
@@ -84,7 +85,7 @@ const pencils = [
     name: 'PencilCo Standard Wooden Pencil',
     description: 'Standard wooden pencil by PencilCo.',
     stock: Math.ceil(Math.random() * 100000) + 100000,
-    pricing: { cost: 0.12, bulkCostModifiers: pencilBulkCostModifiers },
+    basePpu: 0.12,
     optionGroups: standardPencilOptionGroups,
   },
   {
@@ -94,8 +95,8 @@ const pencils = [
     name: 'PencilCo Plastic Mechanical Pencil',
     description: 'Standard plastic mechanical pencil by PencilCo.',
     stock: Math.ceil(Math.random() * 100000) + 100000,
-    pricing: { cost: 0.04, bulkCostModifiers: pencilBulkCostModifiers },
-    optionGroups: mechanical_pencil_option_groups,
+    basePpu: 0.06,
+    optionGroups: mechanicalPencilOptionGroups,
   },
 ];
 

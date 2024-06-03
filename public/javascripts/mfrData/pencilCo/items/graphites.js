@@ -3,16 +3,15 @@ import { ITEM_GRAPHITE, MFR_REFS } from '../../../utils/constants.js';
 import { expandObjectKeyAbbrs } from '../../../utils/abbrManager.js';
 import createGroup from '../../../utils/createGroup.js';
 
-const graphiteBulkCostModifiers = expandObjectKeyAbbrs([
-  { qty: 100, cm: 0 },
-  { qty: 250, cm: 0.05 },
-  { qty: 500, cm: 0.1 },
-  { qty: 1000, cm: 0.15 },
-  { qty: 10000, cm: 0.2 },
+const graphiteQuantityPricingGroup = expandObjectKeyAbbrs([
+  { opt: 250, cm: 0 },
+  { opt: 500, cm: 0.05 },
+  { opt: 1000, cm: 0.1 },
+  { opt: 10000, cm: 0.2 },
 ]);
 
 // #region Standard Graphite Groups
-const graphiteHardnessGradeGroup = createGroup('hardnessGrade', {
+const graphiteGradeGroup = createGroup('grade', {
   options: [
     { opt: 'H', cm: 0 },
     { opt: 'HB', cm: 0 },
@@ -28,7 +27,7 @@ const graphiteWidthGroup = createGroup('width', {
     { opt: '0.9mm', cm: 0.01 },
   ],
 });
-const graphiteOptionGroup = [graphiteHardnessGradeGroup, graphiteWidthGroup];
+const graphiteOptionGroup = [graphiteQuantityPricingGroup, graphiteGradeGroup, graphiteWidthGroup];
 // #endregion
 
 const common = {
@@ -46,7 +45,7 @@ const graphites = [
     description:
       'Replacement graphite for mechanical pencils by PencilCo. Each unit comes with 50 individual sticks.',
     stock: Math.ceil(Math.random() * 100000) + 100000,
-    pricing: { cost: 0.05, bulkCostModifiers: graphiteBulkCostModifiers },
+    basePpu: 0.05,
   },
 ];
 

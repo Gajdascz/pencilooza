@@ -2,12 +2,12 @@ import { ITEM_ERASER, MFR_REFS } from '../../../utils/constants.js';
 import { expandObjectKeyAbbrs } from '../../../utils/abbrManager.js';
 import createGroup from '../../../utils/createGroup.js';
 
-const eraserBulkCostModifiers = expandObjectKeyAbbrs([
-  { qty: 100, cm: 0 },
-  { qty: 250, cm: 0.05 },
-  { qty: 500, cm: 0.1 },
-  { qty: 1000, cm: 0.15 },
-  { qty: 10000, cm: 0.2 },
+const eraserQuantityPricingGroup = expandObjectKeyAbbrs([
+  { opt: 100, cm: 0 },
+  { opt: 250, cm: 0.05 },
+  { opt: 500, cm: 0.1 },
+  { opt: 1000, cm: 0.15 },
+  { opt: 10000, cm: 0.2 },
 ]);
 
 const eraserColorGroup = createGroup('color', {
@@ -31,7 +31,7 @@ const eraserMaterialGroup = createGroup('material', {
   ],
 });
 
-const eraserOptionGroups = [eraserColorGroup, eraserMaterialGroup];
+const eraserOptionGroups = [eraserQuantityPricingGroup, eraserColorGroup, eraserMaterialGroup];
 
 const common = {
   skuPrefix: ITEM_ERASER.SKU_PREFIX(MFR_REFS.PENCIL_PRINCE),
@@ -49,7 +49,7 @@ const erasers = [
     description:
       'High quality eraser fixed to the end of a wooden pencil. Used when configuring pencils for creation.',
     stock: Math.ceil(Math.random() * 10000) + 10000,
-    pricing: { cost: 0.02 },
+    basePpu: 0.02,
   },
   {
     ...common,
@@ -58,7 +58,7 @@ const erasers = [
     name: 'Pencil Prince Quality Cap Eraser',
     description: 'High quality reusable erasers placed on the end of a pencil.',
     stock: Math.ceil(Math.random() * 2500) + 2500,
-    pricing: { cost: 0.04, bulkCostModifiers: eraserBulkCostModifiers },
+    basePpu: 0.05,
   },
   {
     ...common,
@@ -67,7 +67,7 @@ const erasers = [
     name: 'Pencil Prince Quality Mechanical Pencil Eraser',
     description: 'High quality replacement eraser that fits all Pencil Prince Mechanical Pencils.',
     stock: Math.ceil(Math.random() * 10000) + 10000,
-    pricing: { cost: 0.02, bulkCostModifiers: eraserBulkCostModifiers },
+    basePpu: 0.02,
   },
 ];
 export default erasers;

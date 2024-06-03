@@ -9,7 +9,7 @@
 title Data Models
 
 class Pricing schema {
-  + cost: Number
+  + basePpu: Number
   + retail: Number
   + bulk_factors: [{quantity,costModifier}]
   == Virtual ==

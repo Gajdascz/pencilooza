@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const PricingSchema = new Schema(
   {
-    cost: { type: Number, required: true },
+    basePpu: { type: Number, required: true },
     bulkCostModifiers: [
       {
         quantity: { type: Number, required: true },
@@ -16,15 +16,16 @@ const PricingSchema = new Schema(
   { _id: false }
 );
 
-PricingSchema.virtual('bulkPrices').get(function () {
-  return this.bulkCostModifiers.map((bulkModifier) => ({
-    quantity: bulkModifier.quantity,
-    price: bulkModifier.costModifier * this.cost * bulkModifier.quantity,
-  }));
-});
-
-PricingSchema.virtual('suggestedRetail').get(function () {
-  return this.cost * 2;
+PricingSchema.virtual('computedPrices').get(function () {
+  return this.bulkCostModifiers.map((bcm) => {
+    const { quantity, costModifier } = bcm;
+    const ppu = Math.round((this.basePpu - costModifier * this.basePpu) * 1000) / 1000;
+    return {
+      quantity,
+      ppu,
+      msrp: ppu * 2,
+    };
+  });
 });
 
 export default PricingSchema;
