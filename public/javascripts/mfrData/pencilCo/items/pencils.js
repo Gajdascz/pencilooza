@@ -3,34 +3,34 @@ import { ITEM_PENCIL, ITEM_GRAPHITE, ITEM_ERASER, MFR_REFS } from '../../../util
 import { expandObjectKeyAbbrs } from '../../../utils/abbrManager.js';
 import createGroup from '../../../utils/createGroup.js';
 
-const pencilQuantityPricingGroup = expandObjectKeyAbbrs([
-  { opt: 250, cm: 0 },
-  { opt: 500, cm: 0.05 },
-  { opt: 1000, cm: 0.1 },
-  { opt: 10000, cm: 0.2 },
+const pencilBulkCostModifier = expandObjectKeyAbbrs([
+  { qty: 250, cm: 0 },
+  { qty: 500, cm: 0.05 },
+  { qty: 1000, cm: 0.1 },
+  { qty: 10000, cm: 0.2 },
 ]);
 
 // #region Standard Pencil Groups
 const standardPencilColorGroup = createGroup('color', {
   options: [
-    { opt: 'bare', cm: 0 },
-    { opt: 'yellow', cm: 0 },
-    { opt: 'custom', cm: 0.2 },
+    { optN: 'bare', cm: 0 },
+    { optN: 'yellow', cm: 0 },
+    { optN: 'custom', cm: 0.2 },
   ],
 });
 
 const standardPencilGradeGroup = createGroup('grade', {
   options: [
-    { opt: 'H', cm: 0 },
-    { opt: 'HB', cm: 0 },
-    { opt: 'B', cm: 0 },
+    { optN: 'H', cm: 0 },
+    { optN: 'HB', cm: 0 },
+    { optN: 'B', cm: 0 },
   ],
 });
 
 const standardPencilMaterialGroup = createGroup('material', {
   options: [
-    { opt: 'basswood', cm: 0 },
-    { opt: 'incense cedar', cm: 0.5 },
+    { optN: 'basswood', cm: 0 },
+    { optN: 'incense cedar', cm: 0.5 },
   ],
 });
 
@@ -39,7 +39,6 @@ const standardPencilEraserGroup = createGroup('eraser', {
 });
 
 const standardPencilOptionGroups = [
-  pencilQuantityPricingGroup,
   standardPencilColorGroup,
   standardPencilGradeGroup,
   standardPencilMaterialGroup,
@@ -50,10 +49,10 @@ const standardPencilOptionGroups = [
 // #region Mechanical Pencil Groups
 const mechanicalPencilColorGroup = createGroup('color', {
   options: [
-    { opt: 'black', cm: 0 },
-    { opt: 'red', cm: 0 },
-    { opt: 'blue', cm: 0 },
-    { opt: 'green', cm: 0 },
+    { optN: 'black', cm: 0 },
+    { optN: 'red', cm: 0 },
+    { optN: 'blue', cm: 0 },
+    { optN: 'green', cm: 0 },
   ],
 });
 const mechanicalPencilEraserGroup = createGroup('eraser', {
@@ -64,7 +63,6 @@ const mechanicalPencilGraphiteGroup = createGroup('graphite', {
 });
 
 const mechanicalPencilOptionGroups = [
-  pencilQuantityPricingGroup,
   mechanicalPencilColorGroup,
   mechanicalPencilGraphiteGroup,
   mechanicalPencilEraserGroup,
@@ -75,6 +73,7 @@ const common = {
   skuPrefix: ITEM_PENCIL.SKU_PREFIX(MFR_REFS.PENCIL_CO),
   category: ITEM_PENCIL.CATEGORY,
   madeIn: 'CN',
+  quantityPricing: pencilBulkCostModifier,
 };
 
 const pencils = [

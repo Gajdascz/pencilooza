@@ -4,18 +4,12 @@ const Schema = mongoose.Schema;
 
 const OptionGroupSchema = new Schema(
   {
-    group: { type: String, required: true },
-    quantityPricing: {
-      type: [
-        { option: { type: String, required: true }, costModifier: { type: Number, default: 0 } },
-      ],
-      required: true,
-    },
-    refs: { type: [String], required: false },
+    groupName: { type: String, required: true },
+    refs: { type: [{ type: Schema.Types.ObjectId, ref: 'Item' }], required: false },
     options: [
       {
         type: {
-          option: { type: String, required: true },
+          optionName: { type: String, required: true },
           costModifier: { type: Number, default: 0 },
         },
         required: false,

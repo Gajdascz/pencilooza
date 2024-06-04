@@ -8,7 +8,7 @@
 
 title Data Models
 
-class Pricing schema {
+class quantityPricing schema {
   + basePpu: Number
   + retail: Number
   + bulk_factors: [{quantity,costModifier}]
@@ -17,7 +17,7 @@ class Pricing schema {
   + getSuggestedRetail: Number
 }
 class OptionGroups schema {
-  + group: String
+  + groupName String
   + refs: [String]
   + options: [{String,Number}]
 }
@@ -30,7 +30,7 @@ class Item model {
   + stock: Number
   + madeIn: String
   + manufacturer: Manufacturer[1]
-  + pricing: Pricing
+  + quantityPricing: quantityPricing
   + optionGroups: OptionGroups
   + timeCreated: Date
   + timeUpdated: Date
@@ -64,7 +64,7 @@ class SkuCounter model {
 }
 Contact --* Manufacturer
 Item  -- "1" Manufacturer
-Pricing --* Item
+quantityPricing --* Item
 OptionGroups --* Item
 Item .> SkuCounter : uses
 

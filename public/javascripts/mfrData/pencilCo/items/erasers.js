@@ -3,38 +3,39 @@ import { ITEM_ERASER, MFR_REFS } from '../../../utils/constants.js';
 import createGroup from '../../../utils/createGroup.js';
 
 // #region Eraser Groups
-const eraserQuantityPricingGroup = expandObjectKeyAbbrs([
-  { opt: 250, cm: 0 },
-  { opt: 500, cm: 0.05 },
-  { opt: 1000, cm: 0.1 },
-  { opt: 10000, cm: 0.2 },
+const eraserBulkCostModifiers = expandObjectKeyAbbrs([
+  { qty: 250, cm: 0 },
+  { qty: 500, cm: 0.05 },
+  { qty: 1000, cm: 0.1 },
+  { qty: 10000, cm: 0.2 },
 ]);
 
 const eraserColorGroup = createGroup('color', {
   options: [
-    { opt: 'pink', cm: 0 },
-    { opt: 'white', cm: 0 },
-    { opt: 'red', cm: 0 },
-    { opt: 'blue', cm: 0 },
-    { opt: 'green', cm: 0 },
-    { opt: 'variety', cm: 0 },
+    { optN: 'pink', cm: 0 },
+    { optN: 'white', cm: 0 },
+    { optN: 'red', cm: 0 },
+    { optN: 'blue', cm: 0 },
+    { optN: 'green', cm: 0 },
+    { optN: 'variety', cm: 0 },
   ],
 });
 
 const eraserMaterialGroup = createGroup('material', {
   options: [
-    { opt: 'rubber', cm: 0 },
-    { opt: 'polymer', cm: 0.2 },
+    { optN: 'rubber', cm: 0 },
+    { optN: 'polymer', cm: 0.2 },
   ],
 });
 
-const eraserOptionGroups = [eraserQuantityPricingGroup, eraserColorGroup, eraserMaterialGroup];
+const eraserOptionGroups = [eraserColorGroup, eraserMaterialGroup];
 // #endregion
 
 const common = {
   skuPrefix: ITEM_ERASER.SKU_PREFIX(MFR_REFS.PENCIL_CO),
   category: ITEM_ERASER.CATEGORY,
   madeIn: 'CN',
+  quantityPricing: eraserBulkCostModifiers,
   optionGroups: eraserOptionGroups,
 };
 

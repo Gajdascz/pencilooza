@@ -44,7 +44,7 @@ const itemIdMap = {};
 
 const processOptionGroups = (optionGroups) =>
   optionGroups.map((group) => {
-    const message = `|-> Processing Option Group: ${group.group}`;
+    const message = `|-> Processing Option GroupName: ${group.groupName}`;
     if (group.options && group.refs) {
       debug(`${message}: ${FAIL}`);
       throw new Error(
@@ -72,8 +72,18 @@ const processOptionGroups = (optionGroups) =>
   });
 
 const createItemModel = async (mfrId, itemInfo) => {
-  const { category, skuPrefix, type, name, description, madeIn, stock, pricing, optionGroups } =
-    itemInfo;
+  const {
+    category,
+    skuPrefix,
+    type,
+    name,
+    description,
+    madeIn,
+    stock,
+    quantityPricing,
+    optionGroups,
+    basePpu,
+  } = itemInfo;
   debug(`- Building ${name} Item Model`);
   const processedOptionGroups = processOptionGroups(optionGroups, itemIdMap);
   const message = `|--> Building Item Model`;
@@ -87,7 +97,8 @@ const createItemModel = async (mfrId, itemInfo) => {
     madeIn,
     manufacturer: mfrId,
     stock,
-    pricing,
+    quantityPricing,
+    basePpu,
     optionGroups: processedOptionGroups,
   });
   itemIdMap[itemInfo.ref] = item._id;

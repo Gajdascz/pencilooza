@@ -2,34 +2,34 @@ import { ITEM_PENCIL, ITEM_ERASER, ITEM_GRAPHITE, MFR_REFS } from '../../../util
 import { expandObjectKeyAbbrs } from '../../../utils/abbrManager.js';
 import createGroup from '../../../utils/createGroup.js';
 
-const pencilQuantityPricingGroup = expandObjectKeyAbbrs([
-  { opt: 250, cm: 0 },
-  { opt: 500, cm: 0.05 },
-  { opt: 1000, cm: 0.1 },
-  { opt: 10000, cm: 0.2 },
+const pencilBulkCostModifier = expandObjectKeyAbbrs([
+  { qty: 250, cm: 0 },
+  { qty: 500, cm: 0.05 },
+  { qty: 1000, cm: 0.1 },
+  { qty: 10000, cm: 0.2 },
 ]);
 
 // #region Standard Pencil Option Groups
 const standardPencilColorGroup = createGroup('color', {
   options: [
-    { opt: 'bare', cm: 0 },
-    { opt: 'yellow', cm: 0 },
-    { opt: 'custom', cm: 0.18 },
+    { optN: 'bare', cm: 0 },
+    { optN: 'yellow', cm: 0 },
+    { optN: 'custom', cm: 0.18 },
   ],
 });
 const standardPencilGradeGroup = createGroup('grade', {
   options: [
-    { opt: '2H', cm: 0 },
-    { opt: 'H', cm: 0 },
-    { opt: 'HB', cm: 0 },
-    { opt: 'B', cm: 0 },
-    { opt: '2B', cm: 0 },
+    { optN: '2H', cm: 0 },
+    { optN: 'H', cm: 0 },
+    { optN: 'HB', cm: 0 },
+    { optN: 'B', cm: 0 },
+    { optN: '2B', cm: 0 },
   ],
 });
 const standardPencilMaterialGroup = createGroup('material', {
   options: [
-    { opt: 'basswood', cm: 0 },
-    { opt: 'incense cedar', cm: 0.25 },
+    { optN: 'basswood', cm: 0 },
+    { optN: 'incense cedar', cm: 0.25 },
   ],
 });
 
@@ -38,7 +38,6 @@ const standardPencilEraserGroup = createGroup('eraser', {
 });
 
 const standardPencilOptionGroups = [
-  pencilQuantityPricingGroup,
   standardPencilColorGroup,
   standardPencilGradeGroup,
   standardPencilMaterialGroup,
@@ -62,18 +61,17 @@ const mechanicalPencilEraserGroup = createGroup('eraser', {
 // plastic
 const plasticMechanicalPencilColorGroup = createGroup('color', {
   options: [
-    { opt: 'pink', cm: 0 },
-    { opt: 'white', cm: 0 },
-    { opt: 'black', cm: 0 },
-    { opt: 'red', cm: 0 },
-    { opt: 'blue', cm: 0 },
-    { opt: 'green', cm: 0 },
-    { opt: 'purple', cm: 0 },
-    { opt: 'gold', cm: 0 },
+    { optN: 'pink', cm: 0 },
+    { optN: 'white', cm: 0 },
+    { optN: 'black', cm: 0 },
+    { optN: 'red', cm: 0 },
+    { optN: 'blue', cm: 0 },
+    { optN: 'green', cm: 0 },
+    { optN: 'purple', cm: 0 },
+    { optN: 'gold', cm: 0 },
   ],
 });
 const plasticMechanicalPencilOptionGroups = [
-  pencilQuantityPricingGroup,
   plasticMechanicalPencilColorGroup,
   mechanicalPencilEraserGroup,
   mechanicalPencilGraphiteGroup,
@@ -81,14 +79,13 @@ const plasticMechanicalPencilOptionGroups = [
 // metal
 const metalMechanicalPencilMaterialGroup = createGroup('material', {
   options: [
-    { opt: 'aluminum', cm: 0 },
-    { opt: 'copper', cm: 0.75 },
-    { opt: 'stainless', cm: 1 },
-    { opt: 'titanium', cm: 3 },
+    { optN: 'aluminum', cm: 0 },
+    { optN: 'copper', cm: 0.75 },
+    { optN: 'stainless', cm: 1 },
+    { optN: 'titanium', cm: 3 },
   ],
 });
 const metalMechanicalPencilOptionGroups = [
-  pencilQuantityPricingGroup,
   metalMechanicalPencilMaterialGroup,
   mechanicalPencilEraserGroup,
   mechanicalPencilGraphiteGroup,
@@ -96,22 +93,21 @@ const metalMechanicalPencilOptionGroups = [
 // wood
 const woodMechanicalPencilMaterialGroup = createGroup('material', {
   options: [
-    { opt: 'oak', cm: 0 },
-    { opt: 'maple', cm: 1 },
-    { opt: 'pink-ivory', cm: 3 },
-    { opt: 'exotic-ebony', cm: 5 },
+    { optN: 'oak', cm: 0 },
+    { optN: 'maple', cm: 1 },
+    { optN: 'pink-ivory', cm: 3 },
+    { optN: 'exotic-ebony', cm: 5 },
   ],
 });
 const woodMechanicalPencilTrimGroup = createGroup('trim', {
   options: [
-    { opt: 'stainless', cm: 0 },
-    { opt: 'titanium', cm: 0.75 },
-    { opt: 'gold', cm: 5 },
-    { opt: 'platinum', cm: 7.5 },
+    { optN: 'stainless', cm: 0 },
+    { optN: 'titanium', cm: 0.75 },
+    { optN: 'gold', cm: 5 },
+    { optN: 'platinum', cm: 7.5 },
   ],
 });
 const woodMechanicalPencilOptionGroups = [
-  pencilQuantityPricingGroup,
   woodMechanicalPencilMaterialGroup,
   woodMechanicalPencilTrimGroup,
   mechanicalPencilEraserGroup,
@@ -122,6 +118,7 @@ const woodMechanicalPencilOptionGroups = [
 const common = {
   skuPrefix: ITEM_PENCIL.SKU_PREFIX(MFR_REFS.PENCIL_PRINCE),
   category: ITEM_PENCIL.CATEGORY,
+  quantityPricing: pencilBulkCostModifier,
   madeIn: 'US',
 };
 

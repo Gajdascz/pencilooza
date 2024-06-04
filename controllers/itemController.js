@@ -2,23 +2,6 @@ import asyncHandler from 'express-async-handler';
 import Item from '../models/item/Item.js';
 import Mfr from '../models/manufacturer/Mfr.js';
 
-const renderDetail = (res, item, total, selected) => {
-  res.render('itemDetail', {
-    name: item.name,
-    category: item.category,
-    type: item.type,
-    description: item.description,
-    stock: item.stock,
-    madeIn: item.madeIn,
-    manufacturer: item.manufacturer,
-    pricing: item.pricing,
-    optionGroups: item.optionGroups,
-    sku: item.sku,
-    total,
-    selected,
-  });
-};
-
 const getDetailTotal = (qty, ppu, optGroups) =>
   qty * optGroups.reduce((acc, curr) => (acc += ppu * curr.options[0].costModifier), ppu);
 
@@ -83,13 +66,39 @@ const itemController = {
   }),
   itemDetail: asyncHandler(async (req, res, next) => {
     const item = await Item.findById(req.params.id);
-    const processedItem = await item.getProcessedData();
-    renderDetail(res, processedItem, getDetailTotal(), { ppu: processedItem.pricing[0].ppuDiff });
-    const { ppu, quantity, msrp } = pricing[0];
-    const selected = {
-      qty: quantity,
-      options: optionGroups.map((group) => ({ name: group.group, value: group.options[0].option })),
-    };
+    const {
+      name,
+      category,
+      type,
+      description,
+      stock,
+      madeIn,
+      manufacturer,
+      quantityPricing,
+      basePpu,
+      optionGroups,
+      sku,
+    } = await item.getProcessedData();
+    res.render('itemDetail', {
+      name,
+      category,
+      type,
+      description,
+      stock,
+      madeIn,
+      manufacturer,
+      quantityPricing,
+      optionGroups,
+      sku,
+      basePpu,
+      defaultSelected: {
+        quantityPricing: quantityPricing[0],
+        options: optionGroups.map(({ groupName, options }) => ({
+          groupName,
+          option: options[0],
+        })),
+      },
+    });
   }),
   itemUpdateDetail: asyncHandler(async (req, res, next) => {
     console.log(res);

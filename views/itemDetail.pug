@@ -1,68 +1,135 @@
 extends layout
-extends scripts
+
+block scripts
   script.
-    document.addEventListener('DOMContentLoaded', function () { 
-      document.querySelectorAll('.ul-horizontal-option').forEach(button => button.addEventListener('click', function (e) {
-        e.preventDefault();
-        const form = document.querySelector('form3itemDetailOptions');
-        const formData = new FormData(form);
-        formData.append()
-      }))
-    })
+    const basePpu = !{basePpu};
+    const cache = {
+      selected: {
+        quantityPricing: !{JSON.stringify(defaultSelected.quantityPricing)},
+        options: !{JSON.stringify(defaultSelected.options)}
+      },
+      getCurrentOptionCostModifier: () => cache.selected.options.reduce((acc,curr) => (acc += +curr.option.ppuDiff),0),
+      getCurrentPpu: () => {
+        console.log('optionsCostModifier',cache.getCurrentOptionCostModifier())
+        const {ppuDiff} = cache.selected.quantityPricing;
+        const totalOptionCostModifier = cache.getCurrentOptionCostModifier();
+        console.log(basePpu,ppuDiff,totalOptionCostModifier)
+        return basePpu - +ppuDiff + totalOptionCostModifier;
+      },
+      getCurrentTotal: () => {
+        const currentPpu = cache.getCurrentPpu();
+        const {qty} = cache.selected.quantityPricing;
+        return currentPpu*+qty;
+      },
+      getAllCurrent: () => ({
+        quantity: cache.selected.quantityPricing.qty,
+        optionsModifier: cache.getCurrentOptionCostModifier(),
+        ppu: cache.getCurrentPpu(),
+        total: cache.getCurrentTotal()
+      })
+    };
+    const updateCurrent = () => {
+      const {quantity,optionsModifier,ppu,total} = cache.getAllCurrent();
+      console.log(quantity,optionsModifier,ppu,total)
+      document.querySelector('span#current-quantity').textContent = quantity;
+      document.querySelector('span#current-options-modifier').textContent=`$${optionsModifier}`;
+      document.querySelector('span#current-ppu').textContent=`$${ppu}`;
+      document.querySelector('span#current-total').textContent=`$${total}`;
+    }
+    const onOptionSelect = (e,{groupName,optionName,ppuDiff}) => {
+      document.querySelector(`input#${groupName}SelectedOption`).value = optionName;
+      document.querySelector(`input#${groupName}SelectedOptionPpuDiff`).value = ppuDiff;
+      document.querySelector(`button#${groupName}SelectToggle`).textContent= optionName;
+    }
+    const onMenuToggle = (event) => {
+      event.preventDefault();
+      const dropdownContainer = event.target.parentElement;
+      const isExpanded = dropdownContainer.getAttribute('aria-expanded') === 'true' || false;
+      const toggle = dropdownContainer.querySelector('.dropdown-toggle');
+      const optionList = dropdownContainer.querySelector('.dropdown-menu-option-list');
+      const options = dropdownContainer.querySelectorAll('[role="option"]');
+        
+      const onMenuClose = (e) => {
+        if(dropdownContainer.contains(e.target)) return;
+        dropdownContainer.setAttribute('aria-expanded',false);
+        toggle.setAttribute('aria-expanded',false);
+        optionList.style.display = 'none';
+        document.removeEventListener('click',onMenuClose);
+      }
+      const onMenuOpen = () => {
+        dropdownContainer.setAttribute('aria-expanded',true);
+        toggle.setAttribute('aria-expanded',true);
+        optionList.style.display = 'flex';
+        document.addEventListener('click',onMenuClose);
+      }
+      if(isExpanded) onMenuClose({target:null});
+      else onMenuOpen();
+    }
+    updateCurrent(); 
+    
 block content
-  div.item-detail-container
-    header.item-detail-header
-      h1 #{name}
-      p= description
-    section.item-detail-basic-info
-      ul.item-detail-basic-info-list 
-        li.item-detail-category 
-          span.span-label Category:
-          |   #{category}
-        li.item-detail-type
-          span.span-label Type:
-          |   #{type}
-        li.item-detail-stock
-          span.span-label Stock:
-          |   #{stock}
-        li.item-detail-made-in
-          span.span-label Made In:
-          |   #{madeIn}
-        li.item-detail-sku
-          span.span-label SKU:
-          |   #{sku}
-        li.item-detail-mfr
-          span.span-label Manufacturer:
-          a(href=manufacturer.url)  #{manufacturer.name}
-    section.item-detail-options
-      h2 Options
-      div.option-groups-container
-        ul.ul-horizontal
-          p.ul-horizontal-options-label quantity: 
-          div.ul-horizontal-options-container
-            for price in pricing 
-              li
-                button(type='submit' class= selected.qty === price.quantity ? 'selected' : '').ul-horizontal-option  #{price.quantity} 
+  header.item-detail-header
+    h1 #{name}
+    p= description
+  section.item-detail-basic-info
+    ul.item-detail-basic-info-list 
+      li.item-detail-category 
+        span.span-label Category:
+        |   #{category}
+      li.item-detail-type
+        span.span-label Type:
+        |   #{type}
+      li.item-detail-stock
+        span.span-label Stock:
+        |   #{stock}
+      li.item-detail-made-in
+        span.span-label Made In:
+        |   #{madeIn}
+      li.item-detail-sku
+        span.span-label SKU:
+        |   #{sku}
+      li.item-detail-mfr
+        span.span-label Manufacturer:
+        a(href=manufacturer.url)  #{manufacturer.name}
+  section.item-detail-options
+    form(id='itemDetailOptionsForm', method='POST')
+      h2.item-detail-options-form-header Options
+      div.item-detail-options-inputs-container
+        div(role='combobox' aria-expanded=false aria-owns='dropdown-list' aria-haspopup='listbox').dropdown-container
+          input(style='display:none;' id='quantitySelectedOption' )
+          input(style='display:none;' id='quantitySelectedOptionPpuDiff' )
+          div.dropdown-container-label-toggle-wrapper 
+            h3.dropdown-container-label Quantity
+            button(aria-controls='dropdown-list' id='quantitySelectToggle' aria-haspopup=true aria-expanded=false onClick='onMenuToggle(event)').dropdown-toggle= cache
+            ul(rule='listbox' id='dropdown-list' tabindex='-1' style='display:none;').dropdown-menu-option-list
+              for price in quantityPricing
+                li(role='option' tabindex='0' onClick=`onOptionSelect(event,{groupName:'quantity', optionName:'${price.qty}',ppuDiff:'${price.ppuDiff}'})`).dropdown-menu-option= price.qty
         if optionGroups.length
-          each group in optionGroups 
-            ul.ul-horizontal
-              p.ul-horizontal-options-label #{group.group}:
-              if group.options.length
-                div.ul-horizontal-options-container
-                  each option in group.options
-                    button(type='submit' class= selected.options.some(selectedOption => selectedOption.value === option.option) ? 'selected' : '').ul-horizontal-option   #{option.option}
-    section.item-detail-options-current
-      h3 Current
-      div.label-value-wrapper 
-        span.span-label PPU: 
-        |   $#{selected.ppu}
-      div.label-value-wrapper
-        span.span-label MSRP: 
-        |   $#{selected.msrp}
-      div.label-value-wrapper 
-        span.span-label Quantity: 
-        |   $#{selected.qty}
-      div.label-value-wrapper 
-        span.span-label Total: 
-        |   $#{total}
-      button Checkout
+          each optionGroup in optionGroups
+            div(role='combobox' aria-expanded=false aria-owns='dropdown-list' aria-haspopup='listbox').dropdown-container
+              input(style='display:none;' id=optionGroup.groupName+'SelectedOption' )
+              input(style='display:none;' id=optionGroup.groupName+'SelectedOptionPpuDiff' )
+              div.dropdown-container-label-toggle-wrapper
+                h3.dropdown-container-label #{optionGroup.groupName.charAt(0).toUpperCase() + optionGroup.groupName.slice(1)}
+                button(aria-controls='dropdown-list' id=optionGroup.groupName+'SelectToggle' aria-haspopup=true aria-expanded=false onClick='onMenuToggle(event)').dropdown-toggle Select
+                ul(rule='listbox' id='dropdown-list' tabindex='-1' style='display: none;').dropdown-menu-option-list
+                  for option in optionGroup.options
+                    li(role='option' tabindex='0' onClick=`onOptionSelect(event,{groupName:'${optionGroup.groupName}', optionName: '${option.optionName}', ppuDiff: '${option.ppuDiff}'})`).dropdown-menu-option= option.optionName
+  section.item-detail-options-current
+    h3 Current
+    div.label-value-wrapper 
+      span.span-label BasePPU: 
+      |   $#{basePpu}
+    div.label-value-wrapper 
+      span.span-label Quantity: 
+      span#current-quantity
+    div.label-value-wrapper 
+      span.span-label Options: 
+      span#current-options-modifier
+    div.label-value-wrapper 
+      span.span-label TotalPPU:
+      span#current-ppu
+    div.label-value-wrapper 
+      span.span-label Total: 
+      span#current-total
+    button(onClick=`console.log(selected)`) Checkout

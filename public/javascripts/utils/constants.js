@@ -4,9 +4,9 @@ const MFR_REFS = {
 };
 const ITEM_GENERAL = {
   CATEGORIES: {
-    PENCIL: 'Pencil',
-    ERASER: 'Eraser',
-    GRAPHITE: 'Graphite',
+    PENCIL: 'pencil',
+    ERASER: 'eraser',
+    GRAPHITE: 'graphite',
   },
   SKU_CODES: {
     PENCIL: 'PNCL',
@@ -25,8 +25,8 @@ const ITEM_PENCIL = {
   CATEGORY: ITEM_GENERAL.CATEGORIES.PENCIL,
   SKU_CODE: 'PNCL',
   TYPES: {
-    STANDARD: 'Standard',
-    MECHANICAL: 'Mechanical',
+    STANDARD: 'standard',
+    MECHANICAL: 'mechanical',
   },
   SKU_PREFIX: (mfrRef) => GENERATE.SKU_PREFIX(mfrRef, ITEM_PENCIL.SKU_CODE),
   REFS: {
@@ -41,9 +41,9 @@ const ITEM_ERASER = {
   CATEGORY: ITEM_GENERAL.CATEGORIES.ERASER,
   SKU_CODE: 'ERSR',
   TYPES: {
-    FIXED: 'Fixed',
-    CAP: 'Cap',
-    MECHANICAL: 'Mechanical',
+    FIXED: 'fixed',
+    CAP: 'cap',
+    MECHANICAL: 'mechanical',
   },
   SKU_PREFIX: (mfrRef) => GENERATE.SKU_PREFIX(mfrRef, ITEM_ERASER.SKU_CODE),
   REFS: {
@@ -60,9 +60,9 @@ const ITEM_GRAPHITE = {
   CATEGORY: ITEM_GENERAL.CATEGORIES.GRAPHITE,
   SKU_CODE: 'GRPT',
   TYPES: {
-    STANDARD: 'Standard',
-    PREMIUM: 'Premium',
-    LUXURY: 'Luxury',
+    STANDARD: 'standard',
+    PREMIUM: 'premium',
+    LUXURY: 'luxury',
   },
   SKU_PREFIX: (mfrRef) => GENERATE.SKU_PREFIX(mfrRef, ITEM_GRAPHITE.SKU_CODE),
   REFS: {

@@ -66,7 +66,16 @@ const ItemSchema = new Schema({
   madeIn: { type: String, required: true, length: 2 },
   manufacturer: { type: Schema.Types.ObjectId, ref: 'Mfr', required: true },
   basePpu: { type: Number, required: true },
-  optionGroups: { type: [OptionGroupSchema], required: true },
+  quantityPricing: {
+    type: [
+      {
+        qty: { type: Number, required: true },
+        costModifier: { type: Number, required: true },
+      },
+    ],
+    required: true,
+  },
+  optionGroups: { type: [OptionGroupSchema], required: false },
   timeCreated: { type: Date, default: Date.now() },
   timeUpdated: { type: Date, default: Date.now() },
 });
@@ -91,34 +100,47 @@ ItemSchema.virtual('url').get(function () {
 ItemSchema.index({ category: 1, type: 1 });
 
 ItemSchema.method('getProcessedData', async function () {
-  const computeOptions = (options, basePpu) =>
-    options.map((option) => ({
-      ...option.toObject(),
-      ppuDiff: Math.round(basePpu - basePpu * option.costModifier * 1000) / 1000,
-    }));
-  const populateRefs = async (refs) => Promise.all(refs.map(async (ref) => ref.findById(ref.id)));
-
-  const getPpuDiff = (basePpu) => basePpu -
+  const getPpuDiff = (costModifier) => Math.round(this.basePpu * costModifier * 1000) / 1000;
+  const populateRefs = async (refs) => {
+    return Promise.all(
+      refs.map(async (ref) => {
+        return mongoose.model('Item').findById(ref.toString());
+      })
+    );
+  };
 
   await this.populate(['manufacturer']);
 
   const processOptionGroups = async () => {
     return await Promise.all(
       this.optionGroups.map(async (optionGroup) => {
-        const { options, refs, quantityPricing, group } = optionGroup;
+        const { options, refs, groupName } = optionGroup;
         let processedOptions;
 
         if (options && options.length > 0)
-          processedOptions = computeOptions(options, this.pricing.basePpu);
-        if (refs && refs.length > 0) processedOptions = await populateRefs(refs);
-        return { group, options: processedOptions };
+          processedOptions = options.map((option) => ({
+            optionName: option.optionName,
+            ppuDiff: getPpuDiff(option.costModifier),
+          }));
+        if (refs && refs.length > 0) {
+          const populatedRefs = await populateRefs(refs);
+          processedOptions = populatedRefs.map((item) => ({
+            itemId: item.id,
+            optionName: item.name,
+            ppuDiff: item.basePpu,
+          }));
+        }
+        return { groupName, options: processedOptions };
       })
     );
   };
 
   return {
     ...this.toObject(),
-    pricing: this.pricing.computedPrices,
+    quantityPricing: this.quantityPricing.map((priceObj) => ({
+      qty: priceObj.qty,
+      ppuDiff: -getPpuDiff(priceObj.costModifier),
+    })),
     optionGroups: await processOptionGroups(),
   };
 });

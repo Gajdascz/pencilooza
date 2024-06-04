@@ -2,39 +2,34 @@ import { expandObjectKeyAbbrs } from '../../../utils/abbrManager.js';
 import { ITEM_GRAPHITE, MFR_REFS } from '../../../utils/constants.js';
 import createGroup from '../../../utils/createGroup.js';
 
-const graphiteQuantityPricingGroup = expandObjectKeyAbbrs([
-  { opt: 100, cm: 0 },
-  { opt: 250, cm: 0.05 },
-  { opt: 500, cm: 0.1 },
-  { opt: 1000, cm: 0.15 },
-  { opt: 10000, cm: 0.2 },
+const graphiteBulkCostModifiers = expandObjectKeyAbbrs([
+  { qty: 250, cm: 0 },
+  { qty: 500, cm: 0.05 },
+  { qty: 1000, cm: 0.1 },
+  { qty: 10000, cm: 0.2 },
 ]);
 
 // #region Graphite Option Groups
 const graphiteHardnessGradeGroup = createGroup('grade', {
   options: [
-    { opt: '2H', cm: 0 },
-    { opt: 'H', cm: 0 },
-    { opt: 'HB', cm: 0 },
-    { opt: 'B', cm: 0 },
-    { opt: '2B', cm: 0 },
+    { optN: '2H', cm: 0 },
+    { optN: 'H', cm: 0 },
+    { optN: 'HB', cm: 0 },
+    { optN: 'B', cm: 0 },
+    { optN: '2B', cm: 0 },
   ],
 });
 
 const graphiteWidthGroup = createGroup('width', {
   options: [
-    { opt: '0.3mm', cm: 0 },
-    { opt: '0.5mm', cm: 0 },
-    { opt: '0.7mm', cm: 0 },
-    { opt: '0.9mm', cm: 0.01 },
+    { optN: '0.3mm', cm: 0 },
+    { optN: '0.5mm', cm: 0 },
+    { optN: '0.7mm', cm: 0 },
+    { optN: '0.9mm', cm: 0.01 },
   ],
 });
 
-const graphite_option_groups = [
-  graphiteQuantityPricingGroup,
-  graphiteHardnessGradeGroup,
-  graphiteWidthGroup,
-];
+const graphite_option_groups = [graphiteHardnessGradeGroup, graphiteWidthGroup];
 // #endregion
 
 const common = {
@@ -42,6 +37,7 @@ const common = {
   category: ITEM_GRAPHITE.CATEGORY,
   madeIn: 'US',
   optionGroups: graphite_option_groups,
+  quantityPricing: graphiteBulkCostModifiers,
 };
 
 const graphites = [

@@ -1,6 +1,5 @@
 export default [
-  ['opt', 'option'],
-  ['qty', 'quantity'],
+  ['optN', 'optionName'],
   ['bcm', 'bulkCostModifier'],
   ['cm', 'costModifier'],
 ];

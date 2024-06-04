@@ -17,7 +17,7 @@
   --color-blue-light: #E3F2FD;
   --color-gray-graphite: #4A4A4A;
   --color-gray-graphite-darker: #333333;
-  --color-yellow-pencil: #b69d23;
+  --color-yellow-pencil: #f3d334;
   --color-brown-wood: #503a11;
   --color-pink-eraser: #d7888f;
   --color-blue-paper-line: #2F3FD0;
@@ -73,35 +73,125 @@ ul.nested-list {
   display: flex;
   gap: 0.5em;
 }
-.ul-horizontal {
+
+/*#region Dropdown Menu*/
+.dropdown-container {
+  position: relative;
+  width: max-content;
+}
+
+.dropdown-container-label-toggle-wrapper {
   display: flex;
-  gap: 0.5em;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+}
+.dropdown-container-label {
+  width: min-content;
+  font-weight: normal;
+  font-style: italic;
+  margin-bottom: 0.15em;
+}
+
+
+/* #region Toggle Button */
+.dropdown-toggle {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
+  min-width: 150px;
+  background-color: var(--color-white-paper);
+  border: 2px solid var(--color-gray-graphite-darker);
+  color: var(--color-gray-graphite-darker);
+  font-weight: 600;
+  border-radius: 10px;
+  padding: 0.25em;
+  z-index: 0;
 }
-.ul-horizontal-options-label {
-  font-weight: bold;
-  flex: 1;
+.dropdown-toggle[aria-expanded='true'] {
+  border-radius: 10px 10px 0 0;
+  border: 2px solid var(--color-blue-paper-line);
+  border-bottom:1px solid var(--color-blue-paper-line);
 }
-.ul-horizontal-options-container {
+.dropdown-toggle:hover {
+  border-color: var(--color-blue-paper-line);
+  box-shadow: var(--shadow);
+}
+.dropdown-toggle::after {
+  content: url('data:image/svg+xml;utf8,<svg width="24px" height="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>menu-down</title><path d="M7,10L12,15L17,10H7Z" /></svg>');
+  position: absolute;
+  right: 1%;
+  transform: rotate(0deg);
+  transform-origin: center;
+  transition: transform 0.1s linear;
+}
+.dropdown-toggle[aria-expanded='true']::after {
+  transform: rotate(180deg);
+}
+.dropdown-toggle[aria-expanded='false']::after {
+  transform: rotate(0deg);
+}
+/* #endregion */
+
+.dropdown-menu-option-list{
   display: flex;
-  flex:1;
-  gap: 0.25em;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  left: 50%;
+  top: 98%;
+  transform: translateX(-50%);
+  background-color: var(--color-white-paper);
+  z-index: 1;
+  width: 100%;
+  border-radius: 0 0 10px 10px;
+  border: 2px solid var(--color-blue-paper-line);
+  border-top:1px solid var(--color-blue-paper-line);
+  box-shadow: var(--shadow);
 }
 
-
-
-.ul-horizontal-option {
+.dropdown-menu-option {
+  cursor: pointer;
+  width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: .25em;
-  background-color: transparent;
-  border-radius: 10px;
-  padding: 0.25em;
-  min-width: 50px;
-  border: 2px solid var(--color-gray-graphite-darker);
-  width: 100%;
+  padding: 0.1em;
 }
+.dropdown-menu-option:hover {
+  background-color: var(--color-yellow-pencil);
+  font-weight: 600;
+  color: black;
+  box-shadow: var(--shadow);
+}
+.dropdown-menu-option:last-child{
+  border-radius: 0 0 10px 10px;
+}
+/*  #endregion  */
+
+
+section.item-detail-options {
+  display: flex;
+  flex-direction: column;
+  flex:1;
+}
+
+form#itemDetailOptionsForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}
+.item-detail-options-inputs-container {
+  display: flex;
+  flex-wrap: wrap; 
+  gap: 0.5em; 
+  max-width: fit-content;
+}
+.item-detail-options-inputs-container > .dropdown-container {
+  flex: 0 1 25%;
+}
+
 .ul-horizontal-option.selected {
   background-color: var(--color-white-paper);
   box-shadow: var(--shadow);
@@ -124,7 +214,8 @@ ul.nested-list {
   display: grid;
   grid-template-areas: 
     'cat type mfr' 
-    'stock madeIn sku';
+    'stock madeIn sku'
+    'ppu . .';
   grid-auto-columns: max-content;
   gap: 0.5em;
   width: min-content;
@@ -133,7 +224,7 @@ ul.nested-list {
 .item-detail-type {grid-area: type;}
 .item-detail-mfr {grid-area: mfr;}
 .item-detail-stock {grid-area: stock};
-.item-detail-ppu {grid-area:ppu}
+.item-detail-base-ppu {grid-area:ppu}
 .item-detail-sku {grid-area:sku}
 
 .item-detail-options-current {
@@ -150,11 +241,7 @@ ul.nested-list {
   gap: 0.5em;
 }
 
-section.item-detail-options {
-  display: flex;
-  flex-direction: column;
-  flex:1;
-}
+
 
 
 /* #region Layout Sidebar Navigation Menu */
