@@ -1,0 +1,11 @@
+extends layout
+
+block content
+  h1= title
+  if mfrs.length
+    ul
+      each mfr in mfrs
+        li &bull; 
+          a(href=mfr.url) #{mfr.name}
+  else
+    p No items found in inventory.

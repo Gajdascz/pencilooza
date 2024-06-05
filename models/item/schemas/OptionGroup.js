@@ -5,7 +5,15 @@ const Schema = mongoose.Schema;
 const OptionGroupSchema = new Schema(
   {
     groupName: { type: String, required: true },
-    refs: { type: [{ type: Schema.Types.ObjectId, ref: 'Item' }], required: false },
+    refs: {
+      type: [
+        {
+          itemId: { type: Schema.Types.ObjectId, ref: 'Item', required: true },
+          costModifier: { type: Number, default: 0 },
+        },
+      ],
+      required: false,
+    },
     options: [
       {
         type: {

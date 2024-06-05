@@ -1,13 +1,25 @@
 import asyncHandler from 'express-async-handler';
 
-import mfr from '../models/manufacturer/Mfr.js';
+import Mfr from '../models/manufacturer/Mfr.js';
+import Item from '../models/item/Item.js';
 
 const mfrController = {
   mfrList: asyncHandler(async (req, res, next) => {
-    res.send('TBI');
+    const mfrs = await Mfr.find({}, 'name').sort({ name: 1 }).exec();
+    res.render('manufacturerList', { title: 'All Manufacturers', mfrs });
   }),
   mfrDetail: asyncHandler(async (req, res, next) => {
-    res.send('TBI');
+    const { name, ref, description, contact } = await Mfr.findById(req.params.id).exec();
+    const products = await Promise.all(await Item.find({ manufacturer: req.params.id }).exec());
+    const productLinks = products.map((product) => ({ name: product.name, url: product.url }));
+    console.log(productLinks);
+    res.render('manufacturerDetail', {
+      name,
+      ref,
+      description,
+      contact: contact.toObject(),
+      productLinks,
+    });
   }),
   mfrGetCreate: asyncHandler(async (req, res, next) => {
     res.send('TBI');

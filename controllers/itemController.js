@@ -2,9 +2,6 @@ import asyncHandler from 'express-async-handler';
 import Item from '../models/item/Item.js';
 import Mfr from '../models/manufacturer/Mfr.js';
 
-const getDetailTotal = (qty, ppu, optGroups) =>
-  qty * optGroups.reduce((acc, curr) => (acc += ppu * curr.options[0].costModifier), ppu);
-
 const itemController = {
   index: asyncHandler(async (req, res, next) => {
     const [totalMfrs, [{ totalItems, totalCategories, totalTypes, totalMadeIn, totalStock }]] =
@@ -59,7 +56,7 @@ const itemController = {
   }),
   itemList: asyncHandler(async (req, res, next) => {
     const allItems = await Item.find({}, 'name type category manufacturer')
-      .sort({ category: -1 })
+      .sort({ manufacturer: 1 })
       .populate('manufacturer')
       .exec();
     res.render('itemList', { title: 'All Items', items: allItems });

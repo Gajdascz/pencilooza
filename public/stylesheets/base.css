@@ -100,6 +100,9 @@ ul.nested-list {
   justify-content: space-between;
   align-items: center;
   min-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-wrap:  nowrap;
   background-color: var(--color-white-paper);
   border: 2px solid var(--color-gray-graphite-darker);
   color: var(--color-gray-graphite-darker);
@@ -119,17 +122,18 @@ ul.nested-list {
 }
 .dropdown-toggle::after {
   content: url('data:image/svg+xml;utf8,<svg width="24px" height="24px" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><title>menu-down</title><path d="M7,10L12,15L17,10H7Z" /></svg>');
-  position: absolute;
-  right: 1%;
+  border-radius: 0 10px 10px 0;
   transform: rotate(0deg);
   transform-origin: center;
   transition: transform 0.1s linear;
 }
 .dropdown-toggle[aria-expanded='true']::after {
-  transform: rotate(180deg);
+  transform: rotate(180deg);  
+  border-radius: 0;
+
 }
 .dropdown-toggle[aria-expanded='false']::after {
-  transform: rotate(0deg);
+  transform: rotate(0deg);  
 }
 /* #endregion */
 
@@ -159,6 +163,7 @@ ul.nested-list {
   align-items: center;
   padding: 0.1em;
 }
+.selected-option,
 .dropdown-menu-option:hover {
   background-color: var(--color-yellow-pencil);
   font-weight: 600;
@@ -173,8 +178,12 @@ ul.nested-list {
 
 section.item-detail-options {
   display: flex;
-  flex-direction: column;
-  flex:1;
+  justify-content: center;
+  align-items: center;
+  gap: 1em;
+}
+section.item-detail-options > * {
+  flex: 2 1 100%;
 }
 
 form#itemDetailOptionsForm {
@@ -185,17 +194,11 @@ form#itemDetailOptionsForm {
 .item-detail-options-inputs-container {
   display: flex;
   flex-wrap: wrap; 
-  gap: 0.5em; 
+  gap: 0.25em; 
   max-width: fit-content;
 }
 .item-detail-options-inputs-container > .dropdown-container {
-  flex: 0 1 25%;
-}
-
-.ul-horizontal-option.selected {
-  background-color: var(--color-white-paper);
-  box-shadow: var(--shadow);
-  border-color: var(--color-blue-paper-line);
+  flex: 1 1 10%;
 }
 
 .item-detail-container {
@@ -204,11 +207,6 @@ form#itemDetailOptionsForm {
   gap: 2em;
 }
 .item-detail-header {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
 }
 .item-detail-basic-info-list {
   display: grid;
@@ -227,21 +225,39 @@ form#itemDetailOptionsForm {
 .item-detail-base-ppu {grid-area:ppu}
 .item-detail-sku {grid-area:sku}
 
-.item-detail-options-current {
+.item-detail-totals {
   display: flex;
   flex-direction: column;
   width: max-content;
 }
+.add-to-order-button {
+  border-radius: 10px;
+  padding: 0.75em;
+  font-weight: bold;
+  background-color: var(--color-white-paper);
+}
+.add-to-order-button:hover{
+  border-color: var(--color-blue-paper-line);
+  box-shadow: var(--shadow);
+  color: var(--color-blue-paper-line);
+}
 
-.option-groups-container {
+.selected-options-overview {
   display: flex;
   flex-direction: column;
-  width: max-content;
-  justify-content: space-between;
   gap: 0.5em;
 }
+.selected-options-costs,
+.selected-options-references-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25em;
+}
 
-
+.selected-option-link,
+.selected-option-li {
+  font-style: italic;
+}
 
 
 /* #region Layout Sidebar Navigation Menu */

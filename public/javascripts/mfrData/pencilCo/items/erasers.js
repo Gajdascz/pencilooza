@@ -1,30 +1,29 @@
-import { expandObjectKeyAbbrs } from '../../../utils/abbrManager.js';
 import { ITEM_ERASER, MFR_REFS } from '../../../utils/constants.js';
 import createGroup from '../../../utils/createGroup.js';
 
 // #region Eraser Groups
-const eraserBulkCostModifiers = expandObjectKeyAbbrs([
-  { qty: 250, cm: 0 },
-  { qty: 500, cm: 0.05 },
-  { qty: 1000, cm: 0.1 },
-  { qty: 10000, cm: 0.2 },
-]);
+const eraserBulkCostModifiers = [
+  { quantity: 250, costModifier: 0 },
+  { quantity: 500, costModifier: 0.1 },
+  { quantity: 1000, costModifier: 0.22 },
+  { quantity: 5000, costModifier: 0.3 },
+];
 
 const eraserColorGroup = createGroup('color', {
   options: [
-    { optN: 'pink', cm: 0 },
-    { optN: 'white', cm: 0 },
-    { optN: 'red', cm: 0 },
-    { optN: 'blue', cm: 0 },
-    { optN: 'green', cm: 0 },
-    { optN: 'variety', cm: 0 },
+    { optionName: 'pink', costModifier: 0 },
+    { optionName: 'white', costModifier: 0 },
+    { optionName: 'red', costModifier: 0 },
+    { optionName: 'blue', costModifier: 0 },
+    { optionName: 'green', costModifier: 0 },
+    { optionName: 'variety', costModifier: 0 },
   ],
 });
 
 const eraserMaterialGroup = createGroup('material', {
   options: [
-    { optN: 'rubber', cm: 0 },
-    { optN: 'polymer', cm: 0.2 },
+    { optionName: 'rubber', costModifier: 0 },
+    { optionName: 'polymer', costModifier: 0.2 },
   ],
 });
 
@@ -37,6 +36,7 @@ const common = {
   madeIn: 'CN',
   quantityPricing: eraserBulkCostModifiers,
   optionGroups: eraserOptionGroups,
+  description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
 };
 
 const erasers = [
@@ -44,9 +44,7 @@ const erasers = [
     ...common,
     ref: ITEM_ERASER.REFS.FIXED(MFR_REFS.PENCIL_CO),
     type: ITEM_ERASER.TYPES.FIXED,
-    name: 'PencilCo Fixed Eraser',
-    description:
-      'Eraser fixed to the end of a standard wooden pencil. Used when configuring pencils for creation.',
+    name: 'Fixed Eraser',
     stock: Math.ceil(Math.random() * 100000) + 100000,
     basePpu: 0.01,
   },
@@ -54,19 +52,17 @@ const erasers = [
     ...common,
     ref: ITEM_ERASER.REFS.CAP(MFR_REFS.PENCIL_CO),
     type: ITEM_ERASER.TYPES.CAP,
-    name: 'PencilCo Cap Eraser',
-    description: 'Reusable erasers placed on the end of a pencil.',
+    name: 'Cap Eraser',
     stock: Math.ceil(Math.random() * 100000) + 100000,
-    basePpu: 0.03,
+    basePpu: 0.1,
   },
   {
     ...common,
     ref: ITEM_ERASER.REFS.MECHANICAL(MFR_REFS.PENCIL_CO),
     type: ITEM_ERASER.TYPES.MECHANICAL,
-    name: 'PencilCo Mechanical Pencil Eraser',
-    description: 'Replacement eraser that fits all PencilCo mechanical pencils',
+    name: 'Mechanical Pencil Replacement Eraser',
     stock: Math.ceil(Math.random() * 100000) + 100000,
-    basePpu: 0.01,
+    basePpu: 0.06,
   },
 ];
 

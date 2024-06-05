@@ -1,0 +1,13 @@
+extends layout
+
+block content
+  h1= name
+  p= description 
+  ul
+  each at,method in contact 
+    li #[strong #{method}]: #{at}
+  if productLinks.length 
+    ul
+    each productLink in productLinks
+      li
+        a(href=productLink.url)= productLink.name 

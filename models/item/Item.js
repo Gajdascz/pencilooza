@@ -69,7 +69,7 @@ const ItemSchema = new Schema({
   quantityPricing: {
     type: [
       {
-        qty: { type: Number, required: true },
+        quantity: { type: Number, required: true },
         costModifier: { type: Number, required: true },
       },
     ],
@@ -100,14 +100,24 @@ ItemSchema.virtual('url').get(function () {
 ItemSchema.index({ category: 1, type: 1 });
 
 ItemSchema.method('getProcessedData', async function () {
-  const getPpuDiff = (costModifier) => Math.round(this.basePpu * costModifier * 1000) / 1000;
+  const getPpuDiff = (costModifier) => Math.round(this.basePpu * costModifier * 100) / 100;
   const populateRefs = async (refs) => {
     return Promise.all(
-      refs.map(async (ref) => {
-        return mongoose.model('Item').findById(ref.toString());
+      refs.map(async ({ itemId, costModifier }) => {
+        const item = await mongoose.model('Item').findById(itemId.toString());
+        return {
+          optionName: item.name,
+          ppuDiff: getPpuDiff(costModifier),
+          link: item.url,
+        };
       })
     );
   };
+  const processOptions = (options) =>
+    options.map(({ optionName, costModifier }) => ({
+      optionName,
+      ppuDiff: getPpuDiff(costModifier),
+    }));
 
   await this.populate(['manufacturer']);
 
@@ -116,31 +126,21 @@ ItemSchema.method('getProcessedData', async function () {
       this.optionGroups.map(async (optionGroup) => {
         const { options, refs, groupName } = optionGroup;
         let processedOptions;
-
-        if (options && options.length > 0)
-          processedOptions = options.map((option) => ({
-            optionName: option.optionName,
-            ppuDiff: getPpuDiff(option.costModifier),
-          }));
-        if (refs && refs.length > 0) {
-          const populatedRefs = await populateRefs(refs);
-          processedOptions = populatedRefs.map((item) => ({
-            itemId: item.id,
-            optionName: item.name,
-            ppuDiff: item.basePpu,
-          }));
-        }
+        if (options && options.length > 0) processedOptions = processOptions(options);
+        else if (refs && refs.length > 0) processedOptions = await populateRefs(refs);
+        else throw new Error(`Options or Refs must exist`);
         return { groupName, options: processedOptions };
       })
     );
   };
+  const processQuantityPricing = () =>
+    this.quantityPricing
+      .filter(({ quantity, costModifier }) => this.stock > quantity)
+      .map(({ quantity, costModifier }) => ({ quantity, ppuDiff: -getPpuDiff(costModifier) }));
 
   return {
     ...this.toObject(),
-    quantityPricing: this.quantityPricing.map((priceObj) => ({
-      qty: priceObj.qty,
-      ppuDiff: -getPpuDiff(priceObj.costModifier),
-    })),
+    quantityPricing: processQuantityPricing(),
     optionGroups: await processOptionGroups(),
   };
 });
