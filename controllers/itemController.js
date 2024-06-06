@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import Item from '../models/item/Item.js';
 import Mfr from '../models/manufacturer/Mfr.js';
+// import dropdownController from '../public/javascripts/dropdownController.js';
 
 const itemController = {
   index: asyncHandler(async (req, res, next) => {
@@ -96,9 +97,6 @@ const itemController = {
         })),
       },
     });
-  }),
-  itemUpdateDetail: asyncHandler(async (req, res, next) => {
-    console.log(res);
   }),
   itemGetCreate: asyncHandler(async (req, res, next) => {
     res.send('TBI');

@@ -6,7 +6,7 @@ import { MFR_REFS } from '../../utils/constants.js';
 const mfrInfo = {
   name: 'PencilCo',
   ref: MFR_REFS.PENCIL_CO,
-  description: 'A leading bulk manufacturer of basic pencils and supplies.',
+  description: 'A leading manufacturer of basic pencils and pencil supplies.',
   contact: {
     website: 'https://example.com',
     location: '123 Pencil Road, Graphite City, CN',

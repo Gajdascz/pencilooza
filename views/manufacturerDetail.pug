@@ -4,10 +4,12 @@ block content
   h1= name
   p= description 
   ul
+    h2 Contact
   each at,method in contact 
     li #[strong #{method}]: #{at}
   if productLinks.length 
     ul
+    h2 Products
     each productLink in productLinks
       li
         a(href=productLink.url)= productLink.name 

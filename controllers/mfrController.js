@@ -12,7 +12,6 @@ const mfrController = {
     const { name, ref, description, contact } = await Mfr.findById(req.params.id).exec();
     const products = await Promise.all(await Item.find({ manufacturer: req.params.id }).exec());
     const productLinks = products.map((product) => ({ name: product.name, url: product.url }));
-    console.log(productLinks);
     res.render('manufacturerDetail', {
       name,
       ref,
@@ -22,7 +21,7 @@ const mfrController = {
     });
   }),
   mfrGetCreate: asyncHandler(async (req, res, next) => {
-    res.send('TBI');
+    res.render('manufacturerForm', { title: 'Manufacturer Registration' });
   }),
   mfrPostCreate: asyncHandler(async (req, res, next) => {
     res.send('TBI');

@@ -134,7 +134,6 @@ block scripts
         else dropdownController.close(e);        
       }
     }
-
     viewManager.updateAll(); 
     
 block content
@@ -165,48 +164,48 @@ block content
         li.item-detail-base-ppu 
           span.span-label BasePPU: 
           |   $#{basePpu}
-    section.item-detail-options
-      form(id='itemDetailOptionsForm', method='POST')
-        h2.item-detail-options-form-header Options
-        div.item-detail-options-inputs-container
-          div(role='combobox' aria-expanded=false aria-owns='dropdown-list' aria-haspopup='listbox').dropdown-container
-            input(style='display:none;' id='quantitySelectedOption' )
-            input(style='display:none;' id='quantitySelectedOptionPpuDiff' )
-            div.dropdown-container-label-toggle-wrapper 
-              h3.dropdown-container-label Quantity
-              button(aria-controls='dropdown-list' id='quantitySelectToggle' aria-haspopup=true aria-expanded=false onClick='dropdownController.toggle(event)').dropdown-toggle= defaultSelected.quantityPricing.quantity
-              ul(rule='listbox' id='dropdown-list' tabindex='-1' style='display:none;').dropdown-menu-option-list
-                for price in quantityPricing
-                  li(role='option' class=defaultSelected.quantityPricing.quantity === price.quantity ? 'selected-option' : '' tabindex='0' onClick=`dropdownController.selectOption(event,{groupName:'quantity', optionName:'${price.quantity}',ppuDiff:'${price.ppuDiff}'})`).dropdown-menu-option= price.quantity
-          if optionGroups.length
-            each optionGroup in optionGroups
-              div(role='combobox' aria-expanded=false aria-owns='dropdown-list' aria-haspopup='listbox').dropdown-container
-                input(style='display:none;' id=optionGroup.groupName+'SelectedOption' )
-                input(style='display:none;' id=optionGroup.groupName+'SelectedOptionPpuDiff' )
-                div.dropdown-container-label-toggle-wrapper
-                  h3.dropdown-container-label #{optionGroup.groupName.charAt(0).toUpperCase() + optionGroup.groupName.slice(1)}
-                  button(aria-controls='dropdown-list' id=optionGroup.groupName+'SelectToggle' aria-haspopup=true aria-expanded=false onClick='dropdownController.toggle(event)').dropdown-toggle= defaultSelected.options.find((selected) => selected.groupName === optionGroup.groupName).option.optionName
-                  ul(rule='listbox' id='dropdown-list' tabindex='-1' style='display: none;').dropdown-menu-option-list
-                    for option in optionGroup.options
-                      li(role='option' class=defaultSelected.options.some(selected => selected.option.optionName === option.optionName) ? 'selected-option' : '' tabindex='0' onClick=`dropdownController.selectOption(event,{groupName:'${optionGroup.groupName}', optionName: '${option.optionName}', ppuDiff: '${option.ppuDiff}'})`).dropdown-menu-option= option.optionName
-      aside.selected-options-overview
-        div.selected-options-costs
-          h3.selected-options-header Selected
-          ul.selected-options-list
-          div.label-value-wrapper
-            span.span-label Total:
-            span.total-options-modifier
-        div.selected-options-references
-          ul.selected-options-references-list
-    section.item-detail-totals
-      h3 Totals
-      div.label-value-wrapper 
-        span.span-label Quantity: 
-        span.total-quantity
-      div.label-value-wrapper 
-        span.span-label PPU:
-        span.total-ppu
-      div.label-value-wrapper 
-        span.span-label Order: 
-        span.total-order
-      button().add-to-order-button Add to Order
+  section.item-detail-options
+    form(id='itemDetailOptionsForm', method='POST')
+      h2.item-detail-options-form-header Options
+      div.item-detail-options-inputs-container
+        div(role='combobox' aria-expanded=false aria-owns='dropdown-list' aria-haspopup='listbox').dropdown-container
+          input(style='display:none;' id='quantitySelectedOption' )
+          input(style='display:none;' id='quantitySelectedOptionPpuDiff' )
+          div.dropdown-container-label-toggle-wrapper 
+            h3.dropdown-container-label Quantity
+            button(aria-controls='dropdown-list' id='quantitySelectToggle' aria-haspopup=true aria-expanded=false onClick='dropdownController.toggle(event)').dropdown-toggle= defaultSelected.quantityPricing.quantity
+            ul(rule='listbox' id='dropdown-list' tabindex='-1' style='display:none;').dropdown-menu-option-list
+              for price in quantityPricing
+                li(role='option' class=defaultSelected.quantityPricing.quantity === price.quantity ? 'selected-option' : '' tabindex='0' onClick=`dropdownController.selectOption(event,{groupName:'quantity', optionName:'${price.quantity}',ppuDiff:'${price.ppuDiff}'})`).dropdown-menu-option= price.quantity
+        if optionGroups.length
+          each optionGroup in optionGroups
+            div(role='combobox' aria-expanded=false aria-owns='dropdown-list' aria-haspopup='listbox').dropdown-container
+              input(style='display:none;' id=optionGroup.groupName+'SelectedOption' )
+              input(style='display:none;' id=optionGroup.groupName+'SelectedOptionPpuDiff' )
+              div.dropdown-container-label-toggle-wrapper
+                h3.dropdown-container-label #{optionGroup.groupName.charAt(0).toUpperCase() + optionGroup.groupName.slice(1)}
+                button(aria-controls='dropdown-list' id=optionGroup.groupName+'SelectToggle' aria-haspopup=true aria-expanded=false onClick='dropdownController.toggle(event)').dropdown-toggle= defaultSelected.options.find((selected) => selected.groupName === optionGroup.groupName).option.optionName
+                ul(rule='listbox' id='dropdown-list' tabindex='-1' style='display: none;').dropdown-menu-option-list
+                  for option in optionGroup.options
+                    li(role='option' class=defaultSelected.options.some(selected => selected.option.optionName === option.optionName) ? 'selected-option' : '' tabindex='0' onClick=`dropdownController.selectOption(event,{groupName:'${optionGroup.groupName}', optionName: '${option.optionName}', ppuDiff: '${option.ppuDiff}'})`).dropdown-menu-option= option.optionName
+    aside.selected-options-overview
+      div.selected-options-costs
+        h3.selected-options-header Selected
+        ul.selected-options-list
+        div.label-value-wrapper
+          span.span-label Total:
+          span.total-options-modifier
+      div.selected-options-references
+        ul.selected-options-references-list
+  section.item-detail-totals
+    h3 Totals
+    div.label-value-wrapper 
+      span.span-label Quantity: 
+      span.total-quantity
+    div.label-value-wrapper 
+      span.span-label PPU:
+      span.total-ppu
+    div.label-value-wrapper 
+      span.span-label Order: 
+      span.total-order
+    button().add-to-order-button Add to Order
