@@ -1,4 +1,9 @@
-import { ITEM_PENCIL, ITEM_GRAPHITE, ITEM_ERASER, MFR_REFS } from '../../../utils/constants.js';
+import {
+  ITEM_PENCIL,
+  ITEM_GRAPHITE,
+  ITEM_ERASER,
+  MANUFACTURER_REFS,
+} from '../../../utils/constants.js';
 import createGroup from '../../../utils/createGroup.js';
 
 const pencilBulkCostModifier = [
@@ -33,7 +38,7 @@ const standardPencilMaterialGroup = createGroup('material', {
 });
 
 const standardPencilEraserGroup = createGroup('eraser', {
-  refs: [{ itemId: ITEM_ERASER.REFS.FIXED(MFR_REFS.PENCIL_CO), costModifier: 0 }],
+  refs: [{ itemId: ITEM_ERASER.REFS.FIXED(MANUFACTURER_REFS.PENCIL_CO), costModifier: 0 }],
 });
 
 const standardPencilOptionGroups = [
@@ -54,10 +59,10 @@ const mechanicalPencilColorGroup = createGroup('color', {
   ],
 });
 const mechanicalPencilEraserGroup = createGroup('eraser', {
-  refs: [{ itemId: ITEM_ERASER.REFS.MECHANICAL(MFR_REFS.PENCIL_CO), costModifier: 0 }],
+  refs: [{ itemId: ITEM_ERASER.REFS.MECHANICAL(MANUFACTURER_REFS.PENCIL_CO), costModifier: 0 }],
 });
 const mechanicalPencilGraphiteGroup = createGroup('graphite', {
-  refs: [{ itemId: ITEM_GRAPHITE.REFS.STANDARD(MFR_REFS.PENCIL_CO), costModifier: 0 }],
+  refs: [{ itemId: ITEM_GRAPHITE.REFS.STANDARD(MANUFACTURER_REFS.PENCIL_CO), costModifier: 0 }],
 });
 
 const mechanicalPencilOptionGroups = [
@@ -68,7 +73,7 @@ const mechanicalPencilOptionGroups = [
 // #endregion
 
 const common = {
-  skuPrefix: ITEM_PENCIL.SKU_PREFIX(MFR_REFS.PENCIL_CO),
+  skuPrefix: ITEM_PENCIL.SKU_PREFIX(MANUFACTURER_REFS.PENCIL_CO),
   category: ITEM_PENCIL.CATEGORY,
   madeIn: 'CN',
   quantityPricing: pencilBulkCostModifier,
@@ -78,7 +83,7 @@ const common = {
 const pencils = [
   {
     ...common,
-    ref: ITEM_PENCIL.REFS.STANDARD(MFR_REFS.PENCIL_CO),
+    ref: ITEM_PENCIL.REFS.STANDARD(MANUFACTURER_REFS.PENCIL_CO),
     type: ITEM_PENCIL.TYPES.STANDARD,
     name: 'Wooden Pencil',
     stock: Math.ceil(Math.random() * 100000) + 100000,
@@ -87,7 +92,7 @@ const pencils = [
   },
   {
     ...common,
-    ref: ITEM_PENCIL.REFS.MECHANICAL(MFR_REFS.PENCIL_CO),
+    ref: ITEM_PENCIL.REFS.MECHANICAL(MANUFACTURER_REFS.PENCIL_CO),
     type: ITEM_PENCIL.TYPES.MECHANICAL,
     name: 'Plastic Mechanical Pencil',
     stock: Math.ceil(Math.random() * 100000) + 100000,

@@ -1,4 +1,9 @@
-import { ITEM_PENCIL, ITEM_ERASER, ITEM_GRAPHITE, MFR_REFS } from '../../../utils/constants.js';
+import {
+  ITEM_PENCIL,
+  ITEM_ERASER,
+  ITEM_GRAPHITE,
+  MANUFACTURER_REFS,
+} from '../../../utils/constants.js';
 
 import createGroup from '../../../utils/createGroup.js';
 
@@ -31,7 +36,7 @@ const standardPencilMaterialGroup = createGroup('material', {
 });
 
 const standardPencilEraserGroup = createGroup('eraser', {
-  refs: [{ itemId: ITEM_ERASER.REFS.FIXED(MFR_REFS.PENCIL_PRINCE), costModifier: 0 }],
+  refs: [{ itemId: ITEM_ERASER.REFS.FIXED(MANUFACTURER_REFS.PENCIL_PRINCE), costModifier: 0 }],
 });
 
 const standardPencilOptionGroups = [
@@ -46,14 +51,14 @@ const standardPencilOptionGroups = [
 // common
 const mechanicalPencilGraphiteGroup = createGroup('graphite', {
   refs: [
-    { itemId: ITEM_GRAPHITE.REFS.STANDARD(MFR_REFS.PENCIL_PRINCE), costModifier: 0 },
-    { itemId: ITEM_GRAPHITE.REFS.PREMIUM(MFR_REFS.PENCIL_PRINCE), costModifier: 0.03 },
-    { itemId: ITEM_GRAPHITE.REFS.LUXURY(MFR_REFS.PENCIL_PRINCE), costModifier: 0.06 },
+    { itemId: ITEM_GRAPHITE.REFS.STANDARD(MANUFACTURER_REFS.PENCIL_PRINCE), costModifier: 0 },
+    { itemId: ITEM_GRAPHITE.REFS.PREMIUM(MANUFACTURER_REFS.PENCIL_PRINCE), costModifier: 0.03 },
+    { itemId: ITEM_GRAPHITE.REFS.LUXURY(MANUFACTURER_REFS.PENCIL_PRINCE), costModifier: 0.06 },
   ],
 });
 
 const mechanicalPencilEraserGroup = createGroup('eraser', {
-  refs: [{ itemId: ITEM_ERASER.REFS.MECHANICAL(MFR_REFS.PENCIL_PRINCE), costModifier: 0 }],
+  refs: [{ itemId: ITEM_ERASER.REFS.MECHANICAL(MANUFACTURER_REFS.PENCIL_PRINCE), costModifier: 0 }],
 });
 // plastic
 const plasticMechanicalPencilColorGroup = createGroup('color', {
@@ -113,7 +118,7 @@ const woodMechanicalPencilOptionGroups = [
 // #endregion
 
 const common = {
-  skuPrefix: ITEM_PENCIL.SKU_PREFIX(MFR_REFS.PENCIL_PRINCE),
+  skuPrefix: ITEM_PENCIL.SKU_PREFIX(MANUFACTURER_REFS.PENCIL_PRINCE),
   category: ITEM_PENCIL.CATEGORY,
   quantityPricing: pencilBulkCostModifier,
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
@@ -123,7 +128,7 @@ const common = {
 const pencils = [
   {
     ...common,
-    ref: ITEM_PENCIL.REFS.STANDARD(MFR_REFS.PENCIL_PRINCE),
+    ref: ITEM_PENCIL.REFS.STANDARD(MANUFACTURER_REFS.PENCIL_PRINCE),
     type: ITEM_PENCIL.TYPES.STANDARD,
     name: 'Wooden Pencil',
     stock: Math.ceil(Math.random() * 10000) + 10000,
@@ -132,7 +137,7 @@ const pencils = [
   },
   {
     ...common,
-    ref: ITEM_PENCIL.REFS.MECHANICAL(MFR_REFS.PENCIL_PRINCE, 'plastic'),
+    ref: ITEM_PENCIL.REFS.MECHANICAL(MANUFACTURER_REFS.PENCIL_PRINCE, 'plastic'),
     type: ITEM_PENCIL.TYPES.MECHANICAL,
     name: 'Plastic Mechanical Pencil',
     stock: Math.ceil(Math.random() * 10000) + 10000,
@@ -141,7 +146,7 @@ const pencils = [
   },
   {
     ...common,
-    ref: ITEM_PENCIL.REFS.MECHANICAL(MFR_REFS.PENCIL_PRINCE, 'metal'),
+    ref: ITEM_PENCIL.REFS.MECHANICAL(MANUFACTURER_REFS.PENCIL_PRINCE, 'metal'),
     type: ITEM_PENCIL.TYPES.MECHANICAL,
     name: 'Metal Mechanical Pencil',
     stock: Math.ceil(Math.random() * 10000) + 10000,
@@ -150,7 +155,7 @@ const pencils = [
   },
   {
     ...common,
-    ref: ITEM_PENCIL.REFS.MECHANICAL(MFR_REFS.PENCIL_PRINCE, 'wood'),
+    ref: ITEM_PENCIL.REFS.MECHANICAL(MANUFACTURER_REFS.PENCIL_PRINCE, 'wood'),
     type: ITEM_PENCIL.TYPES.MECHANICAL,
     name: 'Wooden Mechanical Pencil',
     stock: Math.ceil(Math.random() * 10000) + 10000,

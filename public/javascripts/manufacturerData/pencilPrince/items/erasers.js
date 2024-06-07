@@ -1,4 +1,4 @@
-import { ITEM_ERASER, MFR_REFS } from '../../../utils/constants.js';
+import { ITEM_ERASER, MANUFACTURER_REFS } from '../../../utils/constants.js';
 
 import createGroup from '../../../utils/createGroup.js';
 
@@ -33,7 +33,7 @@ const eraserMaterialGroup = createGroup('material', {
 const eraserOptionGroups = [eraserColorGroup, eraserMaterialGroup];
 
 const common = {
-  skuPrefix: ITEM_ERASER.SKU_PREFIX(MFR_REFS.PENCIL_PRINCE),
+  skuPrefix: ITEM_ERASER.SKU_PREFIX(MANUFACTURER_REFS.PENCIL_PRINCE),
   category: ITEM_ERASER.CATEGORY,
   madeIn: 'US',
   quantityPricing: eraserBulkCostModifiers,
@@ -44,7 +44,7 @@ const common = {
 const erasers = [
   {
     ...common,
-    ref: ITEM_ERASER.REFS.FIXED(MFR_REFS.PENCIL_PRINCE),
+    ref: ITEM_ERASER.REFS.FIXED(MANUFACTURER_REFS.PENCIL_PRINCE),
     type: ITEM_ERASER.TYPES.FIXED,
     name: 'Fixed Eraser',
     stock: Math.ceil(Math.random() * 10000) + 10000,
@@ -52,7 +52,7 @@ const erasers = [
   },
   {
     ...common,
-    ref: ITEM_ERASER.REFS.CAP(MFR_REFS.PENCIL_PRINCE),
+    ref: ITEM_ERASER.REFS.CAP(MANUFACTURER_REFS.PENCIL_PRINCE),
     type: ITEM_ERASER.TYPES.FIXED,
     name: 'Cap Eraser',
     stock: Math.ceil(Math.random() * 2500) + 2500,
@@ -60,7 +60,7 @@ const erasers = [
   },
   {
     ...common,
-    ref: ITEM_ERASER.REFS.MECHANICAL(MFR_REFS.PENCIL_PRINCE),
+    ref: ITEM_ERASER.REFS.MECHANICAL(MANUFACTURER_REFS.PENCIL_PRINCE),
     type: ITEM_ERASER.TYPES.FIXED,
     name: 'Mechanical Pencil Replacement Eraser',
     stock: Math.ceil(Math.random() * 10000) + 10000,

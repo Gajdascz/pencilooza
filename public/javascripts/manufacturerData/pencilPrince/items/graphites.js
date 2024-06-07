@@ -1,4 +1,4 @@
-import { ITEM_GRAPHITE, MFR_REFS } from '../../../utils/constants.js';
+import { ITEM_GRAPHITE, MANUFACTURER_REFS } from '../../../utils/constants.js';
 import createGroup from '../../../utils/createGroup.js';
 
 const graphiteBulkCostModifiers = [
@@ -32,7 +32,7 @@ const graphite_option_groups = [graphiteHardnessGradeGroup, graphiteWidthGroup];
 // #endregion
 
 const common = {
-  skuPrefix: ITEM_GRAPHITE.SKU_PREFIX(MFR_REFS.PENCIL_PRINCE),
+  skuPrefix: ITEM_GRAPHITE.SKU_PREFIX(MANUFACTURER_REFS.PENCIL_PRINCE),
   category: ITEM_GRAPHITE.CATEGORY,
   madeIn: 'US',
   optionGroups: graphite_option_groups,
@@ -43,7 +43,7 @@ const common = {
 const graphites = [
   {
     ...common,
-    ref: ITEM_GRAPHITE.REFS.STANDARD(MFR_REFS.PENCIL_PRINCE),
+    ref: ITEM_GRAPHITE.REFS.STANDARD(MANUFACTURER_REFS.PENCIL_PRINCE),
     type: ITEM_GRAPHITE.TYPES.STANDARD,
     name: 'Standard Replacement Graphite',
     stock: Math.ceil(Math.random() * 10000) + 10000,
@@ -51,7 +51,7 @@ const graphites = [
   },
   {
     ...common,
-    ref: ITEM_GRAPHITE.REFS.PREMIUM(MFR_REFS.PENCIL_PRINCE),
+    ref: ITEM_GRAPHITE.REFS.PREMIUM(MANUFACTURER_REFS.PENCIL_PRINCE),
     type: ITEM_GRAPHITE.TYPES.PREMIUM,
     name: 'Premium Replacement Graphite',
     stock: Math.ceil(Math.random() * 5000) + 5000,
@@ -59,7 +59,7 @@ const graphites = [
   },
   {
     ...common,
-    ref: ITEM_GRAPHITE.REFS.LUXURY(MFR_REFS.PENCIL_PRINCE),
+    ref: ITEM_GRAPHITE.REFS.LUXURY(MANUFACTURER_REFS.PENCIL_PRINCE),
     type: ITEM_GRAPHITE.TYPES.LUXURY,
     name: 'Royal Replacement Graphite',
     stock: Math.ceil(Math.random() * 5000) + 5000,

@@ -1,0 +1,69 @@
+extends layout 
+
+block scripts
+  script.
+    const requiredInputFields = document.querySelectorAll('.input-field-wrapper-field[required]')
+    const setPendingValidation = (e) => {
+      const field = e.target;
+      const marker = document.querySelector(`span.required-marker[data-id="${e.target.id}"]`);
+      if(field.value.trim() === '') {
+        field.classList.remove('pending-validation');
+        marker.classList.remove('pending-validation')
+      }
+      else {
+        field.classList.add('pending-validation');
+        marker.classList.add('pending-validation')
+      }
+    }
+    requiredInputFields.forEach(field => field.addEventListener('change', setPendingValidation))
+
+block content
+  include mixins/inputField
+  form(method='POST').register-form
+    header.form-header
+      h1 #{title}
+      p.form-disclaimer-text
+        em
+          strong Information submitted through this form will be publicly displayed in the "Browse Manufacturers" section of this app after review. Please refrain from entering any real personal information. This project is for educational purposes only.
+    div.register-form-inputs-container
+      section.form-input-section
+        h2.form-input-section-header Representative
+        div.grouped-input-fields
+          +inputField('repFirstName', 'First Name', 'Nicolas-Jacques', repFirstName===undefined ? '' : repFirstName, true)
+          +inputField('repLastName', 'Last Name', 'Conté', repLastName===undefined ? '' : repLastName, true)
+          +inputField('repRole', 'Role', 'Select Your Role', repRole, true, 'select',repRoles)
+      section.form-input-section
+        h2.form-input-section-header Company
+        div.grouped-input-fields
+          +inputField('companyName','Name', 'Pencilooza', companyName===undefined ? '' : companyName, true)
+          +inputField('companyStructure', 'Structure', 'Select Your Business Structure', companyStructure, true, 'select',companyStructures)
+        div.grouped-input-fields
+          +inputField('yearFounded', 'Year Founded', '2020', yearFounded===undefined ? '' : yearFounded, true, 'number')
+          +inputField('ein', 'EIN', 'XX-XXXXXXX', ein===undefined ? '' : ein)
+        +inputField('companyDescription','Description', 'Tell us about your company!', companyDescription===undefined ? '' : companyDescription, false, 'textarea')
+      section.form-input-section
+        h2.form-input-section-header Location
+        div.grouped-input-fields
+          +inputField('countryCode', 'Country', 'Select Your Country Code', countryCode, true, 'select',countryCodes)
+          +inputField('state', 'State/Province/Region', 'FL', state===undefined ? '' : state, true)
+        div.grouped-input-fields
+          +inputField('postalCode', 'Postal', '32013', postalCode===undefined ? '' : postalCode, true)
+          +inputField('city', 'City', 'Orange', city===undefined ? '' : city, true)
+        div.grouped-input-fields
+          +inputField('street', 'Street', '42 Scribble St.', street===undefined ? '' : street, true)
+          +inputField('extension', 'Extension', 'APT. HB2, PO Box 042, etc.', extension===undefined ? '' : extension)
+      section.form-input-section
+        h2.form-input-section-header Contact
+        div.grouped-input-fields
+          +inputField('email', 'Email', 'example@pencilooza.pencil', email===undefined ? '' : email, true, 'email')
+          +inputField('phone', 'Phone', '0000000000', phone===undefined ? '' : phone, true, 'tel')
+          +inputField('website', 'Website', 'https://example.com', website===undefined ? '' : website, false, 'url')
+      section.form-input-section 
+        h2.form-input-section-header Note
+        +inputField('note', '', 'Enter any relevant details here. If you entered other in any of the above fields, this is a good place to specify.', note===undefined ? '' : note, false, 'textarea')
+    button(type='submit').form-submit-button Submit
+
+  if errors 
+    ul 
+      for error in errors 
+        li!= error.msg

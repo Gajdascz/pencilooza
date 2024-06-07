@@ -1,4 +1,4 @@
-import { ITEM_GRAPHITE, MFR_REFS } from '../../../utils/constants.js';
+import { ITEM_GRAPHITE, MANUFACTURER_REFS } from '../../../utils/constants.js';
 import createGroup from '../../../utils/createGroup.js';
 
 const graphiteBulkCostModifiers = [
@@ -29,7 +29,7 @@ const graphiteOptionGroup = [graphiteGradeGroup, graphiteWidthGroup];
 // #endregion
 
 const common = {
-  skuPrefix: ITEM_GRAPHITE.SKU_PREFIX(MFR_REFS.PENCIL_CO),
+  skuPrefix: ITEM_GRAPHITE.SKU_PREFIX(MANUFACTURER_REFS.PENCIL_CO),
   category: ITEM_GRAPHITE.CATEGORY,
   madeIn: 'CN',
   quantityPricing: graphiteBulkCostModifiers,
@@ -39,7 +39,7 @@ const common = {
 const graphites = [
   {
     ...common,
-    ref: ITEM_GRAPHITE.REFS.STANDARD(MFR_REFS.PENCIL_CO),
+    ref: ITEM_GRAPHITE.REFS.STANDARD(MANUFACTURER_REFS.PENCIL_CO),
     type: ITEM_GRAPHITE.TYPES.STANDARD,
     name: 'Standard Replacement Graphite',
     stock: Math.ceil(Math.random() * 100000) + 100000,

@@ -1,5 +1,5 @@
 import express from 'express';
-import mfrController from '../controllers/mfrController.js';
+import manufacturerController from '../controllers/manufacturerController.js';
 import itemController from '../controllers/itemController.js';
 
 const router = express.Router();
@@ -7,18 +7,18 @@ const router = express.Router();
 router.get('/', itemController.index);
 
 // #region Manufacturer Routes
-router.get('/manufacturers', mfrController.mfrList);
+router.get('/manufacturers', manufacturerController.list);
 
-router.get('/manufacturer/create', mfrController.mfrGetCreate);
-router.post('/manufacturer/create', mfrController.mfrPostCreate);
+router.get('/manufacturer/create', manufacturerController.getCreate);
+router.post('/manufacturer/create', manufacturerController.postCreate);
 
-router.get('/manufacturer/:id', mfrController.mfrDetail);
+router.get('/manufacturer/:id', manufacturerController.detail);
 
-router.get('/manufacturer/:id/delete', mfrController.mfrGetDelete);
-router.post('/manufacturer/:id/delete', mfrController.mfrPostDelete);
+router.get('/manufacturer/:id/delete', manufacturerController.getDelete);
+router.post('/manufacturer/:id/delete', manufacturerController.postDelete);
 
-router.get('/manufacturer/:id/update', mfrController.mfrGetUpdate);
-router.post('/manufacturer/:id/update', mfrController.mfrPostUpdate);
+router.get('/manufacturer/:id/update', manufacturerController.getUpdate);
+router.post('/manufacturer/:id/update', manufacturerController.postUpdate);
 // #endregion
 
 // #region Item Routes

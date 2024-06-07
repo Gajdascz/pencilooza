@@ -2,10 +2,10 @@ extends layout
 
 block content
   h1= title
-  if mfrs.length
+  if manufacturers.length
     ul
-      each mfr in mfrs
+      each manufacturer in manufacturers
         li &bull; 
-          a(href=mfr.url) #{mfr.name}
+          a(href=manufacturer.url) #{manufacturer.name}
   else
     p No items found in inventory.

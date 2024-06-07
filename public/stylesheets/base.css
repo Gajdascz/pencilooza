@@ -16,9 +16,9 @@
   --color-gray-graphite: #4A4A4A;
   --color-gray-graphite-darker: #333333;
   --color-yellow-pencil: #f3d334;
-  --color-brown-wood: #503a11;
-  --color-pink-eraser: #d7888f;
   --color-blue-paper-line: #2F3FD0;
+  --color-soft-purple: #4F2FD0;
+  --color-orange-brown: #744106;
   --color-red-paper-margin-line: #AA0000;
   --color-white-paper: #F5F5F5;
   --color-green: #006100;
@@ -64,10 +64,10 @@ a {
 }
 a:hover,
 a:visited:hover {
-  color: var(--color-red-paper-margin-line);
+  color: var(--color-green);
 }
 a:visited {
-  color: var(--color-green);
+  color: var(--color-soft-purple);
 }
 ul {
   list-style-type: none;
@@ -105,9 +105,29 @@ ul.nested-list {
   padding: 0.5em;
   flex:1;
 }
+.input-field-wrapper-field.pending-validation {
+  border-color: var(--color-orange-brown);
+}
+span.required-marker.pending-validation {
+  color: var(--color-orange-brown);
+}
 .input-field-wrapper-field:focus {
   outline: 2px solid var(--color-blue-paper-line);
+  box-shadow: var(--shadow);
 }
+.input-field-wrapper-field.valid {
+  border-color: var(--color-green);
+}
+.input-field-wrapper-field.invalid {
+  border-color: var(--color-red-paper-margin-line);
+}
+span.required-marker.valid {
+  color: var(--color-green);
+}
+span.required-marker.invalid {
+  color: var(--color-red-paper-margin-line);
+}
+
 select.input-field-wrapper-field {
   cursor: pointer;
 }
@@ -255,7 +275,7 @@ form#itemDetailOptionsForm {
 .item-detail-basic-info-list {
   display: grid;
   grid-template-areas: 
-    'cat type mfr' 
+    'cat type manufacturer' 
     'stock madeIn sku'
     'ppu . .';
   grid-auto-columns: max-content;
@@ -264,7 +284,7 @@ form#itemDetailOptionsForm {
 }
 .item-detail-category { grid-area: cat;}
 .item-detail-type {grid-area: type;}
-.item-detail-mfr {grid-area: mfr;}
+.item-detail-manufacturer {grid-area: manufacturer;}
 .item-detail-stock {grid-area: stock};
 .item-detail-base-ppu {grid-area:ppu}
 .item-detail-sku {grid-area:sku}

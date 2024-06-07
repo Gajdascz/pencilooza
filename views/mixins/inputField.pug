@@ -1,6 +1,8 @@
-mixin inputField(id, label, placeholder='', value='', required=false, type='text')
+mixin inputField(id, label, placeholder='', value='', required=false, type='text', options = [])
   div.input-field-wrapper
-    label(for=id).input-field-wrapper-label= label + (required ? '*' : '')
+    label(for=id).input-field-wrapper-label= label
+      if required
+        span(data-id=id).required-marker *
     case type
       when 'select'
         select.input-field-wrapper-field(
@@ -9,9 +11,9 @@ mixin inputField(id, label, placeholder='', value='', required=false, type='text
           required=required,
           placeholder=placeholder
         )
-          option(value='' disabled selected) -- #{placeholder} --
-          each option in value
-            option(value=option)= (option.charAt(0).toUpperCase() + option.slice(1))
+          option(value='' disabled selected=(value=== '' ? selected : false)) -- #{placeholder} --
+          each option in options
+            option(value=option selected=(value===option ? selected : false))= (option.charAt(0).toUpperCase() + option.slice(1))
       when 'textarea'
         textarea.input-field-wrapper-field(
           id=id

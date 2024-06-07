@@ -2,8 +2,8 @@
 import mongoose from 'mongoose';
 import createDebug from 'debug';
 import Item from '../../models/item/Item.js';
-import Mfr from '../../models/manufacturer/Mfr.js';
-import mfrs from './mfrData/index.js';
+import Manufacturer from '../../models/manufacturer/Manufacturer.js';
+import manufacturers from './manufacturerData/index.js';
 import 'dotenv/config';
 
 // Get arguments passed on command line
@@ -74,7 +74,7 @@ const processOptionGroups = (optionGroups) =>
     throw new Error('Group does not have either options or ref: %O', group);
   });
 
-const createItemModel = async (mfrId, itemInfo) => {
+const createItemModel = async (manufacturerId, itemInfo) => {
   const {
     category,
     skuPrefix,
@@ -97,7 +97,7 @@ const createItemModel = async (mfrId, itemInfo) => {
     name,
     description,
     madeIn,
-    manufacturer: mfrId,
+    manufacturer: manufacturerId,
     stock,
     quantityPricing,
     basePpu,
@@ -114,27 +114,27 @@ const createItemModel = async (mfrId, itemInfo) => {
   }
 };
 
-const createMfrModel = async (mfrInfo) => {
+const createManufacturerModel = async (manufacturerInfo) => {
   const message = `- Building Manufacturer Model`;
-  const mfr = new Mfr(mfrInfo);
+  const manufacturer = new Manufacturer(manufacturerInfo);
   try {
-    await mfr.save();
+    await manufacturer.save();
     debug(`${message}: ${SUCCESS}`);
-    return mfr;
+    return manufacturer;
   } catch (err) {
     debug(`${message}: ${FAIL}`);
     throw new Error(err);
   }
 };
 
-const processMfrData = async (mfrData) => {
-  const { mfrInfo, productGroups } = mfrData;
-  debug(`-------------- Processing ${mfrInfo.name}'s Data --------------`);
+const processManufacturerData = async (manufacturerData) => {
+  const { manufacturerInfo, productGroups } = manufacturerData;
+  debug(`-------------- Processing ${manufacturerInfo.name}'s Data --------------`);
   try {
-    const mfr = await createMfrModel(mfrInfo);
+    const manufacturer = await createManufacturerModel(manufacturerInfo);
     for (const group of productGroups) {
       for (const product of group) {
-        await createItemModel(mfr._id, product);
+        await createItemModel(manufacturer._id, product);
       }
     }
   } catch (err) {
@@ -147,19 +147,11 @@ const processMfrData = async (mfrData) => {
 const deleteAllCollections = async () => {
   const message = `- Deleting all DB collections`;
   try {
-    await Promise.all(
-      Object.values(mongoose.connection.collections).map(async (collection) => {
-        try {
-          await collection.deleteMany({});
-        } catch (err) {
-          throw new Error(`Failed to delete collection: ${collection.name}`);
-        }
-      })
-    );
+    const collections = Object.values(mongoose.connection.collections);
+    await Promise.all(collections.map((collection) => collection.deleteMany({})));
     debug(`${message}: ${SUCCESS}`);
   } catch (err) {
-    debug(`${message}: ${FAIL}`);
-    throw new Error(err);
+    debug(`${message}: ${FAIL}: ${err}`);
   }
 };
 
@@ -169,9 +161,9 @@ async function main() {
     await connect();
     if (process.argv.indexOf('--reset') !== -1) await deleteAllCollections();
     debug('------------------------------------------\n');
-    for (const mfr of mfrs) {
+    for (const manufacturer of manufacturers) {
       try {
-        await processMfrData(mfr);
+        await processManufacturerData(manufacturer);
       } catch (err) {
         debug(err);
       }

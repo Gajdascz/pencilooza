@@ -7,78 +7,74 @@ import {
   ITEM_PENCIL,
   ITEM_ERASER,
   ITEM_GRAPHITE,
+  TYPES_BY_CATEGORY,
 } from '../../public/javascripts/utils/constants.js';
 
 const Schema = mongoose.Schema;
-
-const typesByCategory = {
-  [ITEM_PENCIL.CATEGORY]: Object.values(ITEM_PENCIL.TYPES),
-  [ITEM_ERASER.CATEGORY]: Object.values(ITEM_ERASER.TYPES),
-  [ITEM_GRAPHITE.CATEGORY]: Object.values(ITEM_GRAPHITE.TYPES),
-};
 
 const categoryBySkuCode = {
   [ITEM_PENCIL.SKU_CODE]: ITEM_PENCIL.CATEGORY,
   [ITEM_ERASER.SKU_CODE]: ITEM_ERASER.CATEGORY,
   [ITEM_GRAPHITE.SKU_CODE]: ITEM_GRAPHITE.CATEGORY,
 };
-const ItemSchema = new Schema({
-  category: { type: String, required: true, enum: Object.values(ITEM_GENERAL.CATEGORIES) },
-  skuPrefix: {
-    type: String,
-    required: true,
-    uppercase: true,
-    maxLength: 13,
-    validate: [
-      {
-        validator: function (value) {
-          // eslint-disable-next-line no-unused-vars
-          const [mfrRef, itemCode] = value.split('-');
-          return this.category === categoryBySkuCode[itemCode];
+const ItemSchema = new Schema(
+  {
+    category: { type: String, required: true, enum: Object.values(ITEM_GENERAL.CATEGORIES) },
+    skuPrefix: {
+      type: String,
+      required: true,
+      uppercase: true,
+      maxLength: 13,
+      validate: [
+        {
+          validator: function (value) {
+            // eslint-disable-next-line no-unused-vars
+            const [manufacturerRef, itemCode] = value.split('-');
+            return this.category === categoryBySkuCode[itemCode];
+          },
+          message: (props) => `${props.value} does not match the category of the item.`,
         },
-        message: (props) => `${props.value} does not match the category of the item.`,
-      },
-      {
-        validator: async function (value) {
-          const [mfrRef] = value.split('-');
-          const mfr = await mongoose.model('Mfr').findById(this.manufacturer);
-          return mfr && mfr.ref === mfrRef;
+        {
+          validator: async function (value) {
+            const [manufacturerRef] = value.split('-');
+            const manufacturer = await mongoose.model('Manufacturer').findById(this.manufacturer);
+            return manufacturer && manufacturer.ref === manufacturerRef;
+          },
+          message: (props) =>
+            `Manufacturer reference in SKU prefix ${props.value} does not match the associated manufacturer`,
         },
-        message: (props) =>
-          `Manufacturer reference in SKU prefix ${props.value} does not match the associated manufacturer`,
-      },
-    ],
-  },
-  sku: { type: String, unique: true },
-  type: {
-    type: String,
-    required: true,
-    validate: {
-      validator: function (value) {
-        return typesByCategory[this.category].includes(value);
-      },
-      message: (props) => `${props.value} is not a valid type for the category ${this.category}`,
+      ],
     },
-  },
-  name: { type: String, required: true, maxLength: 100, mingLength: 3 },
-  description: { type: String, required: true, maxLength: 500, minLength: 3 },
-  stock: { type: Number, required: true },
-  madeIn: { type: String, required: true, length: 2 },
-  manufacturer: { type: Schema.Types.ObjectId, ref: 'Mfr', required: true },
-  basePpu: { type: Number, required: true },
-  quantityPricing: {
-    type: [
-      {
-        quantity: { type: Number, required: true },
-        costModifier: { type: Number, required: true },
+    sku: { type: String, unique: true },
+    type: {
+      type: String,
+      required: true,
+      validate: {
+        validator: function (value) {
+          return TYPES_BY_CATEGORY[this.category].includes(value);
+        },
+        message: (props) => `${props.value} is not a valid type for the category ${this.category}`,
       },
-    ],
-    required: true,
+    },
+    name: { type: String, required: true, maxLength: 100, mingLength: 3 },
+    description: { type: String, required: true, maxLength: 500, minLength: 3 },
+    stock: { type: Number, required: true },
+    madeIn: { type: String, required: true, length: 2 },
+    manufacturer: { type: Schema.Types.ObjectId, ref: 'Manufacturer', required: true },
+    basePpu: { type: Number, required: true },
+    quantityPricing: {
+      type: [
+        {
+          quantity: { type: Number, required: true },
+          costModifier: { type: Number, required: true },
+        },
+      ],
+      required: true,
+    },
+    optionGroups: { type: [OptionGroupSchema], required: false },
   },
-  optionGroups: { type: [OptionGroupSchema], required: false },
-  timeCreated: { type: Date, default: Date.now() },
-  timeUpdated: { type: Date, default: Date.now() },
-});
+  { timestamps: true }
+);
 
 ItemSchema.pre('save', async function (next) {
   if (!this.sku) {
