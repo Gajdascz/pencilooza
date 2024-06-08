@@ -1,0 +1,27 @@
+extends layout
+
+block content
+  include mixins/labelValue 
+  include mixins/inputField
+  header.registration-status-header
+    h1 #{type.charAt(0).toUpperCase() + type.slice(1)} Registration: #{id}
+    h2.registration-status-status status: 
+      span(class=`${status}-status`) #{status.charAt(0).toUpperCase() + status.slice(1)}
+    +labelValue('submitted:',createdAt)
+  each sectionData,sectionName in dataSections
+    section.status-form-data-section 
+    h3 #{sectionName.charAt(0).toUpperCase() + sectionName.slice(1)}
+    each value,label in sectionData
+      +labelValue(`${label}:`,value)
+  form(method='POST')#registration-status-review-form
+    input(style='display:none;' name='registrationId' value=id)
+    input(style='display:none;' name='actionType' id='actionType')
+    +inputField('admin-password', 'Admin Password', '', '', required=true, type='password')
+    button(type='button' name='acceptRegistration' onClick="onSubmit('accept')" ).accept-button Accept
+    button(type='button' name='acceptRegistration' onClick="onSubmit('reject')" ).reject-button Reject
+
+  script.
+    const onSubmit = (action) => {
+      document.querySelector('#actionType').value = action
+      document.querySelector('#registration-status-review-form').submit();
+    }

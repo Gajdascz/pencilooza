@@ -1,6 +1,7 @@
 import express from 'express';
 import manufacturerController from '../controllers/manufacturerController.js';
 import itemController from '../controllers/itemController.js';
+import registrationController from '../controllers/registrationController.js';
 
 const router = express.Router();
 
@@ -38,5 +39,9 @@ router.post('/item/:id/update', itemController.itemPostUpdate);
 router.get('/item/create', itemController.itemGetCreate);
 router.post('/item/create', itemController.itemPostCreate);
 // #endregion
+
+router.get('/form-status/:id', registrationController.getStatus);
+
+router.post('/admin-action', (req, res) => {});
 
 export default router;

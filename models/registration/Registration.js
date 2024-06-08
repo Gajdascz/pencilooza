@@ -1,14 +1,11 @@
 import mongoose from 'mongoose';
 
-import ManufacturerRegistrationSchema from './schemas/ManufacturerRegistration.js';
-import ItemRegistrationSchema from './schemas/ItemRegistration.js';
-
 const Schema = mongoose.Schema;
 
 const RegistrationSchema = new Schema(
   {
     type: { type: String, enum: ['manufacturer', 'item'], required: true },
-    data: { type: [ManufacturerRegistrationSchema, ItemRegistrationSchema], required: true },
+    data: { type: Schema.Types.Mixed, required: true },
     status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' },
   },
   { timestamps: true }

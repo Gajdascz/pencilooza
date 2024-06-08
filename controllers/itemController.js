@@ -11,20 +11,26 @@ const registrationAggregation = Registration.aggregate([
       properties: [
         {
           $group: {
-            _id: '$type',
+            _id: null,
             pendingManufacturers: {
-              $addToSet: { $cond: [{ $eq: ['$type', 'manufacturer'] }, 'manufacturer', null] },
+              $addToSet: { $cond: [{ $eq: ['$type', 'manufacturer'] }, '$manufacturer', null] },
             },
             pendingItems: {
-              $addToSet: { $cond: [{ $eq: ['$type', 'item'] }, 'item', null] },
+              $addToSet: { $cond: [{ $eq: ['$type', 'item'] }, '$item', null] },
             },
           },
         },
         {
           $project: {
             _id: 0,
-            totalPendingManufacturers: { $size: '$pendingManufacturers' },
-            totalPendingItems: { $size: '$pendingItems' },
+            totalPendingManufacturers: {
+              $size: {
+                $filter: { input: '$pendingManufacturers', cond: { $ne: ['$$this', null] } },
+              },
+            },
+            totalPendingItems: {
+              $size: { $filter: { input: '$pendingItems', cond: { $ne: ['$$this', null] } } },
+            },
           },
         },
       ],
@@ -32,9 +38,13 @@ const registrationAggregation = Registration.aggregate([
   },
   {
     $project: {
-      totalPendingRegistrations: { $arrayElemAt: ['$totalPendingRegistrations.total', 0] },
-      totalPendingManufacturers: { $arrayElemAt: ['$properties.totalPendingManufacturers', 0] },
-      totalPendingItems: { $arrayElemAt: ['$properties.totalPendingItems', 0] },
+      totalPendingRegistrations: {
+        $ifNull: [{ $arrayElemAt: ['$totalPendingRegistrations.total', 0] }, 0],
+      },
+      totalPendingManufacturers: {
+        $ifNull: [{ $arrayElemAt: ['$properties.totalPendingManufacturers', 0] }, 0],
+      },
+      totalPendingItems: { $ifNull: [{ $arrayElemAt: ['$properties.totalPendingItems', 0] }, 0] },
     },
   },
 ]).exec();

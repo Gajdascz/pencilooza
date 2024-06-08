@@ -1,15 +1,34 @@
 extends layout
 
 block content
-  h1= name
-  p= description 
-  ul
-    h2 Contact
-  each at,method in contact 
-    li #[strong #{method}]: #{at}
+  include mixins/labelValue
+  div.manufacturer-info-container
+    section.company-intro
+      h1= company.name
+      p= company.description
+    section.company-info
+      h2 General
+      +labelValue('Year Founded:', company.yearFounded)
+      +labelValue('Structure:', company.structure)
+      if company.ein
+        +labelValue('EIN:', company.ein)
+      if note
+        +labelValue('Note:', note)
+    section.contact-info
+      h2 Contact
+      +labelValue('Representative:', repInfo)
+      +labelValue('Address:',fullAddress)
+      +labelValue('Phone:',contact.phone)
+      a(href=`mailto:${contact.email}`)= contact.email
+      if website
+        br
+        a(href=contact.website)= contact.website
   if productLinks.length 
     ul
     h2 Products
     each productLink in productLinks
       li
         a(href=productLink.url)= productLink.name 
+
+
+

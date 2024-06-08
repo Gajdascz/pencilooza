@@ -41,5 +41,11 @@ const ManufacturerSchema = new Schema(
 ManufacturerSchema.virtual('url').get(function () {
   return `/inventory/manufacturer/${this._id}`;
 });
+ManufacturerSchema.virtual('fullAddress').get(function () {
+  return `${this.location.street}${this.location.extension ? `, ${this.location.extension}` : ''}, ${this.location.city}, ${this.location.state}, ${this.location.postalCode}, ${this.location.countryCode}`;
+});
+ManufacturerSchema.virtual('repInfo').get(function () {
+  return `${this.rep.firstName} ${this.rep.lastName}, ${this.rep.role.charAt(0).toUpperCase() + this.rep.role.slice(1)} of ${this.company.name}`;
+});
 
 export default mongoose.model('Manufacturer', ManufacturerSchema);

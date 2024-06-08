@@ -6,6 +6,6 @@ block content
     ul
       each manufacturer in manufacturers
         li &bull; 
-          a(href=manufacturer.url) #{manufacturer.name}
+          a(href=manufacturer.url) #{manufacturer.company.name}
   else
     p No items found in inventory.

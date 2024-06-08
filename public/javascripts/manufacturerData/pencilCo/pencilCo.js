@@ -10,13 +10,13 @@ const manufacturerInfo = {
     description: 'High-Volume Low-Cost.',
     structure: 'corporation',
     yearFounded: '2002',
+    ein: '99-9999999',
   },
   contact: {
     website: 'https://example.com',
     email: 'info@pencilco.pencils',
     phone: '0123456789',
   },
-  ein: '00-0000000',
   location: {
     countryCode: 'CN',
     state: 'Guangdong',

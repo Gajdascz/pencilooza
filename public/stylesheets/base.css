@@ -84,7 +84,15 @@ ul.nested-list {
   gap: 0.5em;
 }
 
-
+.pending-status {
+  color: var(--color-orange-brown)
+}
+.accepted-status {
+  color: var(--color-green)
+}
+.rejected-status {
+  color: var(--color-red-paper-margin-line)
+}
 
 /* #region Input Field */
 .input-field-wrapper {

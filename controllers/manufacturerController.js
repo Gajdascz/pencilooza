@@ -53,20 +53,22 @@ const structureRegistrationData = (req) => {
 
 const manufacturerController = {
   list: asyncHandler(async (req, res, next) => {
-    const manufacturers = await Manufacturer.find({}, 'name').sort({ name: 1 }).exec();
+    const manufacturers = await Manufacturer.find({}, 'company.name').sort({ name: 1 }).exec();
     render.list(res, manufacturers);
   }),
   detail: asyncHandler(async (req, res, next) => {
-    const {
-      name,
-      ref,
-      description,
-      contact: contactSchema,
-    } = await Manufacturer.findById(req.params.id).exec();
-    const contact = contactSchema.toObject();
+    const manufacturer = await Manufacturer.findById(req.params.id).exec();
+    const { company, contact, other } = manufacturer;
     const products = await Promise.all(await Item.find({ manufacturer: req.params.id }).exec());
     const productLinks = products.map((product) => ({ name: product.name, url: product.url }));
-    render.detail(res, { name, ref, description, contact, productLinks });
+    render.detail(res, {
+      company,
+      contact,
+      fullAddress: manufacturer.fullAddress,
+      repInfo: manufacturer.repInfo,
+      note: other.note,
+      productLinks,
+    });
   }),
   getCreate: asyncHandler(async (req, res, next) => render.create(res)),
   postCreate: [
@@ -75,16 +77,27 @@ const manufacturerController = {
       const errors = validationResult(req);
       structureRegistrationData(req);
       const registration = new Registration({ type: 'manufacturer', data: req.body });
-      const { company, contact, location, rep, other } = registration.data[0];
+      const { company, contact, location, rep, other } = registration.data;
+      const { selectors, errorMsgs } = errors.array().reduce(
+        (acc, err) => {
+          const [selector, errorMsg] = err.msg.split('___');
+          acc.selectors.push(selector);
+          acc.errorMsgs.push(errorMsg);
+          return acc;
+        },
+        { selectors: [], errorMsgs: [] }
+      );
       if (!errors.isEmpty()) {
-        console.log(errors);
         render.create(res, {
           repFirstName: rep.firstName,
           repLastName: rep.lastName,
+          repRole: rep.role,
           companyName: company.name,
+          companyStructure: company.structure,
           yearFounded: company.yearFounded,
           ein: company.ein,
           companyDescription: company.description,
+          countryCode: location.countryCode,
           state: location.state,
           postalCode: location.postalCode,
           city: location.city,
@@ -94,12 +107,12 @@ const manufacturerController = {
           phone: contact.phone,
           website: contact.website,
           note: other.note,
-          errors: errors.array(),
+          selectors,
+          errorMsgs,
         });
       } else {
         await registration.save();
-        console.log('Saved', registration.company);
-        res.redirect('/');
+        res.redirect(registration.url);
       }
     }),
   ],

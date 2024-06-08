@@ -5,17 +5,17 @@ block scripts
     const requiredInputFields = document.querySelectorAll('.input-field-wrapper-field[required]')
     const setPendingValidation = (e) => {
       const field = e.target;
-      const marker = document.querySelector(`span.required-marker[data-id="${e.target.id}"]`);
-      if(field.value.trim() === '') {
-        field.classList.remove('pending-validation');
-        marker.classList.remove('pending-validation')
-      }
-      else {
-        field.classList.add('pending-validation');
-        marker.classList.add('pending-validation')
-      }
+      if(field.value.trim() === '') field.classList.remove('pending-validation');
+      else field.classList.add('pending-validation');
     }
     requiredInputFields.forEach(field => field.addEventListener('change', setPendingValidation))
+    const selectors = !{JSON.stringify(selectors)};
+    if(selectors && selectors.length > 0) {
+      selectors.forEach(selector => document.querySelector(`#${selector}`).classList.add('invalid'))
+      document.querySelectorAll('.input-field-wrapper-field').forEach(field => {
+        if(!field.classList.contains('invalid')) field.classList.add('valid');
+      })
+    }
 
 block content
   include mixins/inputField
@@ -26,17 +26,21 @@ block content
         em
           strong Information submitted through this form will be publicly displayed in the "Browse Manufacturers" section of this app after review. Please refrain from entering any real personal information. This project is for educational purposes only.
     div.register-form-inputs-container
+      if errorMsgs
+        ul 
+        for msg in errorMsgs 
+          li!= msg
       section.form-input-section
         h2.form-input-section-header Representative
         div.grouped-input-fields
           +inputField('repFirstName', 'First Name', 'Nicolas-Jacques', repFirstName===undefined ? '' : repFirstName, true)
           +inputField('repLastName', 'Last Name', 'Conté', repLastName===undefined ? '' : repLastName, true)
-          +inputField('repRole', 'Role', 'Select Your Role', repRole, true, 'select',repRoles)
+          +inputField('repRole', 'Role', 'Select Your Role', repRole===undefined ? '' : repRole, true, 'select',repRoles)
       section.form-input-section
         h2.form-input-section-header Company
         div.grouped-input-fields
           +inputField('companyName','Name', 'Pencilooza', companyName===undefined ? '' : companyName, true)
-          +inputField('companyStructure', 'Structure', 'Select Your Business Structure', companyStructure, true, 'select',companyStructures)
+          +inputField('companyStructure', 'Structure', 'Select Your Business Structure', companyStructure===undefined ? '' : companyStructure, true, 'select',companyStructures)
         div.grouped-input-fields
           +inputField('yearFounded', 'Year Founded', '2020', yearFounded===undefined ? '' : yearFounded, true, 'number')
           +inputField('ein', 'EIN', 'XX-XXXXXXX', ein===undefined ? '' : ein)
@@ -44,7 +48,7 @@ block content
       section.form-input-section
         h2.form-input-section-header Location
         div.grouped-input-fields
-          +inputField('countryCode', 'Country', 'Select Your Country Code', countryCode, true, 'select',countryCodes)
+          +inputField('countryCode', 'Country', 'Select Your Country Code', countryCode===undefined ? '' : countryCode, true, 'select',countryCodes)
           +inputField('state', 'State/Province/Region', 'FL', state===undefined ? '' : state, true)
         div.grouped-input-fields
           +inputField('postalCode', 'Postal', '32013', postalCode===undefined ? '' : postalCode, true)
@@ -62,8 +66,3 @@ block content
         h2.form-input-section-header Note
         +inputField('note', '', 'Enter any relevant details here. If you entered other in any of the above fields, this is a good place to specify.', note===undefined ? '' : note, false, 'textarea')
     button(type='submit').form-submit-button Submit
-
-  if errors 
-    ul 
-      for error in errors 
-        li!= error.msg

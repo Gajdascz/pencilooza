@@ -1,0 +1,16 @@
+include inputField
+script.
+  const onSubmit = (action) => {
+    document.querySelector('#actionType').value = action
+    document.querySelector('#registration-status-review-form').submit();
+  }
+mixin adminForm(actionURL='#', inputs=[])
+  form(method='POST', action=actionURL)#registration-status-review-form
+    if inputs.length
+      each input in inputs
+        if(input.isHidden)
+          input(style='display:none;' id=input.id name=input.id value=input.value)
+        else
+          +inputField(input.id,input.label,input.placeholder,input.required,input.type,input.options)
+    +inputField('adminPassword', 'Admin Password', '', '', required=true, type='password')
+    button(type='submit') Submit

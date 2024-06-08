@@ -7,7 +7,7 @@ block content
       each item in items
         li &bull; 
           a(href=item.url) #{item.name}
-          |  (#{item.manufacturer.name})
+          |  (#{item.manufacturer.company.name})
 
   else
     p No items found in inventory.
