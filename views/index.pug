@@ -20,11 +20,24 @@ block content
               span.span-label &bull; All:
               |   !{totalItems}
             li 
-              span.span-label &bull; Stock:
-              |   !{totalStock}
-            li 
               span.span-label &bull; Categories:
               |   !{totalCategories}
             li 
               span.span-label &bull; Types:
               |   !{totalTypes}
+            li
+              span.span-label &bull; Stock:
+              |   !{totalStock}
+        li 
+          span.span-label &bull; Pending Registrations
+          ul.nested-list
+            li
+              span.span-label &bull; All:
+              |   !{totalPendingRegistrations}
+            li
+              span.span-label &bull; Manufacturers:
+              |   !{totalPendingManufacturers}
+            li
+              span.span-label &bull; Items:
+              |   !{totalPendingItems}
+

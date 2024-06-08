@@ -5,14 +5,13 @@ const Schema = mongoose.Schema;
 
 const ManufacturerSchema = new Schema(
   {
-    name: { type: String, required: true, maxLength: 100, minLength: 3 },
     ref: { type: String, required: true, maxLength: 10, minLength: 3 },
-    description: { type: String, required: true, maxLength: 250, minLength: 3 },
     company: {
+      name: { type: String, required: true, maxLength: 100, minLength: 3 },
       structure: { type: String, enum: COMPANY_STRUCTURES, required: true },
       yearFounded: { type: Number, min: 0, max: new Date().getFullYear(), required: true },
       ein: { type: String, minLength: 10, maxLength: 10, required: false },
-      background: { type: String, maxLength: 500, required: false },
+      description: { type: String, required: true, maxLength: 250, minLength: 3 },
     },
     contact: {
       email: { type: String, minLength: 3, maxLength: 50, required: true },
