@@ -1,21 +1,6 @@
 extends layout 
 
-block scripts
-  script.
-    const requiredInputFields = document.querySelectorAll('.input-field-wrapper-field[required]')
-    const setPendingValidation = (e) => {
-      const field = e.target;
-      if(field.value.trim() === '') field.classList.remove('pending-validation');
-      else field.classList.add('pending-validation');
-    }
-    requiredInputFields.forEach(field => field.addEventListener('change', setPendingValidation))
-    const selectors = !{JSON.stringify(selectors)};
-    if(selectors && selectors.length > 0) {
-      selectors.forEach(selector => document.querySelector(`#${selector}`).classList.add('invalid'))
-      document.querySelectorAll('.input-field-wrapper-field').forEach(field => {
-        if(!field.classList.contains('invalid')) field.classList.add('valid');
-      })
-    }
+
 
 block content
   include mixins/inputField
@@ -29,7 +14,7 @@ block content
       if errorMsgs
         ul 
         for msg in errorMsgs 
-          li!= msg
+          li.error-message!= msg
       section.form-input-section
         h2.form-input-section-header Representative
         div.grouped-input-fields
@@ -40,6 +25,8 @@ block content
         h2.form-input-section-header Company
         div.grouped-input-fields
           +inputField('companyName','Name', 'Pencilooza', companyName===undefined ? '' : companyName, true)
+        div.grouped-input-fields
+          +inputField('companyRef', 'Company Shorthand', 'PNCLOZA', companyRef===undefined ? '' : companyRef, true)
           +inputField('companyStructure', 'Structure', 'Select Your Business Structure', companyStructure===undefined ? '' : companyStructure, true, 'select',companyStructures)
         div.grouped-input-fields
           +inputField('yearFounded', 'Year Founded', '2020', yearFounded===undefined ? '' : yearFounded, true, 'number')
@@ -66,3 +53,25 @@ block content
         h2.form-input-section-header Note
         +inputField('note', '', 'Enter any relevant details here. If you entered other in any of the above fields, this is a good place to specify.', note===undefined ? '' : note, false, 'textarea')
     button(type='submit').form-submit-button Submit
+
+
+
+
+
+block scripts
+  script.
+    const requiredInputFields = document.querySelectorAll('.input-field-wrapper-field[required]')
+    const setPendingValidation = (e) => {
+      const field = e.target;
+      if(field.value.trim() === '') field.classList.remove('pending-validation');
+      else field.classList.add('pending-validation');
+    }
+    requiredInputFields.forEach(field => field.addEventListener('change', setPendingValidation))
+    const selectors = ['#{selectors}'].filter(selector => selector !== '');
+    if(selectors && selectors.length > 0) {
+      console.log(selectors)
+      selectors.forEach(selector => document.querySelector(`#${selector}`).classList.add('invalid'))
+      document.querySelectorAll('.input-field-wrapper-field').forEach(field => {
+        if(!field.classList.contains('invalid')) field.classList.add('valid');
+      })
+    }

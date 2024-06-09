@@ -1,0 +1,6 @@
+mixin inputWithButton(type,name,id,options)
+  div.input-with-button-container
+    label(for=id style=options.labelIsHidden ? 'display:none;' : '' class=options.labelClass)= options.labelText
+    div.input-with-button-wrapper
+      input(type=type id=id name=name placeholder=options.inputPlaceholder)
+      button(type=options.buttonType class=options.buttonClass)= options.buttonText

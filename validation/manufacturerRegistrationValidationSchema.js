@@ -24,6 +24,13 @@ const manufacturerRegistrationValidationSchema = {
     errorMessage: 'companyName___Company name must be between 1 and 50 characters',
     escape: true,
   },
+  companyRef: {
+    trim: true,
+    toUpperCase: true,
+    isLength: { options: { min: 3, max: 10 } },
+    errorMessage: 'companyRef___Company References must be between 3 and 10 characters',
+    escape: true,
+  },
   companyStructure: {
     isIn: { options: [COMPANY_STRUCTURES] },
     errorMessage: 'companyStructure___Company Structure must be one of the provided options.',

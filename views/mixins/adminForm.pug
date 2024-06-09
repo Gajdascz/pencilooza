@@ -1,16 +1,41 @@
 include inputField
-script.
-  const onSubmit = (action) => {
-    document.querySelector('#actionType').value = action
-    document.querySelector('#registration-status-review-form').submit();
-  }
-mixin adminForm(actionURL='#', inputs=[])
-  form(method='POST', action=actionURL)#registration-status-review-form
-    if inputs.length
-      each input in inputs
-        if(input.isHidden)
-          input(style='display:none;' id=input.id name=input.id value=input.value)
-        else
-          +inputField(input.id,input.label,input.placeholder,input.required,input.type,input.options)
-    +inputField('adminPassword', 'Admin Password', '', '', required=true, type='password')
-    button(type='submit') Submit
+include inputWithButton 
+
+mixin adminForm(actionURL='#', formId)
+  form(method='POST', action=actionURL, id=formId).admin-form-container
+    block
+    +inputWithButton('password','adminPassword','admin-password',
+      {
+        labelIsHidden:true,
+        labelText:'Admin Password',
+        inputPlaceholder:'Admin Password',
+        buttonClass:'admin-form-submit-button',
+        buttonText:'Submit',
+        buttonType:'submit'
+      }
+    )
+  script.
+    document.addEventListener('DOMContentLoaded', () => {
+    const actionURL = '#{actionURL}';
+    const form = document.querySelector('#'+'#{formId}');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const enteredPassword = new URLSearchParams(formData);
+      try {
+        const response = await fetch('/inventory/'+actionURL, {
+          method: 'POST',
+          body: enteredPassword,
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+        });
+        console.log(response)
+        const json = await response.json();
+        alert(json.message);
+        if (!response.ok) {
+        } else {
+        }
+      } catch (err) {
+        console.error('Error:', err);
+      }
+      });
+    });

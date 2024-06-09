@@ -12,7 +12,7 @@ const RegistrationSchema = new Schema(
 );
 
 RegistrationSchema.virtual('url').get(function () {
-  return `/inventory/form-status/${this._id}`;
+  return `/inventory/registration-status/${this._id}`;
 });
 
 export default mongoose.model('Registration', RegistrationSchema);

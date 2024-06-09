@@ -5,9 +5,9 @@ const Schema = mongoose.Schema;
 
 const ManufacturerSchema = new Schema(
   {
-    ref: { type: String, required: true, maxLength: 10, minLength: 3 },
     company: {
       name: { type: String, required: true, maxLength: 100, minLength: 3 },
+      ref: { type: String, required: true, maxLength: 10, minLength: 3, unique: true },
       structure: { type: String, enum: COMPANY_STRUCTURES, required: true },
       yearFounded: { type: Number, min: 0, max: new Date().getFullYear(), required: true },
       ein: { type: String, minLength: 10, maxLength: 10, required: false },

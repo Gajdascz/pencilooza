@@ -40,8 +40,10 @@ router.get('/item/create', itemController.itemGetCreate);
 router.post('/item/create', itemController.itemPostCreate);
 // #endregion
 
-router.get('/form-status/:id', registrationController.getStatus);
+router.get('/registration-confirmation/:id', registrationController.getConfirmation);
 
-router.post('/admin-action', (req, res) => {});
+router.post('/registration-status', registrationController.findStatus);
+router.get('/registration-status/:id', registrationController.getStatus);
+router.post('/registration-status/:id', registrationController.updateStatus);
 
 export default router;

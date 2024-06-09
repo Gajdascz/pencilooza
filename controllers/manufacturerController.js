@@ -31,7 +31,7 @@ const structureRegistrationData = (req) => {
   // prettier-ignore
   const {
         repFirstName, repLastName, repRole,
-        companyName, companyStructure, ein, yearFounded, companyDescription,
+        companyName, companyRef, companyStructure, ein, yearFounded, companyDescription,
         countryCode, state, postalCode, city, street, extension,
         email, phone, website,
         note
@@ -41,6 +41,7 @@ const structureRegistrationData = (req) => {
     company: {
       name: companyName,
       structure: companyStructure,
+      ref: companyRef,
       ein,
       yearFounded,
       description: companyDescription,
@@ -94,6 +95,7 @@ const manufacturerController = {
           repRole: rep.role,
           companyName: company.name,
           companyStructure: company.structure,
+          companyRef: company.ref,
           yearFounded: company.yearFounded,
           ein: company.ein,
           companyDescription: company.description,
@@ -112,7 +114,7 @@ const manufacturerController = {
         });
       } else {
         await registration.save();
-        res.redirect(registration.url);
+        res.redirect(`/inventory/registration-confirmation/${registration._id}`);
       }
     }),
   ],

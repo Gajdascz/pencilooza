@@ -7,44 +7,40 @@ const manufacturerCount = Manufacturer.countDocuments({}).exec();
 const registrationAggregation = Registration.aggregate([
   {
     $facet: {
-      totalPendingRegistrations: [{ $count: 'total' }],
-      properties: [
-        {
-          $group: {
-            _id: null,
-            pendingManufacturers: {
-              $addToSet: { $cond: [{ $eq: ['$type', 'manufacturer'] }, '$manufacturer', null] },
-            },
-            pendingItems: {
-              $addToSet: { $cond: [{ $eq: ['$type', 'item'] }, '$item', null] },
-            },
-          },
-        },
-        {
-          $project: {
-            _id: 0,
-            totalPendingManufacturers: {
-              $size: {
-                $filter: { input: '$pendingManufacturers', cond: { $ne: ['$$this', null] } },
-              },
-            },
-            totalPendingItems: {
-              $size: { $filter: { input: '$pendingItems', cond: { $ne: ['$$this', null] } } },
-            },
-          },
-        },
+      pendingManufacturers: [
+        { $match: { type: 'manufacturer', status: 'pending' } },
+        { $group: { _id: null, count: { $sum: 1 } } },
+        { $project: { _id: 0, count: 1 } },
+      ],
+      pendingItems: [
+        { $match: { type: 'item', status: 'pending' } },
+        { $group: { _id: null, count: { $sum: 1 } } },
+        { $project: { _id: 0, count: 1 } },
+      ],
+      acceptedRegistrations: [
+        { $match: { status: 'accepted' } },
+        { $group: { _id: null, count: { $sum: 1 } } },
+        { $project: { _id: 0, count: 1 } },
+      ],
+      rejectedRegistrations: [
+        { $match: { status: 'rejected' } },
+        { $group: { _id: null, count: { $sum: 1 } } },
+        { $project: { _id: 0, count: 1 } },
       ],
     },
   },
   {
     $project: {
-      totalPendingRegistrations: {
-        $ifNull: [{ $arrayElemAt: ['$totalPendingRegistrations.total', 0] }, 0],
-      },
       totalPendingManufacturers: {
-        $ifNull: [{ $arrayElemAt: ['$properties.totalPendingManufacturers', 0] }, 0],
+        $ifNull: [{ $arrayElemAt: ['$pendingManufacturers.count', 0] }, 0],
       },
-      totalPendingItems: { $ifNull: [{ $arrayElemAt: ['$properties.totalPendingItems', 0] }, 0] },
+      totalPendingItems: { $ifNull: [{ $arrayElemAt: ['$pendingItems.count', 0] }, 0] },
+      totalAcceptedRegistrations: {
+        $ifNull: [{ $arrayElemAt: ['$acceptedRegistrations.count', 0] }, 0],
+      },
+      totalRejectedRegistrations: {
+        $ifNull: [{ $arrayElemAt: ['$rejectedRegistrations.count', 0] }, 0],
+      },
     },
   },
 ]).exec();
@@ -90,7 +86,14 @@ const itemController = {
     const [
       totalManufacturers,
       [{ totalItems, totalCategories, totalTypes, totalMadeIn, totalStock }],
-      [{ totalPendingRegistrations, totalPendingManufacturers, totalPendingItems }],
+      [
+        {
+          totalPendingManufacturers,
+          totalPendingItems,
+          totalAcceptedRegistrations,
+          totalRejectedRegistrations,
+        },
+      ],
     ] = await Promise.all([manufacturerCount, itemAggregation, registrationAggregation]);
 
     res.render('index', {
@@ -101,9 +104,10 @@ const itemController = {
       totalTypes,
       totalMadeIn,
       totalStock,
-      totalPendingRegistrations,
       totalPendingManufacturers,
       totalPendingItems,
+      totalAcceptedRegistrations,
+      totalRejectedRegistrations,
     });
   }),
   itemList: asyncHandler(async (req, res, next) => {

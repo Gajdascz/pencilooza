@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  div.registration-confirmation-container
+    header.registration-confirmation-header
+      h1 Thank you #{name},
+      p Your form has been submitted and is awaiting review.
+    section.registration-confirmation-how-to-view
+      h2 To review your registration
+      ol 
+        li Save your registration id: #[strong #{formId}]
+        li Enter the id in #[strong #[em Find Registration input]] found in the primary navigation.
+      h3
+        a(href=statusLink) Status Quick Link

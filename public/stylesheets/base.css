@@ -13,6 +13,8 @@
 
 :root {
   --color-blue-light: #E3F2FD;
+  --color-blue-darker: #95d3ff;
+
   --color-gray-graphite: #4A4A4A;
   --color-gray-graphite-darker: #333333;
   --color-yellow-pencil: #f3d334;
@@ -21,6 +23,8 @@
   --color-orange-brown: #744106;
   --color-red-paper-margin-line: #AA0000;
   --color-white-paper: #F5F5F5;
+  --color-white-darker: #e4e4e4;
+
   --color-green: #006100;
 
   --paper-line-height: 24px;
@@ -49,7 +53,7 @@ button {
   border-radius: 10px;
   padding: 0.75em;
   font-weight: bold;
-  background-color: var(--color-white-paper);
+  background-color: var(--color-white-darker);
   border: 2px solid var(--color-blue-paper-line);
   color: var(--color-blue-paper-line);
 }
@@ -83,6 +87,9 @@ ul.nested-list {
   display: flex;
   gap: 0.5em;
 }
+ol > li {
+  list-style-position: inside;
+}
 
 .pending-status {
   color: var(--color-orange-brown)
@@ -90,9 +97,66 @@ ul.nested-list {
 .accepted-status {
   color: var(--color-green)
 }
+.error-message,
 .rejected-status {
   color: var(--color-red-paper-margin-line)
 }
+/* #region Admin Form */
+.admin-form-container {
+  display: flex;
+  gap: 1em;
+  border: 3px solid var(--color-gray-graphite-darker);
+  border-radius: 10px;
+  width: max-content;
+  padding: 1em;
+}
+
+/* #endregion */
+
+/* #region Input With Button */
+.input-with-button-container {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: stretch;
+  gap: 0.5em;
+}
+.input-with-button-wrapper {
+  display: flex;
+  align-items: center;
+  border: 2px solid var(--color-gray-graphite-darker);
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: var(--color-white-paper);
+  flex: 1;
+}
+.input-with-button-wrapper > * {
+  border: none;
+  background-color: transparent;
+}
+.input-with-button-wrapper > input {
+  cursor: text;
+  font-weight: 900;
+  height: 100%;
+  padding: 0.25em;
+  width: 100%;
+  flex: 1;
+  font-size: 1rem;
+}
+.input-with-button-wrapper > input:focus,
+.input-with-button-wrapper > input:hover {
+  background-color: var(--color-white-darker);
+  outline: none;
+}
+.input-with-button-wrapper > button {
+  border-radius: 0;
+  border-left: 2px solid var(--color-gray-graphite-darker);
+  padding: 0.5em;
+}
+.input-with-button-wrapper > button:hover {
+  background-color: var(--color-white-darker);
+}
+/* #endregion */
 
 /* #region Input Field */
 .input-field-wrapper {
@@ -353,12 +417,81 @@ form#itemDetailOptionsForm {
 
 /* #endregion */
 
+/* #region Registration Status */
+.status-form-review-radio-container {
+  display: flex;
+  flex-direction: column;
+  max-width: max-content;
+  gap: 0.25em;
+}
+.status-form-review-radio-container > .custom-radio-label-wrapper > input#acceptRegistration[type='radio']:checked + .custom-radio-button::after {
+  background-color: var(--color-green);
+}
+.status-form-review-radio-container > .custom-radio-label-wrapper > input#rejectRegistration[type='radio']:checked + .custom-radio-button::after {
+background-color: var(--color-red-paper-margin-line);
+}
+/* #endregion */
+
+/* #region Custom Radio*/
+.custom-radio-label-wrapper {
+  cursor: pointer;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 0.5em;
+  font-weight: bold;
+}
+.custom-radio-label-wrapper > input[type='radio'] {
+  display: none;
+}
+.custom-radio-label-wrapper > .custom-radio-button {
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--color-gray-graphite-darker);
+  border-radius: 50%;
+  position: relative;
+  margin-left: auto;
+  display: inline-block;
+}
+.custom-radio-label-wrapper:hover > .custom-radio-button { 
+  background-color: var(--color-blue-darker);
+}
+.custom-radio-label-wrapper:hover {
+  color: var(--color-gray-graphite-darker);
+}
+
+.custom-radio-label-wrapper > input[type='radio']:checked + .custom-radio-button::after {
+  content: '';
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background-color: var(--color-blue-paper-line);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+}
+.registration-query-button {
+  font-weight: 900;
+  padding: 0.5em;
+  font-size: 1.5rem;
+}
+/* #endregion */
+
+/* #region Registration Confirmation */
+.registration-confirmation-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1em;
+}
+/* #endregion */
+
 /* #region Layout Sidebar Navigation Menu */
 .primary-nav {
   grid-column: 1;
   background-color: var(--color-white-paper);
   position: relative;
   height: 100%;
+  width: min-content;
   line-height: var(--paper-line-height);
   padding-top: var(--paper-top-padding);
   display: flex;
@@ -380,7 +513,7 @@ form#itemDetailOptionsForm {
   display: flex;
   flex-direction: column;
   padding-left: 1.75em;
-  padding-right: 1em;
+  padding-right: 1.25em;
   gap: var(--paper-line-height);
   font-family: 'thin-pencil';
   font-weight: 900;
@@ -415,6 +548,18 @@ form#itemDetailOptionsForm {
 .primary-nav-logo-link {
   text-align: center;
 }
+.primary-nav-search-registration {
+  width: 100%;
+}
+.primary-nav-search-registration > .input-with-button-container > .input-with-button-wrapper > input:focus {
+
+}
+.primary-nav-search-registration > .input-with-button-container > .input-with-button-wrapper{
+
+}
+.primary-nav-search-registration > .input-with-button-container > .input-with-button-wrapper > input { 
+}
+
 .primary-nav-footer-section {
   margin-top: auto;
   display: flex;
@@ -423,6 +568,10 @@ form#itemDetailOptionsForm {
   flex-direction: column;
   align-items: center;
   min-width: max-content;
+}
+p.search-error-message {
+  font-size: 1rem;
+  font-style: italic;
 }
 /* #endregion */
 

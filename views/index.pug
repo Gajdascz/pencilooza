@@ -11,10 +11,10 @@ block content
       h1 Current Inventory Overview
       ul.index-overview-list
         li
-          span.span-label &bull; Manufacturers: 
+          span.span-label Manufacturers: 
           | !{totalManufacturers}
         li 
-          span.span-label &bull; Item Totals
+          span.span-label Items
           ul.nested-list 
             li
               span.span-label &bull; All:
@@ -29,15 +29,25 @@ block content
               span.span-label &bull; Stock:
               |   !{totalStock}
         li 
-          span.span-label &bull; Pending Registrations
+          span.span-label Registrations
           ul.nested-list
             li
-              span.span-label &bull; All:
-              |   !{totalPendingRegistrations}
+              span.span-label Pending
+              ul.nested-list
+                li
+                  span.span-label &bull; Manufacturers:
+                  |   !{totalPendingManufacturers}
+                li
+                  span.span-label &bull; Items:
+                  |   !{totalPendingItems}
+                  ul.nested-list
             li
-              span.span-label &bull; Manufacturers:
-              |   !{totalPendingManufacturers}
-            li
-              span.span-label &bull; Items:
-              |   !{totalPendingItems}
+              span.span-label Reviewed
+              ul.nested-list
+                li
+                  span.span-label &bull; Accepted:
+                  |   !{totalAcceptedRegistrations}
+                li
+                  span.span-label &bull; Rejected:
+                  |   !{totalRejectedRegistrations}
 

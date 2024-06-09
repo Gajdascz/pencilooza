@@ -38,7 +38,7 @@ const ItemSchema = new Schema(
           validator: async function (value) {
             const [manufacturerRef] = value.split('-');
             const manufacturer = await mongoose.model('Manufacturer').findById(this.manufacturer);
-            return manufacturer && manufacturer.ref === manufacturerRef;
+            return manufacturer && manufacturer.company.ref === manufacturerRef;
           },
           message: (props) =>
             `Manufacturer reference in SKU prefix ${props.value} does not match the associated manufacturer`,

@@ -4,9 +4,9 @@ import graphites from './items/graphites.js';
 import { MANUFACTURER_REFS } from '../../utils/constants.js';
 
 const manufacturerInfo = {
-  ref: MANUFACTURER_REFS.PENCIL_PRINCE,
   company: {
     name: 'Pencil Prince',
+    ref: MANUFACTURER_REFS.PENCIL_PRINCE,
     description: 'Artisan pencils worthy of royalty.',
     structure: 'llc',
     yearFounded: '1980',
