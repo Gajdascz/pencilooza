@@ -2,6 +2,7 @@ import express from 'express';
 import manufacturerController from '../controllers/manufacturerController.js';
 import itemController from '../controllers/itemController.js';
 import registrationController from '../controllers/registrationController.js';
+import adminController from '../controllers/admin/adminController.js';
 
 const router = express.Router();
 
@@ -25,25 +26,24 @@ router.post('/manufacturer/:id/update', manufacturerController.postUpdate);
 // #region Item Routes
 router.get('/items', itemController.itemList);
 
-router.get('/item/create', itemController.itemGetCreate);
-router.post('/item/create', itemController.itemPostCreate);
+// router.get('/item/create', itemController.itemGetCreate);
+// router.post('/item/create', itemController.itemPostCreate);
 
 router.get('/item/:id', itemController.itemDetail);
 
-router.get('/item/:id/delete', itemController.itemGetDelete);
-router.post('/item/:id/delete', itemController.itemPostDelete);
+// router.get('/item/:id/delete', itemController.itemGetDelete);
+// router.post('/item/:id/delete', itemController.itemPostDelete);
 
-router.get('/item/:id/update', itemController.itemGetUpdate);
-router.post('/item/:id/update', itemController.itemPostUpdate);
+// router.get('/item/:id/update', itemController.itemGetUpdate);
+// router.post('/item/:id/update', itemController.itemPostUpdate);
 
-router.get('/item/create', itemController.itemGetCreate);
-router.post('/item/create', itemController.itemPostCreate);
 // #endregion
 
 router.get('/registration-confirmation/:id', registrationController.getConfirmation);
 
 router.post('/registration-status', registrationController.findStatus);
 router.get('/registration-status/:id', registrationController.getStatus);
-router.post('/registration-status/:id', registrationController.updateStatus);
+
+router.post('/admin-command', adminController.authAndExecute);
 
 export default router;

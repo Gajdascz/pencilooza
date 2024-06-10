@@ -1,6 +1,7 @@
 include mixins/inputWithButton
 
 nav.primary-nav
+  button(type='button' id='primaryNavHamburgerToggle' aria-expanded='false') ☰
   div.primary-nav-content-container 
     section.primary-nav-logo-section
       h1.primary-nav-logo-link-header
@@ -18,7 +19,7 @@ nav.primary-nav
         li
           a(href="/inventory/manufacturer/create") Manufacturer  
         li
-          a(href="/inventory/item/create") Item
+          p(style='text-decoration: line-through;') Item
     form(method='POST' action='/inventory/registration-status' id='search-registration-form').primary-nav-search-registration
       +inputWithButton('text','registrationQuery','registration-query',
         { 
@@ -66,4 +67,17 @@ script.
         errorMsg.style.display = 'block';
       }
     });
+
+    const navToggle = document.querySelector('button#primaryNavHamburgerToggle')
+    const navContent = document.querySelector('.primary-nav-content-container')
+    navToggle.addEventListener('click', (e)=>{
+      const isExpanding = navToggle.getAttribute('aria-expanded') === 'false';
+      if(isExpanding) {
+        navContent.style = 'display: flex;'
+        navToggle.setAttribute('aria-expanded','true')
+      } else {
+        navContent.style = 'display: none;'
+        navToggle.setAttribute('aria-expanded','false')
+      }
+    })
   });

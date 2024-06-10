@@ -13,7 +13,7 @@ const debug = createDebug('pencilooza:populatedb');
 const SUCCESS = `\x1b[32mSuccess`;
 const FAIL = `\x1b[31mFail`;
 
-console.log(
+debug(
   'This script populates the Pencilooza database with Manufacturer and Product data. Run command: node populatedb.js "mongodb_connection_string" [--reset]. Pass --reset to delete current data before populating (WARNING DANGEROUS)\n'
 );
 

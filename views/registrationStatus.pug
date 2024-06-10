@@ -3,45 +3,55 @@ extends layout
 block scripts
   script.
     document.addEventListener('DOMContentLoaded', () => {
-      const form = document.querySelector('#registration-status-review-form');
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const formData = new FormData(form);
-        console.log(formData);
-        //- try {
-        //-   const response = await fetch('/inventory/'+actionURL, {
-        //-     method: 'POST',
-        //-     body: enteredPassword,
-        //-     headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        //-   });
-        //-   if (!response.ok) {
-        //-     alert('Invalid Password!');
-        //-   } else {
-        //-     alert('Valid Password!')
-        //-   }
-        //- } catch (err) {
-        //-   console.error('Error:', err);
-        //- }
-      });
-    });
+      const form = document.querySelector('form#registration-status-review-form');
+      if(!form) return;
+      const rejectRadio = document.querySelector('input#rejectRegistration');
+      form.addEventListener('submit', (e) => {
+        if(rejectRadio.checked) {
+          const reason = prompt('Please provide a reason for rejection:');
+          if(reason) document.querySelector('input#rejectionReason').value = reason;
+          else {
+            e.preventDefault();
+            alert('Rejection reason is required');
+          } 
+        }
+        location.reload();
+      })
+    })
+
 
 block content
   include mixins/labelValue 
   include mixins/inputField
   include mixins/adminForm
   include mixins/customRadio
-  header.registration-status-header
-    h1 #{type.charAt(0).toUpperCase() + type.slice(1)} Registration: #{id}
-    h2.registration-status-status status: 
-      span(class=`${status}-status`) #{status.charAt(0).toUpperCase() + status.slice(1)}
-    +labelValue('submitted:',createdAt)
-  each sectionData,sectionName in dataSections
-    section.status-form-data-section 
-    h3 #{sectionName.charAt(0).toUpperCase() + sectionName.slice(1)}
-    each value,label in sectionData
-      +labelValue(`${label}:`,value)
-  +adminForm(`/registration-status/${id}`,'registration-status-review-form')
-      input(style='display:none;' name='registrationId' value=id)
-      div.status-form-review-radio-container
-        +customRadio('Accept','registrationAction', 'acceptRegistration', 'accept', {selected: status === 'accepted', disabled: status !== 'pending'})
-        +customRadio('Reject','registrationAction', 'rejectRegistration', 'reject', {selected: status === 'rejected', disabled: status !== 'pending'})
+  div.registration-status-container
+    header.registration-status-header
+      h1 #{type.charAt(0).toUpperCase() + type.slice(1)} Registration: #{id}
+      p #[em Save the registration code to access your application and profile]
+      h2.registration-status-status status: 
+        span(class=`${status}-status`) #{status.charAt(0).toUpperCase() + status.slice(1)}
+      +labelValue('submitted:',createdAt)
+    section.registration-status-body
+      div.registration-status-data-sections-container
+        each sectionData,sectionName in dataSections
+          section.registration-status-data-section 
+            h3 #{sectionName.charAt(0).toUpperCase() + sectionName.slice(1)}
+            each value,label in sectionData
+              +labelValue(`${label}:`,value)
+      div.registration-status-other-container
+        case status
+          when 'pending'
+            +adminForm('registration-status-review-form', 'reviewRegistration', status !=='pending')
+                input(style='display:none;' name='registrationId' value=id)
+                input(style='display:none;' name='rejectionReason' value=id)
+                div.status-form-review-radio-container
+                  +customRadio('Accept','registrationCommand', 'acceptRegistration', 'accept', {checked: status === 'accepted', disabled: status !== 'pending'})
+                  +customRadio('Reject','registrationCommand', 'rejectRegistration', 'reject', {checked: status === 'rejected', disabled: status !== 'pending'})
+          when 'accepted'
+            h3
+              a(href=dataLink) Your application has been accepted! Click this link to view your profile.
+          when 'rejected'
+            h3= rejectionReason
+          default
+            h3.error-message Error: #{status} was not pending accepted or rejected. 

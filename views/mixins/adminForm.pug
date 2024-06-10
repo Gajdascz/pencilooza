@@ -1,8 +1,13 @@
 include inputField
 include inputWithButton 
 
-mixin adminForm(actionURL='#', formId)
-  form(method='POST', action=actionURL, id=formId).admin-form-container
+//-
+  adminForm provides a form Element which blocks submissions unless the admin password is correct.
+  |--> Form submission handlers MUST be registered in the adminCommands module to process the form data.
+
+mixin adminForm(formId, adminCommand, isDisabled)
+  form(method='POST', action='/inventory/admin-command', id=formId data-status= isDisabled ? 'disabled' : 'active').admin-form-container
+    input(style='display:none;' value=adminCommand name='adminCommand')
     block
     +inputWithButton('password','adminPassword','admin-password',
       {
@@ -11,31 +16,28 @@ mixin adminForm(actionURL='#', formId)
         inputPlaceholder:'Admin Password',
         buttonClass:'admin-form-submit-button',
         buttonText:'Submit',
-        buttonType:'submit'
+        buttonType:'submit',
+        disabled: isDisabled,
       }
     )
   script.
     document.addEventListener('DOMContentLoaded', () => {
-    const actionURL = '#{actionURL}';
     const form = document.querySelector('#'+'#{formId}');
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(form);
-      const enteredPassword = new URLSearchParams(formData);
+      const searchParamsInstance = new URLSearchParams(formData);
       try {
-        const response = await fetch('/inventory/'+actionURL, {
+        const response = await fetch('/inventory/admin-command/', {
           method: 'POST',
-          body: enteredPassword,
+          body: searchParamsInstance,
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
-        console.log(response)
         const json = await response.json();
-        alert(json.message);
-        if (!response.ok) {
-        } else {
-        }
-      } catch (err) {
-        console.error('Error:', err);
-      }
+        console.log(json)
+        if(json.errors?.length > 0) json.errors?.forEach(err => alert(`Error: ${err.msg}`));
+        else if(json.msg) alert(`Success: ${json.msg}`);
+        else alert(`${form.id} submission successful`)
+      } catch (err) { console.error('Error:', err); }
       });
     });

@@ -1,5 +1,5 @@
 mixin customRadio(label,name,id,value,options={})
-  label(for=id).custom-radio-label-wrapper
+  label(for=id data-status=options.disabled ? 'disabled' : 'active').custom-radio-label-wrapper
     input(type='radio' id=id name=name value=value checked=options.checked ? 'checked' : null disabled=options.disabled ? 'disabled' : null)
-    span.custom-radio-button
+    span(data-status=options.disabled?'disabled':'active').custom-radio-button
     | #{label}

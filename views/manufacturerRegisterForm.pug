@@ -69,7 +69,6 @@ block scripts
     requiredInputFields.forEach(field => field.addEventListener('change', setPendingValidation))
     const selectors = ['#{selectors}'].filter(selector => selector !== '');
     if(selectors && selectors.length > 0) {
-      console.log(selectors)
       selectors.forEach(selector => document.querySelector(`#${selector}`).classList.add('invalid'))
       document.querySelectorAll('.input-field-wrapper-field').forEach(field => {
         if(!field.classList.contains('invalid')) field.classList.add('valid');
