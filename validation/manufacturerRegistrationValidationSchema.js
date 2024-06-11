@@ -116,12 +116,7 @@ const manufacturerRegistrationValidationSchema = {
   },
   phone: {
     trim: true,
-    customSanitizer: {
-      options: (value) => {
-        console.log(value);
-        return value.replace(/-/g, '');
-      },
-    },
+    customSanitizer: { options: (value) => value.replace(/-/g, '') },
     matches: {
       options: [/^\d{10,15}$/],
       errorMessage: 'phone___Phone number must be between 10 and 15 digits.',

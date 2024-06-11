@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 
 const RegistrationSchema = new Schema(
   {
-    type: { type: String, enum: ['manufacturer', 'item'], required: true },
+    type: { type: String, enum: ['Manufacturer', 'Item'], required: true },
     data: { type: Schema.Types.Mixed, required: true },
     status: { type: String, enum: ['pending', 'accepted', 'rejected'], default: 'pending' },
     rejectionReason: { type: String, default: '' },

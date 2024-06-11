@@ -25,6 +25,7 @@ const render = {
       companyStructures: COMPANY_STRUCTURES,
       ...data,
     }),
+  delete: (res, data = {}) => res.render('deleteForm', data),
 };
 
 const structureRegistrationData = (req) => {
@@ -52,17 +53,25 @@ const structureRegistrationData = (req) => {
   };
 };
 
+const find = {
+  allManufacturers: async () => Manufacturer.find({}, 'company.name').sort({ name: 1 }).exec(),
+  manufacturer: async (mfrId) => Manufacturer.findById(mfrId).exec(),
+  products: async (mfrId) => Item.find({ manufacturer: mfrId }).exec(),
+  manufacturerAndProducts: async (mfrId) =>
+    Promise.all([find.manufacturer(mfrId), find.products(mfrId)]),
+};
+
 const manufacturerController = {
   list: asyncHandler(async (req, res, next) => {
-    const manufacturers = await Manufacturer.find({}, 'company.name').sort({ name: 1 }).exec();
+    const manufacturers = await find.allManufacturers();
     render.list(res, manufacturers);
   }),
   detail: asyncHandler(async (req, res, next) => {
-    const manufacturer = await Manufacturer.findById(req.params.id).exec();
+    const [manufacturer, products] = await find.manufacturerAndProducts(req.params.id);
     const { company, contact, other } = manufacturer;
-    const products = await Promise.all(await Item.find({ manufacturer: req.params.id }).exec());
     const productLinks = products.map((product) => ({ name: product.name, url: product.url }));
     render.detail(res, {
+      id: req.params.id,
       company,
       contact,
       fullAddress: manufacturer.fullAddress,
@@ -119,10 +128,20 @@ const manufacturerController = {
     }),
   ],
   getDelete: asyncHandler(async (req, res, next) => {
-    res.send('TBI');
-  }),
-  postDelete: asyncHandler(async (req, res, next) => {
-    res.send('TBI');
+    const [manufacturer, products] = await find.manufacturerAndProducts(req.params.id);
+    const productData = products.map((product) => ({
+      name: product.name,
+      url: product.url,
+      type: 'Item',
+      id: product.id,
+    }));
+    render.delete(res, {
+      entityName: manufacturer.company.name,
+      entityUrl: manufacturer.url,
+      entityId: manufacturer.id,
+      entityType: 'Manufacturer',
+      dependencies: productData,
+    });
   }),
   getUpdate: asyncHandler(async (req, res, next) => {
     res.send('TBI');

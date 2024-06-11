@@ -1,13 +1,13 @@
 include inputField
 include inputWithButton 
-
+include hiddenField
 //-
   adminForm provides a form Element which blocks submissions unless the admin password is correct.
   |--> Form submission handlers MUST be registered in the adminCommands module to process the form data.
 
-mixin adminForm(formId, adminCommand, isDisabled)
-  form(method='POST', action='/inventory/admin-command', id=formId data-status= isDisabled ? 'disabled' : 'active').admin-form-container
-    input(style='display:none;' value=adminCommand name='adminCommand')
+mixin adminForm(formId, adminCommand, successRoute = null)
+  form(method='POST', action='/inventory/admin-command' id=formId).form-container
+    +hiddenField('admin-command','adminCommand',value=adminCommand)
     block
     +inputWithButton('password','adminPassword','admin-password',
       {
@@ -17,7 +17,6 @@ mixin adminForm(formId, adminCommand, isDisabled)
         buttonClass:'admin-form-submit-button',
         buttonText:'Submit',
         buttonType:'submit',
-        disabled: isDisabled,
       }
     )
   script.
@@ -34,10 +33,11 @@ mixin adminForm(formId, adminCommand, isDisabled)
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
         const json = await response.json();
-        console.log(json)
-        if(json.errors?.length > 0) json.errors?.forEach(err => alert(`Error: ${err.msg}`));
+        if(json.errors?.length > 0) return json.errors?.forEach(err => alert(`Error: ${err.msg}`));
         else if(json.msg) alert(`Success: ${json.msg}`);
         else alert(`${form.id} submission successful`)
+        if(json.redirect) location.replace(json.redirect);
+        else location.reload()
       } catch (err) { console.error('Error:', err); }
       });
     });

@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  include mixins/adminForm
+  include mixins/hiddenField
+  h1 Delete: #{entityName}
+  if dependencies.length
+    div.manufacturer-products-container
+      h2 #[em #[strong Warning! Deleting this #{entityType} will automatically delete all of the following dependent data:]]
+      ul
+        each dependency in dependencies
+          li
+            a(href=dependency.url)= dependency.name
+  h2 #[em #[strong Enter the required details below to delete #{entityName} and all dependent data.]]
+  +adminForm('deleteForm', 'deleteEntity')
+    +hiddenField('entity-type','entityType',`${entityType}`)
+    +hiddenField('entity-id','entityId',`${entityId}`)
+    +hiddenField('entity-dependencies','entityDependencies',`${JSON.stringify(dependencies)}`)

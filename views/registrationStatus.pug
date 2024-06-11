@@ -15,7 +15,6 @@ block scripts
             alert('Rejection reason is required');
           } 
         }
-        location.reload();
       })
     })
 
@@ -28,10 +27,14 @@ block content
   div.registration-status-container
     header.registration-status-header
       h1 #{type.charAt(0).toUpperCase() + type.slice(1)} Registration: #{id}
-      p #[em Save the registration code to access your application and profile]
+      p #[em Save the registration code to access this application]
+      +labelValue('submitted:',createdAt)
       h2.registration-status-status status: 
         span(class=`${status}-status`) #{status.charAt(0).toUpperCase() + status.slice(1)}
-      +labelValue('submitted:',createdAt)
+      if status === 'rejected'
+        h3 reason: #{rejectionReason}
+      else if status === 'accepted'
+        a(href=dataLink) Your application has been accepted! Click this link to view your profile.
     section.registration-status-body
       div.registration-status-data-sections-container
         each sectionData,sectionName in dataSections
@@ -40,18 +43,10 @@ block content
             each value,label in sectionData
               +labelValue(`${label}:`,value)
       div.registration-status-other-container
-        case status
-          when 'pending'
-            +adminForm('registration-status-review-form', 'reviewRegistration', status !=='pending')
-                input(style='display:none;' name='registrationId' value=id)
-                input(style='display:none;' name='rejectionReason' value=id)
-                div.status-form-review-radio-container
-                  +customRadio('Accept','registrationCommand', 'acceptRegistration', 'accept', {checked: status === 'accepted', disabled: status !== 'pending'})
-                  +customRadio('Reject','registrationCommand', 'rejectRegistration', 'reject', {checked: status === 'rejected', disabled: status !== 'pending'})
-          when 'accepted'
-            h3
-              a(href=dataLink) Your application has been accepted! Click this link to view your profile.
-          when 'rejected'
-            h3= rejectionReason
-          default
-            h3.error-message Error: #{status} was not pending accepted or rejected. 
+        if status === 'pending'
+          +adminForm('registration-status-review-form', 'reviewRegistration', status !=='pending')
+              input(style='display:none;' name='registrationId' value=id)
+              input(style='display:none;' name='rejectionReason' value='')
+              div.grouped-radio-buttons
+                +customRadio('Accept','registrationCommand', 'acceptRegistration', 'accept', {checked: status === 'accepted', disabled: status !== 'pending'})
+                +customRadio('Reject','registrationCommand', 'rejectRegistration', 'reject', {checked: status === 'rejected', disabled: status !== 'pending'})

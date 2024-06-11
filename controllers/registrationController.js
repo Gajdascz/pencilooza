@@ -1,10 +1,7 @@
 import mongoose from 'mongoose';
 import asyncHandler from 'express-async-handler';
 import { DateTime } from 'luxon';
-import { body, validationResult } from 'express-validator';
-
-import adminController from './admin/adminController.js';
-
+import { body } from 'express-validator';
 import Registration from '../models/registration/Registration.js';
 
 const registrationController = {
@@ -21,11 +18,11 @@ const registrationController = {
     asyncHandler(async (req, res, next) => {
       const id = req.body.registrationQuery;
       if (!id || !mongoose.Types.ObjectId.isValid(id)) {
-        return res.status(400).json({ message: 'Invalid Registration ID' });
+        return res.status(400).json({ msg: 'Invalid Registration ID' });
       }
       const registration = await Registration.findById(id).exec();
       if (!registration) {
-        return res.status(404).json({ message: `Registration with ID: ${id} not found` });
+        return res.status(404).json({ msg: `Registration with ID: ${id} not found` });
       }
       return res.redirect(registration.url);
     }),
@@ -39,7 +36,7 @@ const registrationController = {
       createdAt: new DateTime(registration.createdAt).toLocaleString(DateTime.DATETIME_MED),
       dataSections: registration.data,
       dataLink: registration.dataLink,
-      rejectionReasons: registration.rejectionReason,
+      rejectionReason: registration.rejectionReason,
     });
   }),
 };

@@ -17,10 +17,7 @@ router.post('/manufacturer/create', manufacturerController.postCreate);
 router.get('/manufacturer/:id', manufacturerController.detail);
 
 router.get('/manufacturer/:id/delete', manufacturerController.getDelete);
-router.post('/manufacturer/:id/delete', manufacturerController.postDelete);
-
 router.get('/manufacturer/:id/update', manufacturerController.getUpdate);
-router.post('/manufacturer/:id/update', manufacturerController.postUpdate);
 // #endregion
 
 // #region Item Routes

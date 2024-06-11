@@ -1,3 +1,4 @@
 {
-  "cSpell.words": ["bsgh", "curr", "frederickathegreat", "javascripts", "MSRP", "pencilooza"]
+  "cSpell.words": ["bsgh", "curr", "frederickathegreat", "javascripts", "MSRP", "pencilooza"],
+  "html-to-css-autocompletion.getSelectorsFromFileTypes": ["html", "pug"]
 }
