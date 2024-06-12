@@ -81,8 +81,8 @@ const itemAggregation = Item.aggregate([
   },
 ]).exec();
 
-const itemController = {
-  index: asyncHandler(async (req, res, next) => {
+const indexController = {
+  get: asyncHandler(async (req, res, next) => {
     const [
       totalManufacturers,
       [{ totalItems, totalCategories, totalTypes, totalMadeIn, totalStock }],
@@ -103,66 +103,6 @@ const itemController = {
       totalRejectedRegistrations,
     });
   }),
-  itemList: asyncHandler(async (req, res, next) => {
-    const allItems = await Item.find({}, 'name type category manufacturer')
-      .sort({ manufacturer: 1 })
-      .populate('manufacturer')
-      .exec();
-    res.render('itemList', { title: 'All Items', items: allItems });
-  }),
-  itemDetail: asyncHandler(async (req, res, next) => {
-    const item = await Item.findById(req.params.id);
-    const {
-      name,
-      category,
-      type,
-      description,
-      stock,
-      madeIn,
-      manufacturer,
-      quantityPricing,
-      basePpu,
-      optionGroups,
-      sku,
-    } = await item.getProcessedData();
-    res.render('itemDetail', {
-      name,
-      category,
-      type,
-      description,
-      stock,
-      madeIn,
-      manufacturer,
-      quantityPricing,
-      optionGroups,
-      sku,
-      basePpu,
-      defaultSelected: {
-        quantityPricing: quantityPricing[0],
-        options: optionGroups.map(({ groupName, options }) => ({
-          groupName,
-          option: options[0],
-        })),
-      },
-    });
-  }),
-  // itemGetCreate: asyncHandler(async (req, res, next) => {
-  //   res.send('TBI');
-  // }),
-  // itemPostCreate: asyncHandler(async (req, res, next) => {
-  //   res.send('TBI');
-  // }),
-  // itemGetDelete: asyncHandler(async (req, res, next) => {
-  //   res.send('TBI');
-  // }),
-  // itemPostDelete: asyncHandler(async (req, res, next) => {
-  //   res.send('TBI');
-  // }),
-  // itemGetUpdate: asyncHandler(async (req, res, next) => {
-  //   res.send('TBI');
-  // }),
-  // itemPostUpdate: asyncHandler(async (req, res, next) => {
-  //   res.send('TBI');
-  // }),
 };
-export default itemController;
+
+export default indexController;

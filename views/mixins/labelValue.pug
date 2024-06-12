@@ -1,4 +1,7 @@
 mixin labelValue(label,value)
   p.label-value-wrapper
     span.span-label= label
-    span= value
+    if value
+      span= value
+    else
+      block

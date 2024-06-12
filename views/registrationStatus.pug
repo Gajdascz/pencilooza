@@ -6,16 +6,15 @@ block scripts
       const form = document.querySelector('form#registration-status-review-form');
       if(!form) return;
       const rejectRadio = document.querySelector('input#rejectRegistration');
-      form.addEventListener('submit', (e) => {
-        if(rejectRadio.checked) {
-          const reason = prompt('Please provide a reason for rejection:');
-          if(reason) document.querySelector('input#rejectionReason').value = reason;
-          else {
-            e.preventDefault();
-            alert('Rejection reason is required');
-          } 
+      const rejectionReason = document.querySelector('input#rejection-reason');
+      rejectRadio.addEventListener('click', (e) => {
+        const reason = prompt(`Please provide a reason for rejection:`);
+        if(reason && reason.length > 0) rejectionReason.value = reason;
+        else {
+          e.preventDefault();
+          alert('Invalid input: Please provide a valid reason.')
         }
-      })
+        });
     })
 
 
@@ -24,6 +23,7 @@ block content
   include mixins/inputField
   include mixins/adminForm
   include mixins/customRadio
+  include mixins/hiddenField
   div.registration-status-container
     header.registration-status-header
       h1 #{type.charAt(0).toUpperCase() + type.slice(1)} Registration: #{id}
@@ -45,8 +45,8 @@ block content
       div.registration-status-other-container
         if status === 'pending'
           +adminForm('registration-status-review-form', 'reviewRegistration', status !=='pending')
-              input(style='display:none;' name='registrationId' value=id)
-              input(style='display:none;' name='rejectionReason' value='')
-              div.grouped-radio-buttons
-                +customRadio('Accept','registrationCommand', 'acceptRegistration', 'accept', {checked: status === 'accepted', disabled: status !== 'pending'})
-                +customRadio('Reject','registrationCommand', 'rejectRegistration', 'reject', {checked: status === 'rejected', disabled: status !== 'pending'})
+            +hiddenField('registration-id','registrationId',id)
+            +hiddenField('rejection-reason','rejectionReason')
+            div.grouped-radio-buttons
+              +customRadio('Accept','registrationCommand', 'acceptRegistration', 'accept', {checked: status === 'accepted', disabled: status !== 'pending'})
+              +customRadio('Reject','registrationCommand', 'rejectRegistration', 'reject', {checked: status === 'rejected', disabled: status !== 'pending'})

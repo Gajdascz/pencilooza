@@ -90,7 +90,7 @@ ItemSchema.pre('save', async function (next) {
 });
 
 ItemSchema.virtual('url').get(function () {
-  return `/inventory/item/${this._id}`;
+  return `/item/${this._id}`;
 });
 
 ItemSchema.index({ category: 1, type: 1 });

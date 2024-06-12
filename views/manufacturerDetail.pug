@@ -44,10 +44,12 @@ block content
           h2 Products
           each productLink in productLinks
             li
-              a(href=productLink.url)= productLink.name 
+              a(href=productLink.url)= productLink.name
+    if registrationLink
+      a(href=registrationLink) Registration Submission 
     div.manufacturer-operations-container
       form(method='GET', id='manufacturer-detail-form').form-container
         div.grouped-radio-buttons
-          +customRadio('Update','manufacturerDetailCommand', 'updateManufacturer', `/inventory/manufacturer/${id}/update`)
-          +customRadio('Delete','manufacturerDetailCommand', 'deleteManufacturer', `/inventory/manufacturer/${id}/delete`)
+          +customRadio('Update','manufacturerDetailCommand', 'updateManufacturer', `/manufacturer/${id}/update`)
+          +customRadio('Delete','manufacturerDetailCommand', 'deleteManufacturer', `/manufacturer/${id}/delete`)
         button(type='submit')#manufacturerDetailFormSubmitButton Proceed

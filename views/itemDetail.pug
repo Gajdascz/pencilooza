@@ -10,10 +10,10 @@ block scripts
       },
       // updates (overwrites) cached data
       updateSelectedQuantityPricing: (quantity,ppuDiff) => cache.selected.quantityPricing = {quantity,ppuDiff},
-      updateSelectedOptions: (groupName,optionName,ppuDiff) => (cache.selected.options = cache.selected.options.map(group => group.groupName === groupName ? {...group, option: {optionName,ppuDiff}}: group)),
+      updateSelectedOptions: (groupName,optionName,ppuDiff,link) => (cache.selected.options = cache.selected.options.map(group => group.groupName === groupName ? {...group, option: {optionName,ppuDiff,link}}: group)),
       // returns parsed cached data (String -> Number)
       getSelectedQuantityPricing: () => ({quantity: +cache.selected.quantityPricing.quantity, ppuDiff: +cache.selected.quantityPricing.ppuDiff}),
-      getSelectedOptions: () => cache.selected.options.map(selected => ({...selected, option: {...selected.option,optionName: selected.option.optionName, ppuDiff: +selected.option.ppuDiff}})),
+      getSelectedOptions: () => cache.selected.options.map(selected => ({...selected, option: {optionName: selected.option.optionName, ppuDiff: +selected.option.ppuDiff, link: selected.option.link}})),
       // returns the sum of all the selected option's cost modifiers
       getCurrentOptionsCostModifier: () => Math.round(cache.getSelectedOptions().reduce((acc,curr) => (acc += curr.option.ppuDiff),0)*100)/100,
       // returns the current ppu based on options
@@ -61,8 +61,10 @@ block scripts
           optCostLi.classList.add('selected-option-li');
           optCostLi.textContent = `${group.groupName}: $${group.option.ppuDiff}`; 
           selectedOptionsList.append(optCostLi);
+          console.log(group.option)
           if(group.option.link) {
             const optLinkLi = document.createElement('li');
+            optLinkLi.setAttribute('data-group',group.groupName);
             const anchor = document.createElement('a');
             anchor.setAttribute('href',group.option.link);
             anchor.textContent=group.option.optionName;
@@ -121,10 +123,10 @@ block scripts
         optionList.style.display = 'flex';
         document.addEventListener('click',dropdownController.closeListener);
       },
-      selectOption: (e,{groupName,optionName,ppuDiff}) => {
+      selectOption: (e,{groupName,optionName,ppuDiff,link}) => {
         e.preventDefault()
         if(groupName === 'quantity') cache.updateSelectedQuantityPricing(optionName,ppuDiff);
-        else cache.updateSelectedOptions(groupName,optionName,ppuDiff)
+        else cache.updateSelectedOptions(groupName,optionName,ppuDiff,link)
         viewManager.updateMenuSelection({groupName,optionName,ppuDiff}, e.target.parentElement.children);
         viewManager.updateAll();
       },
@@ -137,6 +139,7 @@ block scripts
     viewManager.updateAll(); 
     
 block content
+  include mixins/hiddenField
   div.item-detail-container 
     header.item-detail-header
       h1 #{name}
@@ -169,8 +172,8 @@ block content
         h2.item-detail-options-form-header Options
         div.item-detail-options-inputs-container
           div(role='combobox' aria-expanded=false aria-owns='dropdown-list' aria-haspopup='listbox').dropdown-container
-            input(style='display:none;' id='quantitySelectedOption' )
-            input(style='display:none;' id='quantitySelectedOptionPpuDiff' )
+            +hiddenField('quantitySelectedOption')
+            +hiddenField('quantitySelectedOptionPpuDiff')
             div.dropdown-container-label-toggle-wrapper 
               h3.dropdown-container-label Quantity
               button(aria-controls='dropdown-list' id='quantitySelectToggle' aria-haspopup=true aria-expanded=false onClick='dropdownController.toggle(event)').dropdown-toggle= defaultSelected.quantityPricing.quantity
@@ -180,14 +183,14 @@ block content
           if optionGroups.length
             each optionGroup in optionGroups
               div(role='combobox' aria-expanded=false aria-owns='dropdown-list' aria-haspopup='listbox').dropdown-container
-                input(style='display:none;' id=optionGroup.groupName+'SelectedOption' )
-                input(style='display:none;' id=optionGroup.groupName+'SelectedOptionPpuDiff' )
+                +hiddenField(`${optionGroup.groupName}SelectedOption`)
+                +hiddenField(`${optionGroup.groupName}SelectedOptionPpuDiff`)
                 div.dropdown-container-label-toggle-wrapper
                   h3.dropdown-container-label #{optionGroup.groupName.charAt(0).toUpperCase() + optionGroup.groupName.slice(1)}
                   button(aria-controls='dropdown-list' id=optionGroup.groupName+'SelectToggle' aria-haspopup=true aria-expanded=false onClick='dropdownController.toggle(event)').dropdown-toggle= defaultSelected.options.find((selected) => selected.groupName === optionGroup.groupName).option.optionName
                   ul(rule='listbox' id='dropdown-list' tabindex='-1' style='display: none;').dropdown-menu-option-list
                     for option in optionGroup.options
-                      li(role='option' class=defaultSelected.options.some(selected => selected.option.optionName === option.optionName) ? 'selected-option' : '' tabindex='0' onClick=`dropdownController.selectOption(event,{groupName:'${optionGroup.groupName}', optionName: '${option.optionName}', ppuDiff: '${option.ppuDiff}'})`).dropdown-menu-option= option.optionName
+                      li(role='option' class=defaultSelected.options.some(selected => selected.option.optionName === option.optionName) ? 'selected-option' : '' tabindex='0' onClick=`dropdownController.selectOption(event,{groupName:'${optionGroup.groupName}', optionName: '${option.optionName}', ppuDiff: '${option.ppuDiff}', link: '${option.link ? option.link : ''}'})`).dropdown-menu-option= option.optionName
       aside.selected-options-overview
         div.selected-options-costs
           h3.selected-options-header Selected

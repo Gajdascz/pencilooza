@@ -5,12 +5,13 @@ include hiddenField
   adminForm provides a form Element which blocks submissions unless the admin password is correct.
   |--> Form submission handlers MUST be registered in the adminCommands module to process the form data.
 
-mixin adminForm(formId, adminCommand, successRoute = null)
-  form(method='POST', action='/inventory/admin-command' id=formId).form-container
+mixin adminForm(formId, adminCommand)
+  form(method='POST', id=formId).form-container
     +hiddenField('admin-command','adminCommand',value=adminCommand)
     block
-    +inputWithButton('password','adminPassword','admin-password',
+    +inputWithButton('admin-password','adminPassword',
       {
+        type:'password',
         labelIsHidden:true,
         labelText:'Admin Password',
         inputPlaceholder:'Admin Password',
@@ -22,22 +23,23 @@ mixin adminForm(formId, adminCommand, successRoute = null)
   script.
     document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('#'+'#{formId}');
+    console.log('#{formId}')
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(form);
       const searchParamsInstance = new URLSearchParams(formData);
       try {
-        const response = await fetch('/inventory/admin-command/', {
+        const response = await fetch('/admin-command', {
           method: 'POST',
           body: searchParamsInstance,
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
         });
         const json = await response.json();
         if(json.errors?.length > 0) return json.errors?.forEach(err => alert(`Error: ${err.msg}`));
-        else if(json.msg) alert(`Success: ${json.msg}`);
+        else if(json.msg) alert(`${json.msg}`);
         else alert(`${form.id} submission successful`)
         if(json.redirect) location.replace(json.redirect);
         else location.reload()
-      } catch (err) { console.error('Error:', err); }
+      } catch (err) { console.error('Error in adminForm POST Response:', err); }
       });
     });

@@ -8,8 +8,10 @@ import createDebug from 'debug';
 import { configDotenv } from 'dotenv';
 
 import indexRouter from './routes/index.js';
-import usersRouter from './routes/users.js';
-import inventoryRouter from './routes/inventory.js';
+import registrationRouter from './routes/registration.js';
+import manufacturerRouter from './routes/manufacturer.js';
+import itemRouter from './routes/item.js';
+import adminController from './controllers/admin/adminController.js';
 
 configDotenv();
 mongoose.set('strictQuery', false);
@@ -31,8 +33,11 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
-app.use('/inventory', inventoryRouter);
+app.use('/registration', registrationRouter);
+app.use('/manufacturer', manufacturerRouter);
+app.use('/item', itemRouter);
+
+app.post('/admin-command', adminController.authAndExecute);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

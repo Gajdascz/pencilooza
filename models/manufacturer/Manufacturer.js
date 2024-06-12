@@ -39,7 +39,7 @@ const ManufacturerSchema = new Schema(
 );
 
 ManufacturerSchema.virtual('url').get(function () {
-  return `/inventory/manufacturer/${this._id}`;
+  return `/manufacturer/${this._id}`;
 });
 ManufacturerSchema.virtual('fullAddress').get(function () {
   return `${this.location.street}${this.location.extension ? `, ${this.location.extension}` : ''}, ${this.location.city}, ${this.location.state}, ${this.location.postalCode}, ${this.location.countryCode}`;

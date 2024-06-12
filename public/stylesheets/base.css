@@ -43,6 +43,10 @@
 h1,h2,h3,h4,h5,h6 {
   color: var(--color-gray-graphite-darker)
 }
+h1 {
+  font-size: 2.25rem;
+  font-weight: 900;
+}
 button {
   border-radius: 10px;
   padding: 0.75em;
@@ -97,6 +101,7 @@ ol > li {
 .rejected-status {
   color: var(--color-red-paper-margin-line)
 }
+
 span.backdrop {
   background-color: var(--color-backdrop);
   position: fixed;
@@ -332,10 +337,16 @@ textarea.input-field-wrapper-field {
   min-height: 80px;
   resize: none;
 }
+.input-field-wrapper-errors-container {
+  display: flex;
+  flex-direction: column;
+  /* min-width: max-content; */
+}
 
 .grouped-input-fields {
   display: flex;
   flex-wrap: wrap;
+  align-items: baseline;
   gap: 0.5em;
 }
 /* #endregion */

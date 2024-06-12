@@ -74,13 +74,16 @@ const ITEM_GRAPHITE = {
       GENERATE.REF(manufacturerRef, ITEM_GRAPHITE.SKU_CODE, ITEM_GRAPHITE.TYPES.LUXURY, ver),
   },
 };
+const PROFILE_TYPES = {
+  MFR: 'Manufacturer',
+  WS: 'Wholesale',
+};
 
 const TYPES_BY_CATEGORY = {
   [ITEM_PENCIL.CATEGORY]: Object.values(ITEM_PENCIL.TYPES),
   [ITEM_ERASER.CATEGORY]: Object.values(ITEM_ERASER.TYPES),
   [ITEM_GRAPHITE.CATEGORY]: Object.values(ITEM_GRAPHITE.TYPES),
 };
-
 const COMPANY_STRUCTURES = ['llc', 'corporation', 'sole-proprietor', 'non-profit', 'other'];
 const REP_ROLES = ['owner', 'partner', 'manager', 'employee', 'other'];
 const COUNTRY_ALPHA2 = [
@@ -345,4 +348,5 @@ export {
   COMPANY_STRUCTURES,
   REP_ROLES,
   TYPES_BY_CATEGORY,
+  PROFILE_TYPES,
 };
