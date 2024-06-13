@@ -2,13 +2,7 @@ import mongoose from 'mongoose';
 
 import SkuCounter from '../SkuCounter.js';
 import OptionGroupSchema from './schemas/OptionGroup.js';
-import {
-  ITEM_GENERAL,
-  ITEM_PENCIL,
-  ITEM_ERASER,
-  ITEM_GRAPHITE,
-  TYPES_BY_CATEGORY,
-} from '../../public/javascripts/utils/constants.js';
+import { ITEM_GENERAL, ITEM_PENCIL, ITEM_ERASER, ITEM_GRAPHITE, TYPES_BY_CATEGORY } from '../../config/constants.js';
 
 const Schema = mongoose.Schema;
 

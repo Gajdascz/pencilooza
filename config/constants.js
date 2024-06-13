@@ -14,13 +14,11 @@ const ITEM_GENERAL = {
     GRAPHITE: 'GRPT',
   },
 };
-
 const GENERATE = {
   SKU_PREFIX: (manufacturerRef, skuCode) => `${manufacturerRef}-${skuCode}`,
   REF: (manufacturerRef, skuCode, itemType, ver = null) =>
     `${manufacturerRef}_${skuCode}-${itemType}${ver ? `_${ver}` : ''}`,
 };
-
 const ITEM_PENCIL = {
   CATEGORY: ITEM_GENERAL.CATEGORIES.PENCIL,
   SKU_CODE: 'PNCL',
@@ -36,7 +34,6 @@ const ITEM_PENCIL = {
       GENERATE.REF(manufacturerRef, ITEM_PENCIL.SKU_CODE, ITEM_PENCIL.TYPES.MECHANICAL, ver),
   },
 };
-
 const ITEM_ERASER = {
   CATEGORY: ITEM_GENERAL.CATEGORIES.ERASER,
   SKU_CODE: 'ERSR',
@@ -55,7 +52,6 @@ const ITEM_ERASER = {
       GENERATE.REF(manufacturerRef, ITEM_ERASER.SKU_CODE, ITEM_ERASER.TYPES.MECHANICAL, ver),
   },
 };
-
 const ITEM_GRAPHITE = {
   CATEGORY: ITEM_GENERAL.CATEGORIES.GRAPHITE,
   SKU_CODE: 'GRPT',
@@ -74,18 +70,13 @@ const ITEM_GRAPHITE = {
       GENERATE.REF(manufacturerRef, ITEM_GRAPHITE.SKU_CODE, ITEM_GRAPHITE.TYPES.LUXURY, ver),
   },
 };
-const PROFILE_TYPES = {
-  MFR: 'Manufacturer',
-  WS: 'Wholesale',
-};
-
 const TYPES_BY_CATEGORY = {
   [ITEM_PENCIL.CATEGORY]: Object.values(ITEM_PENCIL.TYPES),
   [ITEM_ERASER.CATEGORY]: Object.values(ITEM_ERASER.TYPES),
   [ITEM_GRAPHITE.CATEGORY]: Object.values(ITEM_GRAPHITE.TYPES),
 };
 const COMPANY_STRUCTURES = ['llc', 'corporation', 'sole-proprietor', 'non-profit', 'other'];
-const REP_ROLES = ['owner', 'partner', 'manager', 'employee', 'other'];
+const COMPANY_ROLES = ['owner', 'partner', 'manager', 'employee', 'other'];
 const COUNTRY_ALPHA2 = [
   'AF',
   'AL',
@@ -346,7 +337,6 @@ export {
   ITEM_GRAPHITE,
   COUNTRY_ALPHA2,
   COMPANY_STRUCTURES,
-  REP_ROLES,
+  COMPANY_ROLES,
   TYPES_BY_CATEGORY,
-  PROFILE_TYPES,
 };

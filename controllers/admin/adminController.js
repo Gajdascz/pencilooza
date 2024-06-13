@@ -10,13 +10,14 @@ import adminCommands from './adminCommands.js';
  *  If successful executes the provided adminCommand if available.
  *
  */
+const whitelist = ['updateRegistration'];
 
 const adminController = {
   authAndExecute: [
     body('adminPassword')
       .trim()
-      .custom((enteredPass) => {
-        if (enteredPass !== process.env.ADMIN_COMMAND_PASS)
+      .custom((enteredPass, { req }) => {
+        if (!whitelist.includes(req.body.adminCommand) && enteredPass !== process.env.ADMIN_COMMAND_PASS)
           throw new Error(`Invalid Admin Password`);
         else return true;
       }),
@@ -28,6 +29,7 @@ const adminController = {
       if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
       delete req.body.adminPassword;
       const commandCb = adminCommands.get(req.body.adminCommand);
+      delete req.body.adminCommand;
       return await commandCb(req, res, next);
     }),
   ],

@@ -1,10 +1,5 @@
-import {
-  ITEM_PENCIL,
-  ITEM_GRAPHITE,
-  ITEM_ERASER,
-  MANUFACTURER_REFS,
-} from '../../../utils/constants.js';
-import createGroup from '../../../utils/createGroup.js';
+import { ITEM_PENCIL, ITEM_GRAPHITE, ITEM_ERASER, MANUFACTURER_REFS } from '../../../../constants.js';
+import createGroup from '../../createGroup.js';
 
 const pencilBulkCostModifier = [
   { quantity: 250, costModifier: 0 },

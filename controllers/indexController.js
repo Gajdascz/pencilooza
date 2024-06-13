@@ -80,7 +80,6 @@ const itemAggregation = Item.aggregate([
     },
   },
 ]).exec();
-
 const indexController = {
   get: asyncHandler(async (req, res, next) => {
     const [

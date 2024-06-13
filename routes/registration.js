@@ -1,11 +1,14 @@
 import express from 'express';
-import registrationController from '../controllers/registrationController.js';
+import registrationController from '../controllers/registration/registrationController.js';
 
 const router = express.Router();
 
+router.post('/', registrationController.findRegistration);
 router.get('/:id', registrationController.getDetail);
-router.post('/:id', registrationController.findRegistration);
 router.get('/create/:type', registrationController.getCreate);
+router.post('/create/:type', registrationController.postCreate);
 router.get('/confirmation/:id', registrationController.getConfirmation);
+
+router.get('/update/:id', registrationController.getUpdate);
 
 export default router;

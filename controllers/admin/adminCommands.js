@@ -2,45 +2,63 @@ import asyncHandler from 'express-async-handler';
 
 import Registration from '../../models/registration/Registration.js';
 import mongoose from 'mongoose';
+import { capitalize, dataTransform } from '../../config/utils.js';
+import { validateRegistrationDirect } from '../../validation/index.js';
+
+const getMongooseModel = (modelName) => mongoose.model(capitalize(modelName));
+
+const registrationToModelData = (type, data) => dataTransform[type].registrationToModel(data);
 
 const codes = {
   registered: (what, res, redirect = null) => res.status(201).json({ msg: `${what} was registered.`, redirect }),
-  notFound: (what, res, redirect = null) => res.status(404).json({ msg: `${what} not found`, redirect }),
+  notFound: (what, res, redirect = null) => res.status(404).json({ msg: `${what} not found.`, redirect }),
   error: (what, res, redirect = null) => res.status(500).json({ msg: `Error: ${what}`, redirect }),
-  rejected: (what, res, redirect = null) => res.status(200).json({ msg: `${what} Rejected`, redirect }),
-  notImplemented: (what, res, redirect = null) => res.status(503).json({ msg: `${what} not implemented`, redirect }),
+  rejected: (what, res, redirect = null) => res.status(200).json({ msg: `${what} has been rejected.`, redirect }),
+  notImplemented: (what, res, redirect = null) => res.status(503).json({ msg: `${what} not implemented.`, redirect }),
   deleted: (what, res, redirect = null) => res.status(200).json({ msg: `${what} has been deleted.`, redirect }),
+  updated: (what, res, redirect = null) => res.status(200).json({ msg: `${what} has been updated.`, redirect }),
 };
 
 const entityHandlers = {
-  delete: async (req, res, next) => {
-    const { entityId, entityType, entityDependencies } = req.body;
-    const dependencies = JSON.parse(entityDependencies);
-    const entity = await mongoose.model(entityType).findById(entityId);
+  delete: asyncHandler(async (req, res, next) => {
+    const { entityId, entityType } = req.body;
+    const EntityModel = getMongooseModel(entityType);
+    const entity = await EntityModel.findById(entityId).exec();
     if (!entity) return codes.notFound(`${entityType} with id: ${entityId}`);
-    if (dependencies.length > 0) {
-      await Promise.all(dependencies.map(async (dep) => await mongoose.model(dep.type).findByIdAndDelete(dep.id)));
-    }
-    await entity.deleteOne();
+    await entity.deleteOne().exec();
     return codes.deleted(entityType, res, '/');
-  },
-  create: async (type, data) => {
-    const Model = mongoose.model(type);
-    const entity = new Model(data);
+  }),
+  create: async (entityType, entityData) => {
+    const EntityModel = getMongooseModel(entityType);
+    const entity = new EntityModel(entityData);
     await entity.save();
     return entity;
   },
+  update: asyncHandler(async (req, res, next) => {
+    const result = await validateRegistrationDirect(req, res, next);
+    if (!result.success) throw new Error(`Form validation error: ${result.errors}`);
+    const { entityType, entityId } = req.body;
+    const EntityModel = getMongooseModel(entityType);
+    if (!EntityModel) throw new Error(`Failed to find entity model of type: ${entityType}`);
+    const modelData = registrationToModelData(entityType, req.body);
+    const entity = new EntityModel({ ...modelData, _id: entityId });
+    if (!entity) throw new Error(`Failed to create entity model with id: ${entityId}`);
+    await EntityModel.findByIdAndUpdate(entityId, entity).exec();
+    return codes.updated(entityType, res, entity.url);
+  }),
 };
 
 // Encapsulates registration review logic
 const registrationHandlers = {
   accept: async (registration, res) => {
     try {
-      const entity = await entityHandlers.create(registration.type, registration.data);
+      const modelData = registrationToModelData(registration.type, registration.data);
+      console.log(modelData);
+      const entity = await entityHandlers.create(registration.type, modelData);
       if (!entity) throw new Error(`Invalid entity created in registrationHandlers.accept`);
       registration.status = 'accepted';
       registration.dataLink = entity.url;
-      registration.acceptedModelId = entity.id;
+      registration.acceptedEntityId = entity.id;
       await registration.save();
       return codes.registered(registration.type, res);
     } catch (err) {
@@ -71,6 +89,8 @@ const registrationHandlers = {
 const adminCommands = new Map([
   ['reviewRegistration', registrationHandlers.review],
   ['deleteEntity', entityHandlers.delete],
+  ['updateEntity', entityHandlers.update],
+  ['updateRegistration', entityHandlers.update],
 ]);
 
 export default adminCommands;

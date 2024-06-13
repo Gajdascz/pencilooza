@@ -9,7 +9,7 @@
   "scripts": {
     "lint": "eslint --fix --ext .js",
     "start": "node ./bin/www",
-    "startDev": "nodemon ./bin/www",
+    "startDev": "node --watch ./bin/www",
     "startDebug": "DEBUG=pencilooza:* npm run startDev",
     "repopulateDb": "DEBUG=pencilooza:populatedb node ./public/javascripts/populatedb.js --reset"
   },

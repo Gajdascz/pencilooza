@@ -1,7 +1,7 @@
 import pencils from './items/pencils.js';
 import erasers from './items/erasers.js';
 import graphites from './items/graphites.js';
-import { MANUFACTURER_REFS } from '../../utils/constants.js';
+import { MANUFACTURER_REFS } from '../../../constants.js';
 
 const manufacturerInfo = {
   company: {

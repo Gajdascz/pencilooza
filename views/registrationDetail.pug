@@ -3,7 +3,7 @@ extends layout
 block scripts
   script.
     document.addEventListener('DOMContentLoaded', () => {
-      const form = document.querySelector('form#registration-status-review-form');
+      const form = document.querySelector('form#registration-review-form');
       if(!form) return;
       const rejectRadio = document.querySelector('input#rejectRegistration');
       const rejectionReason = document.querySelector('input#rejection-reason');
@@ -38,13 +38,14 @@ block content
     section.registration-status-body
       div.registration-status-data-sections-container
         each sectionData,sectionName in dataSections
-          section.registration-status-data-section 
+          div.registration-status-data-section 
             h3 #{sectionName.charAt(0).toUpperCase() + sectionName.slice(1)}
             each value,label in sectionData
               +labelValue(`${label}:`,value)
       div.registration-status-other-container
         if status === 'pending'
-          +adminForm('registration-status-review-form', 'reviewRegistration', status !=='pending')
+          a(href=`/registration/update/${id}`).link-button Edit
+          +adminForm('registration-review-form', 'reviewRegistration')
             +hiddenField('registration-id','registrationId',id)
             +hiddenField('rejection-reason','rejectionReason')
             div.grouped-radio-buttons

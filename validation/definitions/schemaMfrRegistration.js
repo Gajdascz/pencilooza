@@ -1,0 +1,35 @@
+import {
+  strByLength,
+  strBySelection,
+  shorthandReference,
+  numberByRange,
+  ein,
+  countryCode,
+  postalCode,
+  email,
+  phone,
+  website,
+} from './rules.js';
+import { COMPANY_ROLES, COMPANY_STRUCTURES } from '../../config/constants.js';
+
+export default {
+  repFirstName: strByLength('repFirstName'),
+  repLastName: strByLength('repLastName'),
+  repRole: strBySelection('repRole', COMPANY_ROLES),
+  companyName: strByLength('companyName', { min: 1 }),
+  companyRef: shorthandReference('companyRef'),
+  companyStructure: strBySelection('companyStructure', COMPANY_STRUCTURES),
+  yearFounded: numberByRange('yearFounded', { max: new Date().getFullYear() }),
+  ein: ein('ein'),
+  companyDescription: strByLength('companyDescription', { min: 5, max: 500, optional: true }),
+  countryCode: countryCode('countryCode'),
+  state: strByLength('state', { min: 2, max: 50 }),
+  postalCode: postalCode('postalCode'),
+  city: strByLength('city', { min: 2, max: 50 }),
+  street: strByLength('street', { min: 3, max: 100 }),
+  extension: strByLength('extension', { min: 1, max: 25, optional: true }),
+  email: email('email'),
+  phone: phone('phone'),
+  website: website('website', { optional: true }),
+  note: strByLength('note', { min: 5, max: 500, optional: true }),
+};

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { COMPANY_STRUCTURES, REP_ROLES } from '../../public/javascripts/utils/constants.js';
+import { COMPANY_STRUCTURES, COMPANY_ROLES } from '../../config/constants.js';
 
 const Schema = mongoose.Schema;
 
@@ -15,7 +15,7 @@ const ManufacturerSchema = new Schema(
     },
     contact: {
       email: { type: String, minLength: 3, maxLength: 50, required: true },
-      phone: { type: String, minLength: 10, maxLength: 10, required: true },
+      phone: { type: String, minLength: 10, maxLength: 12, required: true },
       website: { type: String, minLength: 3, maxLength: 50, required: false },
     },
     location: {
@@ -29,7 +29,7 @@ const ManufacturerSchema = new Schema(
     rep: {
       firstName: { type: String, minLength: 3, maxLength: 25, required: true },
       lastName: { type: String, minLength: 3, maxLength: 25, required: true },
-      role: { type: String, enum: REP_ROLES, required: true },
+      role: { type: String, enum: COMPANY_ROLES, required: true },
     },
     other: {
       note: { type: String, maxLength: 500, required: false },
@@ -38,6 +38,20 @@ const ManufacturerSchema = new Schema(
   { timestamps: true }
 );
 
+ManufacturerSchema.pre(/delete/i, async function (next) {
+  let id = null;
+  try {
+    if (this instanceof mongoose.Query) id = this.getFilter()._id;
+    else id = this._id;
+    await mongoose.model('Registration').deleteMany({ acceptedEntityId: id }).exec();
+    await mongoose.model('Item').deleteMany({ manufacturer: id }).exec();
+    next();
+  } catch (err) {
+    console.error(`Error occurred while deleting related records for manufacturer ID ${id}: ${err.message}`);
+    next(err);
+  }
+});
+
 ManufacturerSchema.virtual('url').get(function () {
   return `/manufacturer/${this._id}`;
 });
@@ -45,7 +59,7 @@ ManufacturerSchema.virtual('fullAddress').get(function () {
   return `${this.location.street}${this.location.extension ? `, ${this.location.extension}` : ''}, ${this.location.city}, ${this.location.state}, ${this.location.postalCode}, ${this.location.countryCode}`;
 });
 ManufacturerSchema.virtual('repInfo').get(function () {
-  return `${this.rep.firstName} ${this.rep.lastName}, ${this.rep.role.charAt(0).toUpperCase() + this.rep.role.slice(1)} of ${this.company.name}`;
+  return `${this.rep.firstName} ${this.rep.lastName}, ${this.rep.role} of ${this.company.name}`;
 });
 
 export default mongoose.model('Manufacturer', ManufacturerSchema);

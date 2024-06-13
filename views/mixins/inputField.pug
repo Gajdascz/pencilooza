@@ -13,14 +13,13 @@ mixin inputField(id, label, placeholder='', value='', required=false, type='text
         )
           option(value='' disabled selected=(value==='' ? 'selected' : false)) -- #{placeholder} --
           each option in options
-            option(value=option selected=(value===option ? 'selected' : false))= (option.charAt(0).toUpperCase() + option.slice(1))
+            option(value=option selected=(value===option ? 'selected' : false))= option
       when 'textarea'
         textarea.input-field-wrapper-field(
           id=id
           name=id 
-          value=value
           placeholder=placeholder 
-        )
+        )=value
       default 
         input.input-field-wrapper-field(
           id=id

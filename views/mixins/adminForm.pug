@@ -5,7 +5,7 @@ include hiddenField
   adminForm provides a form Element which blocks submissions unless the admin password is correct.
   |--> Form submission handlers MUST be registered in the adminCommands module to process the form data.
 
-mixin adminForm(formId, adminCommand)
+mixin adminForm(formId, adminCommand, options)
   form(method='POST', id=formId).form-container
     +hiddenField('admin-command','adminCommand',value=adminCommand)
     block
@@ -23,7 +23,6 @@ mixin adminForm(formId, adminCommand)
   script.
     document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('#'+'#{formId}');
-    console.log('#{formId}')
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
       const formData = new FormData(form);

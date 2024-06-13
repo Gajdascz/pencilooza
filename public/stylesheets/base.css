@@ -85,8 +85,15 @@ ul.nested-list {
 .label-value-wrapper {
   display: flex;
   flex-wrap: wrap;
+  max-width: 100%;
   gap: 0.25em;
 }
+.span-value {
+  max-width: 100%; 
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 ol > li {
   list-style-position: inside;
 }
@@ -132,7 +139,6 @@ body {
   grid-template-columns: auto 1fr;
   height: 100vh;
   max-width: 100vw;
-  overflow-x: hidden;
 }
 main.layout-main-content {
   grid-column: 2;
@@ -141,7 +147,10 @@ main.layout-main-content {
   padding-right: 3em;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
+  text-overflow: ellipsis;
   max-width: 100%;
+  gap: 1em;
 }
 /* #endregion */
 /* #region Layout Sidebar Navigation Menu */
@@ -286,6 +295,14 @@ p.search-error-message {
 }
 .input-with-button-wrapper > button:hover {
   background-color: var(--color-white-darker);
+}
+.no-auth-admin-form-wrapper > .input-with-button-container > .input-with-button-wrapper > input[type='password'] {
+  display: none;
+  border: none;
+}
+.no-auth-admin-form-wrapper > .input-with-button-container > .input-with-button-wrapper > button.admin-form-submit-button {
+  width: 100%;
+  border: none;
 }
 /* #endregion */
 /* #region Input Field */
@@ -660,11 +677,11 @@ form#itemDetailOptionsForm {
   max-width: max-content;
   gap: 0.25em;
 }
-form#registration-status-review-form > .grouped-radio-buttons >  .custom-radio-label-wrapper > input#acceptRegistration[type='radio']:checked + .custom-radio-button::after {
+form#registration-review-form > .grouped-radio-buttons >  .custom-radio-label-wrapper > input#acceptRegistration[type='radio']:checked + .custom-radio-button::after {
   background-color: var(--color-green);
 }
 
-form#registration-status-review-form > .grouped-radio-buttons >.custom-radio-label-wrapper > input#rejectRegistration[type='radio']:checked + .custom-radio-button::after {
+form#registration-review-form > .grouped-radio-buttons >.custom-radio-label-wrapper > input#rejectRegistration[type='radio']:checked + .custom-radio-button::after {
   background-color: var(--color-red-paper-margin-line);
 }
 /* #endregion */
@@ -673,6 +690,7 @@ form#registration-status-review-form > .grouped-radio-buttons >.custom-radio-lab
   display: flex;
   flex-direction: column;
   gap: 1em;
+  overflow: hidden;
 }
 .manufacturer-info-container {
   display: flex;

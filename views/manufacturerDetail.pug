@@ -29,6 +29,8 @@ block content
           +labelValue('EIN:', company.ein)
         if note
           +labelValue('Note:', note)
+        if registrationLink
+          a(href=registrationLink) Registration Submission 
       section.contact-info
         h2 Contact
         +labelValue('Representative:', repInfo)
@@ -45,8 +47,6 @@ block content
           each productLink in productLinks
             li
               a(href=productLink.url)= productLink.name
-    if registrationLink
-      a(href=registrationLink) Registration Submission 
     div.manufacturer-operations-container
       form(method='GET', id='manufacturer-detail-form').form-container
         div.grouped-radio-buttons

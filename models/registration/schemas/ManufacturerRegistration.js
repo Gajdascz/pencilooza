@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { COMPANY_STRUCTURES, REP_ROLES } from '../../../public/javascripts/utils/constants.js';
+import { COMPANY_STRUCTURES, COMPANY_ROLES } from '../../../public/javascripts/utils/constants.js';
 const Schema = mongoose.Schema;
 
 const ManufacturerRegistrationSchema = new Schema({
@@ -27,7 +27,7 @@ const ManufacturerRegistrationSchema = new Schema({
   rep: {
     firstName: { type: String, minLength: 3, maxLength: 25, required: true },
     lastName: { type: String, minLength: 3, maxLength: 25, required: true },
-    role: { type: String, enum: REP_ROLES, required: true },
+    role: { type: String, enum: COMPANY_ROLES, required: true },
   },
   other: {
     note: { type: String, maxLength: 500, required: false },

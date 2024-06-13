@@ -8,7 +8,7 @@ block content
   include mixins/hiddenField
   form(method='POST' id='registrationForm').register-form
     header.form-header
-      h1 Register
+      h1= title
       p.form-disclaimer-text
         em
           strong Information submitted through this form will be publicly displayed after review. Please refrain from entering any real personal information. This project is for educational purposes only.
@@ -18,7 +18,9 @@ block content
         for msg in errorMsgs 
           li.error-message!= msg
       section.form-input-section
-        +hiddenField('registration-type','registrationType',value=registrationType)
+        +hiddenField('entity-type','entityType',value=entityType)
+        if isUpdate
+          +hiddenField('entity-id','entityId',value=entityId)
         h2.form-input-section-header Representative
         div.grouped-input-fields
           +inputField('repFirstName', 'First Name', 'Nicolas-Jacques', repFirstName===undefined ? '' : repFirstName, true)
@@ -55,10 +57,14 @@ block content
       section.form-input-section 
         h2.form-input-section-header Note
         +inputField('note', '', 'Enter any relevant details here. If you entered other in any of the above fields, this is a good place to specify.', note===undefined ? '' : note, false, 'textarea')
-    if isUpdate
-      +adminForm('registrationForm', 'updateEntity')
-    else
-      button(type='submit').form-submit-button Submit
+    case state
+      when 'authUpdate'
+        +adminForm('registrationForm', 'updateEntity')
+      when 'noAuthUpdate'
+        span.no-auth-admin-form-wrapper 
+          +adminForm('registrationForm','updateRegistration')
+      default
+        button(type='submit').form-submit-button Submit
 
 
 

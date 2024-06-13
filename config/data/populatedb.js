@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 import createDebug from 'debug';
 import Item from '../../models/item/Item.js';
 import Manufacturer from '../../models/manufacturer/Manufacturer.js';
-import manufacturers from './manufacturerData/index.js';
+import manufacturers from './manufacturer/index.js';
 import 'dotenv/config';
 
 // Get arguments passed on command line
@@ -71,9 +71,7 @@ const connectionController = {
   deleteAllCollections: async () => {
     const db = connectionController.inventoryDb;
     if (!db) {
-      throw new Error(
-        'Invalid connectionController inventoryDb property. Please ensure a valid connection.'
-      );
+      throw new Error('Invalid connectionController inventoryDb property. Please ensure a valid connection.');
     }
     let collections = null;
     try {
@@ -115,18 +113,8 @@ const processOptionGroups = (optionGroups) =>
   });
 
 const buildItemModel = async (manufacturerId, itemInfo) => {
-  const {
-    category,
-    skuPrefix,
-    type,
-    name,
-    description,
-    madeIn,
-    stock,
-    quantityPricing,
-    optionGroups,
-    basePpu,
-  } = itemInfo;
+  const { category, skuPrefix, type, name, description, madeIn, stock, quantityPricing, optionGroups, basePpu } =
+    itemInfo;
   let processedOptionGroups;
   try {
     processedOptionGroups = processOptionGroups(optionGroups, itemIdMap);

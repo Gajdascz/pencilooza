@@ -1,7 +1,6 @@
-import { checkSchema, validationResult } from 'express-validator';
-import registrationFormValidationSchema from './registrationFormValidationSchema.js';
+const capitalize = (str = '') => (str === '' ? '' : `${str.charAt(0).toUpperCase()}${str.slice(1)}`);
 
-const structureFormData = (req) => {
+const mfrRegistrationToModel = (formData) => {
   // prettier-ignore
   const {
         repFirstName, repLastName, repRole,
@@ -9,8 +8,8 @@ const structureFormData = (req) => {
         countryCode, state, postalCode, city, street, extension,
         email, phone, website,
         note
-      } = req.body;
-  req.body = {
+      } = formData;
+  return {
     rep: { firstName: repFirstName, lastName: repLastName, role: repRole },
     company: {
       name: companyName,
@@ -25,9 +24,8 @@ const structureFormData = (req) => {
     other: { note },
   };
 };
-
-const reverseStructuredFormData = (mfr) => {
-  const { rep, company, contact, location, other } = mfr;
+const mfrModelToRegistration = (modelData) => {
+  const { rep, company, contact, location, other } = modelData;
   return {
     repFirstName: rep.firstName,
     repLastName: rep.lastName,
@@ -51,21 +49,16 @@ const reverseStructuredFormData = (mfr) => {
   };
 };
 
-const mapProductLinks = (products) => products.map((prod) => ({ name: prod.name, url: prod.url }));
-
-const parseValidationErrors = (errorsArray) =>
-  errorsArray.reduce((acc, err) => {
-    const [selector, errorMsg] = err.msg.split('___');
-    acc.push({ selector, msg: errorMsg });
-    return acc;
-  }, []);
-
-const validateForm = async (req, res, next) => {
-  await Promise.all(checkSchema(registrationFormValidationSchema).map((validation) => validation.run(req)));
-  const errors = validationResult(req);
-  structureFormData(req);
-  if (!errors.isEmpty()) req.errors = parseValidationErrors(errors.array());
-  return next();
+const mfrDataTransform = {
+  registrationToModel: (data) => mfrRegistrationToModel(data),
+  modelToRegistration: (data) => mfrModelToRegistration(data),
 };
 
-export { structureFormData, mapProductLinks, parseValidationErrors, validateForm, reverseStructuredFormData };
+const dataTransform = {
+  manufacturer: {
+    registrationToModel: (data) => mfrRegistrationToModel(data),
+    modelToRegistration: (data) => mfrModelToRegistration(data),
+  },
+};
+
+export { capitalize, dataTransform, mfrDataTransform };

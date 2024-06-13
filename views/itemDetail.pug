@@ -61,7 +61,6 @@ block scripts
           optCostLi.classList.add('selected-option-li');
           optCostLi.textContent = `${group.groupName}: $${group.option.ppuDiff}`; 
           selectedOptionsList.append(optCostLi);
-          console.log(group.option)
           if(group.option.link) {
             const optLinkLi = document.createElement('li');
             optLinkLi.setAttribute('data-group',group.groupName);
