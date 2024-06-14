@@ -1,6 +1,6 @@
 const capitalize = (str = '') => (str === '' ? '' : `${str.charAt(0).toUpperCase()}${str.slice(1)}`);
 
-const mfrRegistrationToModel = (formData) => {
+const mfrFormToModel = (formData) => {
   // prettier-ignore
   const {
         repFirstName, repLastName, repRole,
@@ -24,7 +24,7 @@ const mfrRegistrationToModel = (formData) => {
     other: { note },
   };
 };
-const mfrModelToRegistration = (modelData) => {
+const mfrModelToForm = (modelData) => {
   const { rep, company, contact, location, other } = modelData;
   return {
     repFirstName: rep.firstName,
@@ -50,15 +50,17 @@ const mfrModelToRegistration = (modelData) => {
 };
 
 const mfrDataTransform = {
-  registrationToModel: (data) => mfrRegistrationToModel(data),
-  modelToRegistration: (data) => mfrModelToRegistration(data),
+  formToModel: (data) => mfrFormToModel(data),
+  modelToForm: (data) => mfrModelToForm(data),
 };
 
 const dataTransform = {
   manufacturer: {
-    registrationToModel: (data) => mfrRegistrationToModel(data),
-    modelToRegistration: (data) => mfrModelToRegistration(data),
+    formToModel: (data) => mfrFormToModel(data),
+    modelToForm: (data) => mfrModelToForm(data),
   },
 };
 
-export { capitalize, dataTransform, mfrDataTransform };
+const getListEntityLabel = (textClassPairs) => textClassPairs.map((p) => ({ spanText: p[0], className: p[1] }));
+
+export { capitalize, getListEntityLabel, dataTransform, mfrDataTransform };

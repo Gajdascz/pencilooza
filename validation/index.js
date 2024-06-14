@@ -15,7 +15,8 @@ const parseValidationErrors = (errorsArray) =>
 const validateRegistrationMiddleware = asyncHandler(async (req, res, next) => {
   const schemaKey = req.body.entityType?.trim().toLowerCase();
   const schema = schemas[schemaKey];
-  if (!schema) throw new Error(`Validation Schema: ${schemaKey} not found`);
+  if (!schema)
+    throw new Error(`Validation Schema with schemaKey: ${schemaKey} not found (validateRegistrationMiddleware)`);
   await Promise.all(checkSchema(schema).map((validation) => validation.run(req)));
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -27,12 +28,13 @@ const validateRegistrationMiddleware = asyncHandler(async (req, res, next) => {
 
 const validateRegistrationDirect = async (req) => {
   try {
-    const schemaKey = req.body.entityType?.trim().toLowerCase();
+    const schemaKey = req.body.dataKey?.trim().toLowerCase();
     const schema = schemas[schemaKey];
-    if (!schema) throw new Error(`Validation Schema: ${schemaKey} not found`);
+    if (!schema)
+      throw new Error(`Validation Schema with schemaKey: ${schemaKey} not found (validateRegistrationDirect)`);
     await Promise.all(checkSchema(schema).map((validation) => validation.run(req)));
     const errors = validationResult(req);
-    return errors.isEmpty ? { success: true } : { success: false, errors: errors.array() };
+    return errors.isEmpty() ? { success: true } : { success: false, errors: errors.array() };
   } catch (err) {
     return {
       success: false,

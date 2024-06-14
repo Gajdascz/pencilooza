@@ -5,10 +5,13 @@ import Manufacturer from '../../models/manufacturer/Manufacturer.js';
 import Item from '../../models/item/Item.js';
 import { mfrDataTransform } from '../../config/utils.js';
 const render = {
-  list: (res, manufacturers) => res.render('manufacturerList', { title: 'All Manufacturers', manufacturers }),
+  list: (res, manufacturers) => {
+    const entities = manufacturers.map((mfr) => ({ url: mfr.url, label: mfr.company.name }));
+    res.render('list', { title: 'All Manufacturers', entities });
+  },
   detail: (res, manufacturer, productLinks, registrationLink) =>
     res.render('manufacturerDetail', {
-      id: manufacturer.id,
+      entityId: manufacturer.id,
       company: manufacturer.company,
       contact: manufacturer.contact,
       fullAddress: manufacturer.fullAddress,
@@ -60,11 +63,24 @@ const manufacturerController = {
   getUpdate: asyncHandler(async (req, res, next) => {
     const manufacturer = await find.manufacturer(req.params.id);
     registrationController.renderForm(res, {
-      ...mfrDataTransform.modelToRegistration(manufacturer),
+      ...mfrDataTransform.modelToForm(manufacturer),
       title: 'Update Manufacturer',
-      state: 'authUpdate',
       entityType: 'manufacturer',
       entityId: manufacturer.id,
+      errors: req.errors,
+      isUpdate: true,
+    });
+  }),
+  postUpdate: asyncHandler(async (req, res, next) => {
+    const { errors, fieldData } = req.body;
+    console.log(req.body);
+    registrationController.renderForm(res, {
+      title: 'Update Manufacturer',
+      entityType: 'manufacturer',
+      entityId: req.params.id,
+      errors: JSON.parse(errors),
+      ...JSON.parse(fieldData),
+      isUpdate: true,
     });
   }),
 };

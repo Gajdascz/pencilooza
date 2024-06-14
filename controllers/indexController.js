@@ -8,12 +8,12 @@ const registrationAggregation = Registration.aggregate([
   {
     $facet: {
       pendingManufacturers: [
-        { $match: { type: 'Manufacturer', status: 'pending' } },
+        { $match: { type: 'manufacturer', status: 'pending' } },
         { $group: { _id: null, count: { $sum: 1 } } },
         { $project: { _id: 0, count: 1 } },
       ],
       pendingItems: [
-        { $match: { type: 'Item', status: 'pending' } },
+        { $match: { type: 'item', status: 'pending' } },
         { $group: { _id: null, count: { $sum: 1 } } },
         { $project: { _id: 0, count: 1 } },
       ],

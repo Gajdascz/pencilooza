@@ -21,7 +21,7 @@ export default {
   companyStructure: strBySelection('companyStructure', COMPANY_STRUCTURES),
   yearFounded: numberByRange('yearFounded', { max: new Date().getFullYear() }),
   ein: ein('ein'),
-  companyDescription: strByLength('companyDescription', { min: 5, max: 500, optional: true }),
+  companyDescription: strByLength('companyDescription', { optional: true }),
   countryCode: countryCode('countryCode'),
   state: strByLength('state', { min: 2, max: 50 }),
   postalCode: postalCode('postalCode'),
@@ -31,5 +31,5 @@ export default {
   email: email('email'),
   phone: phone('phone'),
   website: website('website', { optional: true }),
-  note: strByLength('note', { min: 5, max: 500, optional: true }),
+  note: strByLength('note', { optional: true }),
 };

@@ -22,20 +22,20 @@ block content
         p= company.description
       section.company-info
         h2 General
-        +labelValue('Year Founded:', company.yearFounded)
-        +labelValue('Structure:', company.structure)
-        +labelValue('Ref:', company.ref)
+        +labelValue('founded:', company.yearFounded)
+        +labelValue('structure:', company.structure)
+        +labelValue('ref:', company.ref)
         if company.ein
-          +labelValue('EIN:', company.ein)
+          +labelValue('ein:', company.ein)
         if note
-          +labelValue('Note:', note)
+          +labelValue('note:', note)
         if registrationLink
           a(href=registrationLink) Registration Submission 
       section.contact-info
         h2 Contact
-        +labelValue('Representative:', repInfo)
-        +labelValue('Address:',fullAddress)
-        +labelValue('Phone:',contact.phone)
+        +labelValue('representative:', repInfo)
+        +labelValue('address:',fullAddress)
+        +labelValue('phone:',contact.phone)
         a(href=`mailto:${contact.email}`)= contact.email
         if website
           br
@@ -50,6 +50,6 @@ block content
     div.manufacturer-operations-container
       form(method='GET', id='manufacturer-detail-form').form-container
         div.grouped-radio-buttons
-          +customRadio('Update','manufacturerDetailCommand', 'updateManufacturer', `/manufacturer/${id}/update`)
-          +customRadio('Delete','manufacturerDetailCommand', 'deleteManufacturer', `/manufacturer/${id}/delete`)
+          +customRadio('Update','manufacturerDetailCommand', 'updateManufacturer', `/manufacturer/${entityId}/update`)
+          +customRadio('Delete','manufacturerDetailCommand', 'deleteManufacturer', `/manufacturer/${entityId}/delete`)
         button(type='submit')#manufacturerDetailFormSubmitButton Proceed

@@ -4,7 +4,7 @@ block content
   include mixins/adminForm
   include mixins/hiddenField
   h1 Delete: #{entityName}
-  if dependencies.length
+  if dependencies && dependencies.length
     div.manufacturer-products-container
       h2 #[em #[strong Warning! Deleting this #{entityType} will automatically delete all of the following dependent data:]]
       ul

@@ -37,7 +37,23 @@ mixin adminForm(formId, adminCommand, options)
         if(json.errors?.length > 0) return json.errors?.forEach(err => alert(`Error: ${err.msg}`));
         else if(json.msg) alert(`${json.msg}`);
         else alert(`${form.id} submission successful`)
-        if(json.redirect) location.replace(json.redirect);
+        if(json.redirect) {
+          if(json.payload) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = json.redirect;
+            Object.keys(json.payload).forEach(key => {
+              const input = document.createElement('input');
+              input.type = 'hidden';
+              input.name = key;
+              input.value = JSON.stringify(json.payload[key]);
+              form.appendChild(input);
+            })
+            document.body.appendChild(form);
+            form.submit();
+          }
+          else location.replace(json.redirect);
+        }
         else location.reload()
       } catch (err) { console.error('Error in adminForm POST Response:', err); }
       });

@@ -7,16 +7,25 @@ import { validateRegistrationDirect } from '../../validation/index.js';
 
 const getMongooseModel = (modelName) => mongoose.model(capitalize(modelName));
 
-const registrationToModelData = (type, data) => dataTransform[type].registrationToModel(data);
+const formToModelData = (key, data) => dataTransform[key]?.formToModel(data);
 
 const codes = {
-  registered: (what, res, redirect = null) => res.status(201).json({ msg: `${what} was registered.`, redirect }),
-  notFound: (what, res, redirect = null) => res.status(404).json({ msg: `${what} not found.`, redirect }),
-  error: (what, res, redirect = null) => res.status(500).json({ msg: `Error: ${what}`, redirect }),
-  rejected: (what, res, redirect = null) => res.status(200).json({ msg: `${what} has been rejected.`, redirect }),
-  notImplemented: (what, res, redirect = null) => res.status(503).json({ msg: `${what} not implemented.`, redirect }),
-  deleted: (what, res, redirect = null) => res.status(200).json({ msg: `${what} has been deleted.`, redirect }),
-  updated: (what, res, redirect = null) => res.status(200).json({ msg: `${what} has been updated.`, redirect }),
+  registered: (what, res, redirect = null, payload = {}) =>
+    res.status(201).json({ msg: `${what} was registered.`, redirect, payload }),
+  notFound: (what, res, redirect = null, payload = {}) =>
+    res.status(404).json({ msg: `${what} not found.`, redirect, payload }),
+  invalid: (what, res, redirect = null, payload = {}) =>
+    res.status(400).json({ msg: `${what} is invalid.`, redirect, payload }),
+  error: (what, res, redirect = null, payload = {}) =>
+    res.status(500).json({ msg: `Error: ${what}`, redirect, payload }),
+  rejected: (what, res, redirect = null, payload = {}) =>
+    res.status(200).json({ msg: `${what} has been rejected.`, redirect, payload }),
+  notImplemented: (what, res, redirect = null, payload = {}) =>
+    res.status(503).json({ msg: `${what} not implemented.`, redirect, payload }),
+  deleted: (what, res, redirect = null, payload = {}) =>
+    res.status(200).json({ msg: `${what} has been deleted.`, redirect, payload }),
+  updated: (what, res, redirect = null, payload = {}) =>
+    res.status(200).json({ msg: `${what} has been updated.`, redirect, payload }),
 };
 
 const entityHandlers = {
@@ -36,15 +45,24 @@ const entityHandlers = {
   },
   update: asyncHandler(async (req, res, next) => {
     const result = await validateRegistrationDirect(req, res, next);
-    if (!result.success) throw new Error(`Form validation error: ${result.errors}`);
-    const { entityType, entityId } = req.body;
+    if (!result.success)
+      return codes.invalid('Form Validation', res, `/manufacturer/${req.body.entityId}/update`, {
+        errors: result.errors,
+        fieldData: req.body,
+      });
+    const { entityType, entityId, dataKey } = req.body;
+    ['entityType', 'entityId', 'dataKey'].forEach((property) => delete req.body[property]);
     const EntityModel = getMongooseModel(entityType);
-    if (!EntityModel) throw new Error(`Failed to find entity model of type: ${entityType}`);
-    const modelData = registrationToModelData(entityType, req.body);
-    const entity = new EntityModel({ ...modelData, _id: entityId });
-    if (!entity) throw new Error(`Failed to create entity model with id: ${entityId}`);
-    await EntityModel.findByIdAndUpdate(entityId, entity).exec();
-    return codes.updated(entityType, res, entity.url);
+    if (!EntityModel) return codes.error(`Failed to find entity model of type: ${entityType}`);
+    let modelData;
+    if (EntityModel.modelName === 'Registration') modelData = { data: req.body };
+    else modelData = formToModelData(dataKey, req.body);
+    const updatedEntity = await EntityModel.findByIdAndUpdate(entityId, modelData, {
+      new: true,
+      runValidators: true,
+    }).exec();
+    if (!updatedEntity) return codes.error(`Failed to update entity model with id: ${entityId}`);
+    return codes.updated(entityType, res, updatedEntity.url);
   }),
 };
 
@@ -52,8 +70,7 @@ const entityHandlers = {
 const registrationHandlers = {
   accept: async (registration, res) => {
     try {
-      const modelData = registrationToModelData(registration.type, registration.data);
-      console.log(modelData);
+      const modelData = formToModelData(registration.type, registration.data);
       const entity = await entityHandlers.create(registration.type, modelData);
       if (!entity) throw new Error(`Invalid entity created in registrationHandlers.accept`);
       registration.status = 'accepted';
@@ -90,7 +107,6 @@ const adminCommands = new Map([
   ['reviewRegistration', registrationHandlers.review],
   ['deleteEntity', entityHandlers.delete],
   ['updateEntity', entityHandlers.update],
-  ['updateRegistration', entityHandlers.update],
 ]);
 
 export default adminCommands;

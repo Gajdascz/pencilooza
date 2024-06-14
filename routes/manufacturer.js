@@ -8,5 +8,6 @@ router.get('/:id', manufacturerController.getDetail);
 
 router.get('/:id/delete', manufacturerController.getDelete);
 router.get('/:id/update', manufacturerController.getUpdate);
+router.post('/:id/update', manufacturerController.postUpdate);
 
 export default router;

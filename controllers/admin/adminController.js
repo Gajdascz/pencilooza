@@ -10,15 +10,13 @@ import adminCommands from './adminCommands.js';
  *  If successful executes the provided adminCommand if available.
  *
  */
-const whitelist = ['updateRegistration'];
 
 const adminController = {
   authAndExecute: [
     body('adminPassword')
       .trim()
-      .custom((enteredPass, { req }) => {
-        if (!whitelist.includes(req.body.adminCommand) && enteredPass !== process.env.ADMIN_COMMAND_PASS)
-          throw new Error(`Invalid Admin Password`);
+      .custom((enteredPass) => {
+        if (enteredPass !== process.env.ADMIN_COMMAND_PASS) throw new Error(`Invalid Admin Password`);
         else return true;
       }),
     body('adminCommand')

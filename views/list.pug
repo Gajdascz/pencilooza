@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1= title
+  if entities.length
+    ul.list-page-entities
+      each entity in entities
+        - const {url, label} = entity
+        - console.log(entity)
+        li &bull; 
+          a(href=url)
+            if typeof label === 'string'
+              span= label
+            else
+              each span in label
+                span(class=span.className ? span.className : '')= span.spanText
+  else
+    p No #{entities.constructor.name}'s found.

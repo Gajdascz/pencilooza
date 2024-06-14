@@ -103,14 +103,18 @@ const itemController = {
       totalRejectedRegistrations,
     });
   }),
-  itemList: asyncHandler(async (req, res, next) => {
+  getList: asyncHandler(async (req, res, next) => {
     const allItems = await Item.find({}, 'name type category manufacturer')
       .sort({ manufacturer: 1 })
-      .populate('manufacturer')
+      .populate('manufacturer', 'company.name')
       .exec();
-    res.render('itemList', { title: 'All Items', items: allItems });
+    const entities = allItems.map((item) => ({
+      url: item.url,
+      label: `${item.name} ${item.manufacturer.company.name}`,
+    }));
+    res.render('list', { title: 'All Items', entities });
   }),
-  itemDetail: asyncHandler(async (req, res, next) => {
+  getDetail: asyncHandler(async (req, res, next) => {
     const item = await Item.findById(req.params.id);
     const {
       name,

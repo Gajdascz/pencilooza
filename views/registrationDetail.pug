@@ -32,7 +32,7 @@ block content
       h2.registration-status-status status: 
         span(class=`${status}-status`) #{status.charAt(0).toUpperCase() + status.slice(1)}
       if status === 'rejected'
-        h3 reason: #{rejectionReason}
+        +labelValue('reason:',rejectionReason)
       else if status === 'accepted'
         a(href=dataLink) Your application has been accepted! Click this link to view your profile.
     section.registration-status-body
@@ -43,11 +43,14 @@ block content
             each value,label in sectionData
               +labelValue(`${label}:`,value)
       div.registration-status-other-container
-        if status === 'pending'
+        div.button-group
           a(href=`/registration/update/${id}`).link-button Edit
+          a(href=`/registration/delete/${id}`).link-button.danger-button Delete
+        if status === 'pending'
           +adminForm('registration-review-form', 'reviewRegistration')
             +hiddenField('registration-id','registrationId',id)
             +hiddenField('rejection-reason','rejectionReason')
             div.grouped-radio-buttons
               +customRadio('Accept','registrationCommand', 'acceptRegistration', 'accept', {checked: status === 'accepted', disabled: status !== 'pending'})
               +customRadio('Reject','registrationCommand', 'rejectRegistration', 'reject', {checked: status === 'rejected', disabled: status !== 'pending'})
+

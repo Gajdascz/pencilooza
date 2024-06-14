@@ -7,20 +7,25 @@ block content
   include mixins/adminForm
   include mixins/hiddenField
   form(method='POST' id='registrationForm').register-form
+    +hiddenField('entity-type','entityType',value=entityType)
+    +hiddenField('data-key','dataKey',value=dataKey ? dataKey : entityType)
+    if isUpdate
+      +hiddenField('entity-id','entityId',value=entityId)
     header.form-header
       h1= title
       p.form-disclaimer-text
         em
-          strong Information submitted through this form will be publicly displayed after review. Please refrain from entering any real personal information. This project is for educational purposes only.
+          strong Disclaimer:
+          | Information submitted through this form will be publicly displayed in the "Browse Registrations" immediately and "Browse Manufacturers" sections if accepted. 
+          | Please refrain from entering any personal, vulgar, and/or offensive information. 
+          | Submissions containing such content will be rejected and/or removed.
+          | Note that this project is created for educational purposes only, and any data entered should be considered publicly accessible. 
     div.register-form-inputs-container
       if errorMsgs
         ul 
         for msg in errorMsgs 
           li.error-message!= msg
       section.form-input-section
-        +hiddenField('entity-type','entityType',value=entityType)
-        if isUpdate
-          +hiddenField('entity-id','entityId',value=entityId)
         h2.form-input-section-header Representative
         div.grouped-input-fields
           +inputField('repFirstName', 'First Name', 'Nicolas-Jacques', repFirstName===undefined ? '' : repFirstName, true)
@@ -57,19 +62,11 @@ block content
       section.form-input-section 
         h2.form-input-section-header Note
         +inputField('note', '', 'Enter any relevant details here. If you entered other in any of the above fields, this is a good place to specify.', note===undefined ? '' : note, false, 'textarea')
-    case state
-      when 'authUpdate'
-        +adminForm('registrationForm', 'updateEntity')
-      when 'noAuthUpdate'
-        span.no-auth-admin-form-wrapper 
-          +adminForm('registrationForm','updateRegistration')
-      default
-        button(type='submit').form-submit-button Submit
-
-
-
-
-
+    if isUpdate
+      +adminForm('registrationForm', 'updateEntity')
+    else
+      button(type='submit').form-submit-button Submit
+    
 block scripts
   script.
     const setPendingValidation = (e) => {
