@@ -5,9 +5,8 @@ const router = express.Router();
 
 router.get('/', manufacturerController.getList);
 router.get('/:id', manufacturerController.getDetail);
-
-router.get('/:id/delete', manufacturerController.getDelete);
-router.get('/:id/update', manufacturerController.getUpdate);
-router.post('/:id/update', manufacturerController.postUpdate);
+router.get('/delete/:id', manufacturerController.getDelete);
+router.get('/update/:id', manufacturerController.getUpdate);
+router.post('/update/:id', manufacturerController.postUpdate);
 
 export default router;

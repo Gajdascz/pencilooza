@@ -2,58 +2,39 @@ import asyncHandler from 'express-async-handler';
 
 import Registration from '../../models/registration/Registration.js';
 import mongoose from 'mongoose';
-import { capitalize, dataTransform } from '../../config/utils.js';
+import { capitalize, dataTransform, setRes } from '../../config/utils.js';
 import { validateRegistrationDirect } from '../../validation/index.js';
-
 const getMongooseModel = (modelName) => mongoose.model(capitalize(modelName));
 
 const formToModelData = (key, data) => dataTransform[key]?.formToModel(data);
 
-const codes = {
-  registered: (what, res, redirect = null, payload = {}) =>
-    res.status(201).json({ msg: `${what} was registered.`, redirect, payload }),
-  notFound: (what, res, redirect = null, payload = {}) =>
-    res.status(404).json({ msg: `${what} not found.`, redirect, payload }),
-  invalid: (what, res, redirect = null, payload = {}) =>
-    res.status(400).json({ msg: `${what} is invalid.`, redirect, payload }),
-  error: (what, res, redirect = null, payload = {}) =>
-    res.status(500).json({ msg: `Error: ${what}`, redirect, payload }),
-  rejected: (what, res, redirect = null, payload = {}) =>
-    res.status(200).json({ msg: `${what} has been rejected.`, redirect, payload }),
-  notImplemented: (what, res, redirect = null, payload = {}) =>
-    res.status(503).json({ msg: `${what} not implemented.`, redirect, payload }),
-  deleted: (what, res, redirect = null, payload = {}) =>
-    res.status(200).json({ msg: `${what} has been deleted.`, redirect, payload }),
-  updated: (what, res, redirect = null, payload = {}) =>
-    res.status(200).json({ msg: `${what} has been updated.`, redirect, payload }),
-};
-
 const entityHandlers = {
-  delete: asyncHandler(async (req, res, next) => {
-    const { entityId, entityType } = req.body;
-    const EntityModel = getMongooseModel(entityType);
-    const entity = await EntityModel.findById(entityId).exec();
-    if (!entity) return codes.notFound(`${entityType} with id: ${entityId}`);
-    await entity.deleteOne().exec();
-    return codes.deleted(entityType, res, '/');
-  }),
   create: async (entityType, entityData) => {
     const EntityModel = getMongooseModel(entityType);
     const entity = new EntityModel(entityData);
     await entity.save();
     return entity;
   },
+  delete: asyncHandler(async (req, res, next) => {
+    const { entityId, entityType } = req.body;
+    const EntityModel = getMongooseModel(entityType);
+    const entity = await EntityModel.findById(entityId).exec();
+    if (!entity) return setRes(res, 404, { alert: `${entityType} with id: ${entityId} could not be found` });
+    await entity.deleteOne().exec();
+    return setRes(res, 200, { alert: `${entityType} successfully deleted`, redirect: '/' });
+  }),
   update: asyncHandler(async (req, res, next) => {
     const result = await validateRegistrationDirect(req, res, next);
     if (!result.success)
-      return codes.invalid('Form Validation', res, `/manufacturer/${req.body.entityId}/update`, {
+      return setRes(res, 400, {
+        redirect: `/${req.body.entityType}/update/${req.body.entityId}`,
         errors: result.errors,
-        fieldData: req.body,
+        data: req.body,
       });
     const { entityType, entityId, dataKey } = req.body;
     ['entityType', 'entityId', 'dataKey'].forEach((property) => delete req.body[property]);
     const EntityModel = getMongooseModel(entityType);
-    if (!EntityModel) return codes.error(`Failed to find entity model of type: ${entityType}`);
+    if (!EntityModel) return setRes(res, 404, { alert: `Failed to find entity model of type: ${entityType}` });
     let modelData;
     if (EntityModel.modelName === 'Registration') modelData = { data: req.body };
     else modelData = formToModelData(dataKey, req.body);
@@ -61,8 +42,8 @@ const entityHandlers = {
       new: true,
       runValidators: true,
     }).exec();
-    if (!updatedEntity) return codes.error(`Failed to update entity model with id: ${entityId}`);
-    return codes.updated(entityType, res, updatedEntity.url);
+    if (!updatedEntity) return setRes(res, 500, { alert: `Error updating ${entityType} with id ${entityId}` });
+    return setRes(res, 200, { alert: `${entityType} successfully updated`, redirect: updatedEntity.url });
   }),
 };
 
@@ -77,9 +58,12 @@ const registrationHandlers = {
       registration.dataLink = entity.url;
       registration.acceptedEntityId = entity.id;
       await registration.save();
-      return codes.registered(registration.type, res);
+      return setRes(res, 201, {
+        alert: 'Registration successfully accepted',
+        redirect: entity.url,
+      });
     } catch (err) {
-      return codes.error(err, res);
+      return setRes(res, 500, { alert: 'Error accepting registration', errors: [err] });
     }
   },
   reject: async (registration, rejectionReason, res) => {
@@ -87,18 +71,18 @@ const registrationHandlers = {
       registration.status = 'rejected';
       registration.rejectionReason = rejectionReason || 'No reason provided';
       await registration.save();
-      return codes.rejected(registration.type, res);
+      return setRes(res, 200, { alert: `${registration.type} successfully rejected` });
     } catch (err) {
-      return codes.rejected(`${registration.type} Registration. Caught: ${err}`, res);
+      return setRes(res, 500, { alert: `Error rejecting registration`, errors: [err] });
     }
   },
   review: asyncHandler(async (req, res, next) => {
     const { registrationId, registrationCommand, rejectionReason } = req.body;
     const registration = await Registration.findById(registrationId).exec();
-    if (!registration) return codes.notFound(`Registration with id: ${registrationId}`, res);
+    if (!registration) return setRes(res, 404, { alert: `Registration with id: ${registrationId} could not be found` });
     if (registrationCommand === 'accept') return await registrationHandlers.accept(registration, res);
     if (registrationCommand === 'reject') return await registrationHandlers.reject(registration, rejectionReason, res);
-    return codes.error(`${registrationCommand} not found.`);
+    return setRes(res, 404, { alert: `${registrationCommand} not found.` });
   }),
 };
 

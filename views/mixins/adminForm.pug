@@ -4,57 +4,19 @@ include hiddenField
 //-
   adminForm provides a form Element which blocks submissions unless the admin password is correct.
   |--> Form submission handlers MUST be registered in the adminCommands module to process the form data.
-
-mixin adminForm(formId, adminCommand, options)
-  form(method='POST', id=formId).form-container
+-
+  const inputOptions = {
+    type:'password',
+    labelIsHidden:true,
+    labelText:'Admin Password',
+    inputPlaceholder:'Admin Password',
+    buttonClass:'admin-form-submit-button',
+    buttonText:'Submit',
+    buttonType:'submit',
+  }
+mixin adminForm(formId, adminCommand)
+  form(method='POST', id=formId).admin-form.form-container
     +hiddenField('admin-command','adminCommand',value=adminCommand)
     block
-    +inputWithButton('admin-password','adminPassword',
-      {
-        type:'password',
-        labelIsHidden:true,
-        labelText:'Admin Password',
-        inputPlaceholder:'Admin Password',
-        buttonClass:'admin-form-submit-button',
-        buttonText:'Submit',
-        buttonType:'submit',
-      }
-    )
-  script.
-    document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector('#'+'#{formId}');
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      const searchParamsInstance = new URLSearchParams(formData);
-      try {
-        const response = await fetch('/admin-command', {
-          method: 'POST',
-          body: searchParamsInstance,
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-        });
-        const json = await response.json();
-        if(json.errors?.length > 0) return json.errors?.forEach(err => alert(`Error: ${err.msg}`));
-        else if(json.msg) alert(`${json.msg}`);
-        else alert(`${form.id} submission successful`)
-        if(json.redirect) {
-          if(json.payload) {
-            const form = document.createElement('form');
-            form.method = 'POST';
-            form.action = json.redirect;
-            Object.keys(json.payload).forEach(key => {
-              const input = document.createElement('input');
-              input.type = 'hidden';
-              input.name = key;
-              input.value = JSON.stringify(json.payload[key]);
-              form.appendChild(input);
-            })
-            document.body.appendChild(form);
-            form.submit();
-          }
-          else location.replace(json.redirect);
-        }
-        else location.reload()
-      } catch (err) { console.error('Error in adminForm POST Response:', err); }
-      });
-    });
+    +inputWithButton('admin-password','adminPassword',inputOptions)
+  script(src='/scripts/adminForm.js')

@@ -4,3 +4,5 @@ mixin inputWithButton(id,name,options)
     div.input-with-button-wrapper
       input(type=options.type ? options.type : 'text' id=id name=name placeholder=options.inputPlaceholder disabled=options.disabled?true:false)
       button(type=options.buttonType class=options.buttonClass disabled=options.disabled?true:false)= options.buttonText
+    div.input-errors-container
+      block

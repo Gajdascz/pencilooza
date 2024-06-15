@@ -28,6 +28,17 @@ const render = {
       entityId: manufacturer.id,
       dependencies,
     }),
+  update: (res, id, errors = [], data = {}) => {
+    registrationController.renderForm(res, {
+      title: 'Update Manufacturer',
+      entityType: 'manufacturer',
+      dataKey: 'manufacturer',
+      entityId: id,
+      errors: errors.length > 0 ? JSON.parse(errors) : errors,
+      isUpdate: true,
+      ...data,
+    });
+  },
 };
 
 const find = {
@@ -62,26 +73,11 @@ const manufacturerController = {
   }),
   getUpdate: asyncHandler(async (req, res, next) => {
     const manufacturer = await find.manufacturer(req.params.id);
-    registrationController.renderForm(res, {
-      ...mfrDataTransform.modelToForm(manufacturer),
-      title: 'Update Manufacturer',
-      entityType: 'manufacturer',
-      entityId: manufacturer.id,
-      errors: req.errors,
-      isUpdate: true,
-    });
+    render.update(res, manufacturer.id, req.errors, mfrDataTransform.modelToForm(manufacturer));
   }),
   postUpdate: asyncHandler(async (req, res, next) => {
     const { errors, fieldData } = req.body;
-    console.log(req.body);
-    registrationController.renderForm(res, {
-      title: 'Update Manufacturer',
-      entityType: 'manufacturer',
-      entityId: req.params.id,
-      errors: JSON.parse(errors),
-      ...JSON.parse(fieldData),
-      isUpdate: true,
-    });
+    render.update(res, req.params.id, errors, fieldData);
   }),
 };
 export default manufacturerController;

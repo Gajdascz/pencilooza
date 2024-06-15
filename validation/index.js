@@ -19,10 +19,7 @@ const validateRegistrationMiddleware = asyncHandler(async (req, res, next) => {
     throw new Error(`Validation Schema with schemaKey: ${schemaKey} not found (validateRegistrationMiddleware)`);
   await Promise.all(checkSchema(schema).map((validation) => validation.run(req)));
   const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    req.errors = parseValidationErrors(errors.array());
-    return res.status(400).json({ errors: req.errors });
-  }
+  if (!errors.isEmpty()) req.errors = parseValidationErrors(errors.array());
   return next();
 });
 
@@ -34,7 +31,7 @@ const validateRegistrationDirect = async (req) => {
       throw new Error(`Validation Schema with schemaKey: ${schemaKey} not found (validateRegistrationDirect)`);
     await Promise.all(checkSchema(schema).map((validation) => validation.run(req)));
     const errors = validationResult(req);
-    return errors.isEmpty() ? { success: true } : { success: false, errors: errors.array() };
+    return errors.isEmpty() ? { success: true } : { success: false, errors: parseValidationErrors(errors.array()) };
   } catch (err) {
     return {
       success: false,

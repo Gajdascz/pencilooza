@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import { body, validationResult } from 'express-validator';
 import adminCommands from './adminCommands.js';
-
+import { setRes } from '../../config/utils.js';
 /**
  * adminController
  *
@@ -21,10 +21,13 @@ const adminController = {
       }),
     body('adminCommand')
       .trim()
-      .custom((command) => adminCommands.has(command)),
+      .custom((command) => {
+        if (!adminCommands.has(command)) throw new Error(`Unknown Admin Command: ${command}`);
+        else return true;
+      }),
     asyncHandler(async (req, res, next) => {
       const errors = validationResult(req);
-      if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() });
+      if (!errors.isEmpty()) return setRes(res, 401, { alert: 'Admin Authentication Error', errors: errors.array() });
       delete req.body.adminPassword;
       const commandCb = adminCommands.get(req.body.adminCommand);
       delete req.body.adminCommand;

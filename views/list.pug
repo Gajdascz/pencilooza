@@ -6,7 +6,6 @@ block content
     ul.list-page-entities
       each entity in entities
         - const {url, label} = entity
-        - console.log(entity)
         li &bull; 
           a(href=url)
             if typeof label === 'string'

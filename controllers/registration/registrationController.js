@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import asyncHandler from 'express-async-handler';
 import { DateTime } from 'luxon';
-import { body } from 'express-validator';
+import { body, validationResult } from 'express-validator';
 
 import { COUNTRY_ALPHA2, COMPANY_ROLES, COMPANY_STRUCTURES } from '../../config/constants.js';
 import Registration from '../../models/registration/Registration.js';
@@ -25,13 +25,15 @@ const render = {
       });
     return res.render('list', { title: 'All Registrations', entities });
   },
-  form: (res, data = {}) =>
+  form: (res, data = {}) => {
+    if (!data.dataKey) throw new Error(`dataKey required to render registration form: ${data.title}`);
     res.render('registrationForm', {
       countryCodes: COUNTRY_ALPHA2,
       repRoles: COMPANY_ROLES,
       companyStructures: COMPANY_STRUCTURES,
       ...data,
-    }),
+    });
+  },
   confirmation: (res, registration) =>
     res.render('registrationConfirmation', {
       formId: registration._id,
@@ -59,6 +61,23 @@ const render = {
       entityId: id,
     });
   },
+  update: (res, registration) => {
+    render.form(res, {
+      title: 'Update Registration',
+      entityType: 'registration',
+      entityId: registration.id,
+      dataKey: registration.type,
+      isUpdate: true,
+      ...registration.data,
+    });
+  },
+  updateReq: (res, reqBody = {}) => {
+    render.form(res, {
+      title: 'Update Registration',
+      isUpdate: true,
+      ...reqBody,
+    });
+  },
 };
 
 const registrationController = {
@@ -70,18 +89,17 @@ const registrationController = {
   getCreate: asyncHandler(async (req, res, next) =>
     render.form(res, {
       title: `Register`,
+      dataKey: req.params.type,
       entityType: req.params.type,
     })
   ),
   postCreate: [
     validateRegistrationMiddleware,
     asyncHandler(async (req, res, next) => {
+      if (req.errors.length > 0) return render.form(res, { ...req.body, errors: req.errors });
       const registration = new Registration({ type: req.params.type, data: req.body });
-      if (req.errors?.length > 0) render.form(res, { ...registration.data, errors: req.errors });
-      else {
-        await registration.save();
-        res.redirect(`/registration/confirmation/${registration._id}`);
-      }
+      await registration.save();
+      return res.redirect(`/registration/confirmation/${registration._id}`);
     }),
   ],
   getConfirmation: asyncHandler(async (req, res, next) => {
@@ -110,20 +128,13 @@ const registrationController = {
       throw new Error(`Registration with ID: ${req.params.id} not found`);
     } else render.detail(res, registration);
   }),
-  getUpdateDirect: () => {},
   getUpdate: asyncHandler(async (req, res, next) => {
     const registration = await Registration.findById(req.params.id).exec();
     if (!registration) throw new Error(`Failed to find registration with id: ${req.params.id}`);
-    else
-      render.form(res, {
-        ...registration.data,
-        title: 'Update Registration',
-        entityType: 'registration',
-        entityId: registration.id,
-        errors: req.errors,
-        dataKey: registration.type,
-        isUpdate: true,
-      });
+    else render.update(res, registration);
+  }),
+  postUpdate: asyncHandler(async (req, res, next) => {
+    render.updateReq(res, { ...req.body, errors: JSON.parse(req.body.errors) });
   }),
   getDelete: asyncHandler(async (req, res, next) => render.delete(res, req.params.id)),
 };

@@ -50,6 +50,6 @@ block content
     div.manufacturer-operations-container
       form(method='GET', id='manufacturer-detail-form').form-container
         div.grouped-radio-buttons
-          +customRadio('Update','manufacturerDetailCommand', 'updateManufacturer', `/manufacturer/${entityId}/update`)
-          +customRadio('Delete','manufacturerDetailCommand', 'deleteManufacturer', `/manufacturer/${entityId}/delete`)
+          +customRadio('Update','manufacturerDetailCommand', 'updateManufacturer', `/manufacturer/update/${entityId}`)
+          +customRadio('Delete','manufacturerDetailCommand', 'deleteManufacturer', `/manufacturer/delete/${entityId}`)
         button(type='submit')#manufacturerDetailFormSubmitButton Proceed

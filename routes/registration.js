@@ -10,5 +10,6 @@ router.post('/create/:type', registrationController.postCreate);
 router.get('/confirmation/:id', registrationController.getConfirmation);
 
 router.get('/update/:id', registrationController.getUpdate);
+router.post('/update/:id', registrationController.postUpdate);
 
 export default router;

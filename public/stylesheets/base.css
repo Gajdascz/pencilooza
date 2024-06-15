@@ -126,11 +126,13 @@ ol > li {
 .pending-status {
   color: var(--color-orange-brown);
 }
+.valid,
 .accepted-hover:hover,
 .accepted,
 .accepted-status {
   color: var(--color-green);
 }
+.invalid,
 .rejected-hover:hover,
 .rejected,
 .error-message,
@@ -163,6 +165,12 @@ span.backdrop {
 .admin-form-submit-button {
   display: flex;
   height: 100%;
+}
+.input-errors-container {
+  display: flex;
+  flex-direction: column;
+  color: var(--color-red);
+  font-style: italic;
 }
 /* #endregion */
 
@@ -296,6 +304,7 @@ p.search-error-message {
   align-items: stretch;
   justify-content: stretch;
   gap: 0.5em;
+  flex: 1;
 }
 .input-with-button-wrapper {
   display: flex;
@@ -305,6 +314,10 @@ p.search-error-message {
   overflow: hidden;
   background-color: var(--color-white-paper);
   flex: 1;
+}
+.input-with-button-wrapper.invalid {
+  border-color: var(--color-red);
+  color: var(--color-red);
 }
 .input-with-button-wrapper > * {
   border: none;
@@ -377,12 +390,6 @@ span.required-marker.pending-validation {
 }
 .input-field-wrapper-field.invalid {
   border-color: var(--color-red);
-}
-span.required-marker.valid {
-  color: var(--color-green);
-}
-span.required-marker.invalid {
-  color: var(--color-red);
 }
 
 select.input-field-wrapper-field {

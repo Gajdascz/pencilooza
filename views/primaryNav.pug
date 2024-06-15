@@ -44,32 +44,6 @@ script.
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('form#search-registration-form');
     const errorMsg = document.querySelector('p.search-error-message');
-
-    //- form.addEventListener('submit', async (e) => {
-    //-   e.preventDefault();
-    //-   const formData = new FormData(form);
-    //-   const query = new URLSearchParams(formData);
-    //-   try {
-    //-     const response = await fetch('/inventory/registration-status', {
-    //-       method: 'POST',
-    //-       body: query,
-    //-       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
-    //-     });
-    //-     if (!response.ok) {
-    //-       const errorData = await response.json();
-    //-       errorMsg.textContent = errorData.message;
-    //-       errorMsg.style.display = 'block';
-    //-     } else {
-    //-       errorMsg.style.display = 'none';
-    //-       window.location.href = response.url
-    //-     }
-    //-   } catch (err) {
-    //-     console.error('Error:', err);
-    //-     errorMsg.textContent = 'An unexpected error occurred';
-    //-     errorMsg.style.display = 'block';
-    //-   }
-    //- });
-
     const navToggle = document.querySelector('button#primaryNavHamburgerToggle')
     const navContent = document.querySelector('.primary-nav-content-container')
     const backdrop = document.createElement('span');
