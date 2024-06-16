@@ -34,29 +34,6 @@ block content
 
 block scripts
   script.
-    const setPendingValidation = (e) => {
-      const field = e.target;
-      field.classList.remove('valid')
-      field.classList.remove('invalid')
-      if(field.value.trim() === '') field.classList.remove('pending-validation');
-      else field.classList.add('pending-validation');
-    }
-    const getErrorMessage = (errTxt) => {
-      const el = document.createElement('span');
-      el.classList.add('error-message','input-field-wrapper-error-message');
-      el.textContent = errTxt;
-      return el;
-    }
-    const inputFields = document.querySelectorAll('.input-field-wrapper-field')
-    inputFields.forEach(field => field.addEventListener('change', setPendingValidation))
-    const errJSONStr = '!{JSON.stringify(errors)}';
-    const errors = errJSONStr && errJSONStr.length > 0 ? JSON.parse('!{JSON.stringify(errors)}') : [];
-    if(errors && errors.length > 0) {
-      inputFields.forEach(inputField => {
-        const inputFieldError = errors.find(err => err.selector === inputField.id);
-        if(inputFieldError) {
-          inputField.classList.add('invalid');
-          inputField.nextSibling.append(getErrorMessage(inputFieldError.msg)) // Selects div.input-field-wrapper-errors-container from inputField mixin
-        } else inputField.classList.add('valid');
-      })
-    }
+    window.errors = '!{JSON.stringify(errors)}'
+    window.success = '!{success}'
+  script(src='/scripts/updateFormValidation.js' type='module')

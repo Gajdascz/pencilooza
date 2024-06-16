@@ -6,7 +6,7 @@ import { body, validationResult } from 'express-validator';
 import { COUNTRY_ALPHA2, COMPANY_ROLES, COMPANY_STRUCTURES } from '../../config/constants.js';
 import Registration from '../../models/registration/Registration.js';
 import { validateRegistrationMiddleware } from '../../validation/index.js';
-import { dataTransform, getListEntityLabel } from '../../config/utils.js';
+import { dataTransform, getListEntityLabel, capitalize, setRes } from '../../config/utils.js';
 
 const render = {
   list: (res, registrations) => {
@@ -63,12 +63,12 @@ const render = {
   },
   update: (res, registration) => {
     render.form(res, {
+      ...registration.data,
       title: 'Update Registration',
       entityType: 'registration',
       entityId: registration.id,
       dataKey: registration.type,
       isUpdate: true,
-      ...registration.data,
     });
   },
   updateReq: (res, reqBody = {}) => {
@@ -88,7 +88,7 @@ const registrationController = {
   }),
   getCreate: asyncHandler(async (req, res, next) =>
     render.form(res, {
-      title: `Register`,
+      title: `Register ${capitalize(req.params.type)}`,
       dataKey: req.params.type,
       entityType: req.params.type,
     })
@@ -96,7 +96,7 @@ const registrationController = {
   postCreate: [
     validateRegistrationMiddleware,
     asyncHandler(async (req, res, next) => {
-      if (req.errors.length > 0) return render.form(res, { ...req.body, errors: req.errors });
+      if (!req.body.success) return render.form(res, { ...req.body, title: 'Register Manufacturer' });
       const registration = new Registration({ type: req.params.type, data: req.body });
       await registration.save();
       return res.redirect(`/registration/confirmation/${registration._id}`);
@@ -137,6 +137,15 @@ const registrationController = {
     render.updateReq(res, { ...req.body, errors: JSON.parse(req.body.errors) });
   }),
   getDelete: asyncHandler(async (req, res, next) => render.delete(res, req.params.id)),
+  getValidate: [
+    validateRegistrationMiddleware,
+    asyncHandler(async (req, res, next) => {
+      let code;
+      if (req.body.success === 1) code = 200;
+      if (req.body.errors.length > 0) code = 400;
+      return setRes(res, code, { errors: req.body.errors, data: req.body });
+    }),
+  ],
 };
 
 export default registrationController;

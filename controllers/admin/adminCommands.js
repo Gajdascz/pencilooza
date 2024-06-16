@@ -42,7 +42,6 @@ const entityHandlers = {
       new: true,
       runValidators: true,
     }).exec();
-    if (!updatedEntity) return setRes(res, 500, { alert: `Error updating ${entityType} with id ${entityId}` });
     return setRes(res, 200, { alert: `${entityType} successfully updated`, redirect: updatedEntity.url });
   }),
 };
@@ -71,7 +70,7 @@ const registrationHandlers = {
       registration.status = 'rejected';
       registration.rejectionReason = rejectionReason || 'No reason provided';
       await registration.save();
-      return setRes(res, 200, { alert: `${registration.type} successfully rejected` });
+      return setRes(res, 200, { alert: `${registration.type} registration successfully rejected` });
     } catch (err) {
       return setRes(res, 500, { alert: `Error rejecting registration`, errors: [err] });
     }

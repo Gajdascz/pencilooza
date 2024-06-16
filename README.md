@@ -1,6 +1,6 @@
 # Pencilooza
 
-Inventory management application for the imaginary store Pencilooza.
+Welcome to Pencilooza, a faux web application designed for pencil manufacturers to register and offer products through the platform.
 
 ## Created With
 

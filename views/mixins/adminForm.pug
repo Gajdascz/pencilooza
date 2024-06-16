@@ -1,6 +1,7 @@
 include inputField
 include inputWithButton 
 include hiddenField
+
 //-
   adminForm provides a form Element which blocks submissions unless the admin password is correct.
   |--> Form submission handlers MUST be registered in the adminCommands module to process the form data.
@@ -14,9 +15,11 @@ include hiddenField
     buttonText:'Submit',
     buttonType:'submit',
   }
-mixin adminForm(formId, adminCommand)
+mixin adminForm(formId, adminCommand, addValidate=true)
   form(method='POST', id=formId).admin-form.form-container
     +hiddenField('admin-command','adminCommand',value=adminCommand)
     block
+    if addValidate
+      button(type='button' id =`validate-${formId}`).validate-button Validate
     +inputWithButton('admin-password','adminPassword',inputOptions)
-  script(src='/scripts/adminForm.js')
+  script(src='/scripts/adminForm.js' type='module')

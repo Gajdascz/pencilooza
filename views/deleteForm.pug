@@ -12,6 +12,6 @@ block content
           li
             a(href=dependency.url)= dependency.name
   h2 #[em #[strong Enter the required details below to delete #{entityName} and all dependent data.]]
-  +adminForm('deleteForm', 'deleteEntity')
+  +adminForm('deleteForm', 'deleteEntity', false)
     +hiddenField('entity-type','entityType',`${entityType}`)
     +hiddenField('entity-id','entityId',`${entityId}`)

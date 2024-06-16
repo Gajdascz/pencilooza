@@ -192,7 +192,7 @@ main.layout-main-content {
   padding-right: 3em;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
+  /* overflow-x: hidden; */
   text-overflow: ellipsis;
   max-width: 100%;
   gap: 1em;

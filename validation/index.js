@@ -13,13 +13,14 @@ const parseValidationErrors = (errorsArray) =>
   }, []);
 
 const validateRegistrationMiddleware = asyncHandler(async (req, res, next) => {
-  const schemaKey = req.body.entityType?.trim().toLowerCase();
+  const schemaKey = req.body.dataKey?.trim().toLowerCase();
   const schema = schemas[schemaKey];
   if (!schema)
     throw new Error(`Validation Schema with schemaKey: ${schemaKey} not found (validateRegistrationMiddleware)`);
   await Promise.all(checkSchema(schema).map((validation) => validation.run(req)));
   const errors = validationResult(req);
-  if (!errors.isEmpty()) req.errors = parseValidationErrors(errors.array());
+  if (!errors.isEmpty()) req.body.errors = parseValidationErrors(errors.array());
+  else req.body.success = true;
   return next();
 });
 

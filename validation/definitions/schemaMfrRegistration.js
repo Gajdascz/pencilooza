@@ -20,7 +20,7 @@ export default {
   companyRef: shorthandReference('companyRef'),
   companyStructure: strBySelection('companyStructure', COMPANY_STRUCTURES),
   yearFounded: numberByRange('yearFounded', { max: new Date().getFullYear() }),
-  ein: ein('ein'),
+  ein: ein('ein', { optional: true }),
   companyDescription: strByLength('companyDescription', { optional: true }),
   countryCode: countryCode('countryCode'),
   state: strByLength('state', { min: 2, max: 50 }),

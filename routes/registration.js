@@ -12,4 +12,8 @@ router.get('/confirmation/:id', registrationController.getConfirmation);
 router.get('/update/:id', registrationController.getUpdate);
 router.post('/update/:id', registrationController.postUpdate);
 
+router.get('/delete/:id', registrationController.getDelete);
+
+router.post('/validate', registrationController.getValidate);
+
 export default router;

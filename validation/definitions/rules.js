@@ -22,15 +22,18 @@ const strByLength = (fieldSelector, { min = -Infinity, max = Infinity, optional 
   ...errorMessage(fieldSelector, genericMessages.inRange(min, max, 'characters')),
   ...escapeRemove,
 });
-const strByFormat = (fieldSelector, formatStrRegEx, formatStrExample, { optional = false } = {}) => ({
-  trim: true,
-  optional,
-  matches: {
-    options: formatStrRegEx,
-    ...errorMessage(fieldSelector, genericMessages.hasFormat(formatStrExample)),
-  },
-  ...escapeRemove,
-});
+const strByFormat = (fieldSelector, formatStrRegEx, formatStrExample, { optional = false } = {}) => {
+  const rules = {
+    trim: true,
+    matches: {
+      options: formatStrRegEx,
+      ...errorMessage(fieldSelector, genericMessages.hasFormat(formatStrExample)),
+    },
+    ...escapeRemove,
+  };
+  if (optional) return { optional: { options: { nullable: true, checkFalsy: true } }, ...rules };
+  return rules;
+};
 const strBySelection = (fieldSelector, providedOptions, { optional = false } = {}) => ({
   optional,
   isIn: { options: [providedOptions], ...errorMessage(fieldSelector, genericMessages.inProvidedOptions()) },
@@ -74,13 +77,14 @@ const shorthandReference = (fieldSelector, { min = 3, max = 10, optional = false
     ...errorMessage(fieldSelector, genericMessages.inRange(min, max, 'characters')),
   },
   custom: {
-    options: (str) => /[^\d]/.test(str),
-    ...errorMessage(fieldSelector, genericMessages.includes('at least one letter')),
+    options: (str) => /^[A-Za-z]+$/.test(str),
+    ...errorMessage(fieldSelector, genericMessages.includes('only alphabetic characters')),
   },
   ...escapeRemove,
 });
 
-const ein = (fieldSelector, { optional = false } = {}) => strByFormat(fieldSelector, [/^\d{2}-\d{7}$/], 'XX-XXXXXXX');
+const ein = (fieldSelector, { optional = false } = {}) =>
+  strByFormat(fieldSelector, [/^\d{2}-\d{7}$/], 'XX-XXXXXXX', { optional });
 
 const countryCode = (fieldSelector, { optional = false } = {}) => ({
   trim: true,

@@ -47,7 +47,7 @@ block content
           a(href=`/registration/update/${id}`).link-button Edit
           a(href=`/registration/delete/${id}`).link-button.danger-button Delete
         if status === 'pending'
-          +adminForm('registration-review-form', 'reviewRegistration')
+          +adminForm('registration-review-form', 'reviewRegistration', false)
             +hiddenField('registration-id','registrationId',id)
             +hiddenField('rejection-reason','rejectionReason')
             div.grouped-radio-buttons

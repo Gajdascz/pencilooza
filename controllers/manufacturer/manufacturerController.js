@@ -73,7 +73,7 @@ const manufacturerController = {
   }),
   getUpdate: asyncHandler(async (req, res, next) => {
     const manufacturer = await find.manufacturer(req.params.id);
-    render.update(res, manufacturer.id, req.errors, mfrDataTransform.modelToForm(manufacturer));
+    render.update(res, manufacturer.id, req.body.errors, mfrDataTransform.modelToForm(manufacturer));
   }),
   postUpdate: asyncHandler(async (req, res, next) => {
     const { errors, fieldData } = req.body;
