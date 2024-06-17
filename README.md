@@ -1,6 +1,6 @@
 # Pencilooza
 
-Welcome to Pencilooza, a faux web application designed for pencil manufacturers to register and offer products through the platform.
+Pencilooza is a pencil themed web application that allows 'manufacturers' to submit registrations which are then managed through authorized CRUD operations. This was created as part of [The Odin Project Curriculum]() which provided me with an introduction to back end development using the Express framework.
 
 ## Created With
 

@@ -141,9 +141,9 @@ const registrationController = {
     validateRegistrationMiddleware,
     asyncHandler(async (req, res, next) => {
       let code;
-      if (req.body.success === 1) code = 200;
-      if (req.body.errors.length > 0) code = 400;
-      return setRes(res, code, { errors: req.body.errors, data: req.body });
+      if (req.body.success) code = 200;
+      else if (req.body.errors.length > 0) code = 400;
+      return setRes(res, code, { errors: req.body.errors, success: req.body.success, data: req.body });
     }),
   ],
 };

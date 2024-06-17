@@ -53,7 +53,7 @@ ManufacturerSchema.pre(/delete/i, async function (next) {
 });
 
 ManufacturerSchema.virtual('url').get(function () {
-  return `/manufacturer/${this._id}`;
+  return `/manufacturer/${this.id}`;
 });
 ManufacturerSchema.virtual('fullAddress').get(function () {
   return `${this.location.street}${this.location.extension ? `, ${this.location.extension}` : ''}, ${this.location.city}, ${this.location.state}, ${this.location.postalCode}, ${this.location.countryCode}`;
@@ -61,5 +61,8 @@ ManufacturerSchema.virtual('fullAddress').get(function () {
 ManufacturerSchema.virtual('repInfo').get(function () {
   return `${this.rep.firstName} ${this.rep.lastName}, ${this.rep.role} of ${this.company.name}`;
 });
+
+ManufacturerSchema.set('toObject', { virtuals: true });
+ManufacturerSchema.set('toJSON', { virtuals: true });
 
 export default mongoose.model('Manufacturer', ManufacturerSchema);

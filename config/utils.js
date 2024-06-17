@@ -63,7 +63,7 @@ const dataTransform = {
 
 const getListEntityLabel = (textClassPairs) => textClassPairs.map((p) => ({ spanText: p[0], className: p[1] }));
 
-const setRes = (res, status, { alert = null, redirect = null, errors = null, data = null }) =>
-  res.status(status).json({ alert, redirect, errors, data });
+const setRes = (res, status, { alert = null, redirect = null, errors = null, success = null, data = null }) =>
+  res.status(status).json({ alert, redirect, errors, success, data });
 
 export { capitalize, getListEntityLabel, setRes, dataTransform, mfrDataTransform };

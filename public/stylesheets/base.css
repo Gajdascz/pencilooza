@@ -87,6 +87,7 @@ button:hover {
 a {
   text-decoration: none;
   color: var(--color-blue-paper-line);
+  max-width: fit-content;
 }
 a:hover,
 a:visited:hover {

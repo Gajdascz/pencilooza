@@ -1,13 +1,11 @@
 import asyncHandler from 'express-async-handler';
 import Item from '../models/item/Item.js';
-import Manufacturer from '../models/manufacturer/Manufacturer.js';
-import Registration from '../models/registration/Registration.js';
 
 const itemController = {
   getList: asyncHandler(async (req, res, next) => {
     const allItems = await Item.find({}, 'name type category manufacturer')
       .sort({ manufacturer: 1 })
-      .populate('manufacturer', 'company.name')
+      .populate('manufacturer')
       .exec();
     const entities = allItems.map((item) => ({
       url: item.url,
