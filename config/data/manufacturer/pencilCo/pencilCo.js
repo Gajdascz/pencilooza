@@ -7,33 +7,31 @@ const manufacturerInfo = {
   company: {
     name: 'PencilCo',
     ref: MANUFACTURER_REFS.PENCIL_CO,
-    description: 'High-Volume Low-Cost.',
+    description: 'We got pencils.',
     structure: 'corporation',
-    yearFounded: '2002',
-    ein: '99-9999999',
+    yearFounded: '1980',
+    ein: '00-0000000',
   },
   contact: {
     website: 'https://example.com',
-    email: 'info@pencilco.pencils',
-    phone: '0123456789',
+    email: 'info@pencilCo.pencil',
+    phone: '000-000-0000',
   },
   location: {
-    countryCode: 'CN',
-    state: 'Guangdong',
-    postalCode: '510000',
-    city: 'Guangzhou',
-    street: '123 Graphite Lane',
+    countryCode: 'US',
+    state: 'FL',
+    postalCode: '32123',
+    city: 'Orangeish',
+    street: '42 Scribble St.',
     extension: 'PO Box 42',
   },
   rep: {
-    firstName: 'David',
-    lastName: 'Smith',
-    role: 'manager',
+    firstName: 'Edgar',
+    lastName: 'Writesalot',
+    role: 'owner',
   },
 };
 
 const productGroups = [erasers, graphites, pencils];
 
-const manufacturerData = { manufacturerInfo, productGroups };
-
-export default manufacturerData;
+export default { manufacturerInfo, productGroups };

@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
 
-import Application from '../../models/application/Application.js';
+import Application from '../../models/Application.js';
 import mongoose from 'mongoose';
 import { capitalize, dataTransform, setRes } from '../../config/utils.js';
 import { validateApplicationDirect } from '../../validation/index.js';

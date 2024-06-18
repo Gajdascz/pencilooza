@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { COMPANY_STRUCTURES, COMPANY_ROLES } from '../../config/constants.js';
+import { COMPANY_STRUCTURES, COMPANY_ROLES } from '../config/constants.js';
 
 const Schema = mongoose.Schema;
 

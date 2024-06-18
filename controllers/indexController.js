@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
 import Item from '../models/item/Item.js';
-import Manufacturer from '../models/manufacturer/Manufacturer.js';
-import Application from '../models/application/Application.js';
+import Manufacturer from '../models/Manufacturer.js';
+import Application from '../models/Application.js';
 
 const manufacturerCount = Manufacturer.countDocuments({}).exec();
 const applicationAggregation = Application.aggregate([

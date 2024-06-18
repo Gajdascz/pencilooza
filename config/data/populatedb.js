@@ -177,6 +177,7 @@ const scriptController = {
   process: async () => {
     log.bh('Processing Manufacturer Data');
     for (const mfr of manufacturers) {
+      debug(mfr);
       const { manufacturerInfo, productGroups } = mfr;
       log.sgh(manufacturerInfo.company.name);
       const mfrModelMsg = `Building Manufacturer Model`;

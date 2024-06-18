@@ -8,12 +8,14 @@ const graphiteBulkCostModifiers = [
   { quantity: 5000, costModifier: 0.3 },
 ];
 
-// #region Standard Graphite Groups
-const graphiteGradeGroup = createGroup('grade', {
+// #region Graphite Option Groups
+const graphiteHardnessGradeGroup = createGroup('grade', {
   options: [
+    { optionName: '2H', costModifier: 0 },
     { optionName: 'H', costModifier: 0 },
     { optionName: 'HB', costModifier: 0 },
     { optionName: 'B', costModifier: 0 },
+    { optionName: '2B', costModifier: 0 },
   ],
 });
 
@@ -25,25 +27,43 @@ const graphiteWidthGroup = createGroup('width', {
     { optionName: '0.9mm', costModifier: 0 },
   ],
 });
-const graphiteOptionGroup = [graphiteGradeGroup, graphiteWidthGroup];
+
+const graphite_option_groups = [graphiteHardnessGradeGroup, graphiteWidthGroup];
 // #endregion
 
 const common = {
   skuPrefix: ITEM_GRAPHITE.SKU_PREFIX(MANUFACTURER_REFS.PENCIL_CO),
   category: ITEM_GRAPHITE.CATEGORY,
-  madeIn: 'CN',
+  madeIn: 'US',
+  optionGroups: graphite_option_groups,
   quantityPricing: graphiteBulkCostModifiers,
-  optionGroups: graphiteOptionGroup,
   description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
 };
+
 const graphites = [
   {
     ...common,
     ref: ITEM_GRAPHITE.REFS.STANDARD(MANUFACTURER_REFS.PENCIL_CO),
     type: ITEM_GRAPHITE.TYPES.STANDARD,
     name: 'Standard Replacement Graphite',
-    stock: Math.ceil(Math.random() * 100000) + 100000,
-    basePpu: 0.05,
+    stock: Math.ceil(Math.random() * 10000) + 10000,
+    basePpu: 0.06,
+  },
+  {
+    ...common,
+    ref: ITEM_GRAPHITE.REFS.PREMIUM(MANUFACTURER_REFS.PENCIL_CO),
+    type: ITEM_GRAPHITE.TYPES.PREMIUM,
+    name: 'Premium Replacement Graphite',
+    stock: Math.ceil(Math.random() * 5000) + 5000,
+    basePpu: 0.1,
+  },
+  {
+    ...common,
+    ref: ITEM_GRAPHITE.REFS.LUXURY(MANUFACTURER_REFS.PENCIL_CO),
+    type: ITEM_GRAPHITE.TYPES.LUXURY,
+    name: 'Luxury Replacement Graphite',
+    stock: Math.ceil(Math.random() * 5000) + 5000,
+    basePpu: 0.18,
   },
 ];
 

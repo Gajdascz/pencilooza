@@ -1,7 +1,7 @@
 import asyncHandler from 'express-async-handler';
-import Application from '../../models/application/Application.js';
+import Application from '../../models/Application.js';
 import applicationController from '../application/applicationController.js';
-import Manufacturer from '../../models/manufacturer/Manufacturer.js';
+import Manufacturer from '../../models/Manufacturer.js';
 import Item from '../../models/item/Item.js';
 import { mfrDataTransform } from '../../config/utils.js';
 const render = {

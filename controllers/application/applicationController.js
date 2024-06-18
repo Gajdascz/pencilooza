@@ -4,7 +4,7 @@ import { DateTime } from 'luxon';
 import { body, validationResult } from 'express-validator';
 
 import { COUNTRY_ALPHA2, COMPANY_ROLES, COMPANY_STRUCTURES } from '../../config/constants.js';
-import Application from '../../models/application/Application.js';
+import Application from '../../models/Application.js';
 import { validateApplicationMiddleware } from '../../validation/index.js';
 import { dataTransform, getListEntityLabel, capitalize, setRes } from '../../config/utils.js';
 

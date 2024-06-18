@@ -1,17 +1,17 @@
 # Pencilooza
 
-Created as part of [The Odin Project Curriculum](https://www.theodinproject.com/lessons/nodejs-inventory-application), Pencilooza is a mock inventory/application management application intended to provide foundational experience and knowledge in creating and structuring an express application. Some of the core concepts include routing, form sanitization and validation, Mongoose/MongoDB communication and management, and much more.
+Created as part of [The Odin Project Curriculum](https://www.theodinproject.com/lessons/nodejs-inventory-application), Pencilooza is a pencil themed mock application management web app. Completing this project provided me with foundational experience and knowledge in creating and structuring an express project. Some of the core concepts I studied and implemented include routing, form sanitization and validation using express-validator, database querying with Mongoose/MongoDB, and AJAX to communicate with the server from the client side.
+
 **Live Preview:** [Deployed using Railway]()
 
 ## Created With
 
-### Core
-
-- [**JavaScript**](https://ecma-international.org/publications-and-standards/standards/): Core language.
+- [**JavaScript**](https://ecma-international.org/publications-and-standards/standards/): Primary language.
 - [**HTML5**](https://html.spec.whatwg.org/multipage/): DOM structuring.
 - [**CSS3**](https://www.w3.org/Style/CSS/): Design and styling.
-
 - [**Node.js**](https://nodejs.org/): JavaScript runtime environment.
+- [**MongoDB**](https://mongodb.com/): Non-relational database management system.
+
 - [**debug**](https://github.com/debug-js/debug/): Provides console debugging based on application environment and namespaces.
 - [**dotenv**](https://github.com/motdotla/dotenv/): Loads environment variables from .env\* file(s) into process.env.
 - [**mongoose**](https://mongoosejs.com/): MongoDB Object Data Manager (ODM).

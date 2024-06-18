@@ -80,10 +80,11 @@ button:hover {
   display: flex;
   width: 100%;
   gap: 1em;
+  max-width: fit-content;
 }
 .button-group > .link-button,
 .button-group > *{
-  flex: 1;
+  min-width: 100px;
 }
 a {
   text-decoration: none;
@@ -347,14 +348,6 @@ p.search-error-message {
 }
 .input-with-button-wrapper > button:hover {
   background-color: var(--color-white-darker);
-}
-.no-auth-admin-form-wrapper > .input-with-button-container > .input-with-button-wrapper > input[type='password'] {
-  display: none;
-  border: none;
-}
-.no-auth-admin-form-wrapper > .input-with-button-container > .input-with-button-wrapper > button.admin-form-submit-button {
-  width: 100%;
-  border: none;
 }
 
 /* #endregion */
@@ -620,6 +613,10 @@ form#itemDetailOptionsForm {
   display: flex;
   flex-wrap: wrap;
   gap: 1em;
+  width: 50%;
+}
+.item-detail-basic-info-list > * {
+  min-width: fit-content;
 }
 .item-detail-totals {
   display: flex;

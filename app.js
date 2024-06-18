@@ -61,7 +61,6 @@ app.use(function (err, req, res, next) {
   res.status(err.status || 500);
   switch (err.status) {
     case 404:
-      return res.render(404, { err });
     default:
       return res.render('error');
   }
