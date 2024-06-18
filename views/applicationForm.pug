@@ -6,9 +6,10 @@ block content
   include mixins/inputField
   include mixins/adminForm
   include mixins/hiddenField
-  include mixins/manufacturerRegistration
+  include mixins/manufacturerApplication
   -
     const params = {
+      errors, success,
       title, entityType, dataKey, entityId, errorMsgs,
       repFirstName, repLastName, repRole,
       companyName, companyRef, companyStructure, yearFounded, ein, companyDescription,
@@ -17,23 +18,17 @@ block content
       note
     }
   if isUpdate
-    +adminForm('registrationForm', 'updateEntity')
+    +adminForm('applicationForm', 'updateEntity')
       case dataKey
         when 'manufacturer'
-          +manufacturerRegistration(params)
+          +manufacturerApplication(params)
         default
-          p No registration of type #{dataKey} found. 
+          p No application of type #{dataKey} found. 
   else 
-    form(method='POST' id='registrationForm' action=`/registration/create/${dataKey}`).register-form
+    form(method='POST' id='applicationForm' action=`/application/create/${dataKey}`).apply-form
       case dataKey
         when 'manufacturer'
-          +manufacturerRegistration(params)
+          +manufacturerApplication(params)
           button(type='submit').form-submit-button Submit
         default
-          p No registration of type #{dataKey} found.
-
-block scripts
-  script.
-    window.errors = '!{JSON.stringify(errors)}'
-    window.success = '!{success}'
-  script(src='/scripts/updateFormValidation.js' type='module')
+          p No application of type #{dataKey} found.

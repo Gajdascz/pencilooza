@@ -1,28 +1,43 @@
 include inputField
 include hiddenField
 
-mixin manufacturerRegistration(data)
+mixin manufacturerApplication(data)
   - 
-    const {  title, entityType, dataKey, entityId, errorMsgs,
+    const {  
+      errors, success,
+      title, entityType, dataKey, entityId, errorMsgs,
       repFirstName, repLastName, repRole,
       companyName, companyRef, companyStructure, yearFounded, ein, companyDescription,
       countryCode, state, postalCode, city, street, extension,
       email, phone, website,
       note
     } = data
+    let validationResult;
+    if(success && success === true) validationResult = 'success';
+    else if (errors && errors.length > 0) validationResult = errors;
+    else validationResult = 'yetToBeValidated';
+  
   +hiddenField('entity-type','entityType',value=entityType)
   +hiddenField('data-key','dataKey',value=dataKey ? dataKey : entityType)
   +hiddenField('entity-id','entityId',value=entityId)
+  +hiddenField('validation-result','validationResult',value=validationResult)
+
   header.form-header
     h1= title
     p.form-disclaimer-text
       em
         strong Disclaimer:  
-        | Information submitted through this form will be publicly displayed in the "Browse Registrations" immediately and "Browse Manufacturers" sections if accepted. 
-        | Please refrain from entering any personal, vulgar, and/or offensive information. 
-        | Submissions containing such content will be rejected and/or removed.
-        | Note that this project is created for educational purposes only, and any data entered should be considered publicly accessible. 
-    div.register-form-inputs-container
+          mark Information submitted through this form will be publicly displayed and you will not be able to delete or edit the application.
+          | The application will be shown in the 
+          a(href='/application') "Browse Applications" page 
+          | immediately and the 
+          a(href='/manufacturer') "Browse Manufacturers" page 
+          | if accepted. 
+          mark Please refrain from entering any personal, vulgar, and/or offensive information. 
+          | Submissions containing such content will be removed.
+          | Note that this project was created for educational purposes only, 
+          mark any data entered should be considered publicly accessible. 
+    div.apply-form-inputs-container
       if errorMsgs
         ul 
         for msg in errorMsgs 

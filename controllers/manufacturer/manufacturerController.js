@@ -1,6 +1,6 @@
 import asyncHandler from 'express-async-handler';
-import Registration from '../../models/registration/Registration.js';
-import registrationController from '../registration/registrationController.js';
+import Application from '../../models/application/Application.js';
+import applicationController from '../application/applicationController.js';
 import Manufacturer from '../../models/manufacturer/Manufacturer.js';
 import Item from '../../models/item/Item.js';
 import { mfrDataTransform } from '../../config/utils.js';
@@ -9,7 +9,7 @@ const render = {
     const entities = manufacturers.map((mfr) => ({ url: mfr.url, label: mfr.company.name }));
     res.render('list', { title: 'All Manufacturers', entities });
   },
-  detail: (res, manufacturer, productLinks, registrationLink) =>
+  detail: (res, manufacturer, productLinks, applicationLink) =>
     res.render('manufacturerDetail', {
       entityId: manufacturer.id,
       company: manufacturer.company,
@@ -18,7 +18,7 @@ const render = {
       repInfo: manufacturer.repInfo,
       note: manufacturer.other.note,
       productLinks,
-      registrationLink,
+      applicationLink,
     }),
   delete: (res, manufacturer, dependencies) =>
     res.render('deleteForm', {
@@ -29,7 +29,7 @@ const render = {
       dependencies,
     }),
   update: (res, id, errors = [], data = {}) => {
-    registrationController.renderForm(res, {
+    applicationController.renderForm(res, {
       title: 'Update Manufacturer',
       entityType: 'manufacturer',
       dataKey: 'manufacturer',
@@ -45,7 +45,7 @@ const find = {
   allManufacturers: () => Manufacturer.find({}, 'company.name').sort({ name: 1 }).exec(),
   manufacturer: (mfrId) => Manufacturer.findById(mfrId).exec(),
   products: (mfrId) => Item.find({ manufacturer: mfrId }).exec(),
-  registration: (mfrId) => Registration.findOne({ acceptedEntityId: mfrId }).exec(),
+  application: (mfrId) => Application.findOne({ acceptedEntityId: mfrId }).exec(),
 };
 
 const manufacturerController = {
@@ -56,18 +56,18 @@ const manufacturerController = {
   getDetail: asyncHandler(async (req, res, next) => {
     const id = req.params.id;
     const manufacturer = await find.manufacturer(id);
-    const registration = await find.registration(id);
+    const application = await find.application(id);
     const products = await find.products(id);
     const productLinks = products.map((prod) => ({ name: prod.name, url: prod.url }));
-    render.detail(res, manufacturer, productLinks, registration?.url);
+    render.detail(res, manufacturer, productLinks, application?.url);
   }),
   getDelete: asyncHandler(async (req, res, next) => {
     const manufacturer = await find.manufacturer(req.params.id);
-    const registration = await find.registration(req.params.id);
+    const application = await find.application(req.params.id);
     const products = await find.products(req.params.id);
     const dependencies = [];
-    if (registration)
-      dependencies.push({ type: 'Registration', name: 'Registration', url: registration.url, id: registration.id });
+    if (application)
+      dependencies.push({ type: 'Application', name: 'Application', url: application.url, id: application.id });
     products.forEach((prod) => dependencies.push({ type: 'Item', name: prod.name, url: prod.url, id: prod.id }));
     render.delete(res, manufacturer, dependencies);
   }),

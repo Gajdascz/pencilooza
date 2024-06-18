@@ -37,10 +37,5 @@ const updateFormValidation = (errors, success = false) => {
       else setValid(field);
     });
 };
-document.addEventListener('DOMContentLoaded', () => {
-  const errorsJSON = window.errors;
-  const success = window.success;
-  updateFormValidation(errorsJSON ? JSON.parse(errorsJSON) : [], success ? JSON.parse(success) : false);
-});
 
 export { updateFormValidation };

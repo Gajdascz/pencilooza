@@ -43,11 +43,11 @@ ManufacturerSchema.pre(/delete/i, async function (next) {
   try {
     if (this instanceof mongoose.Query) id = this.getFilter()._id;
     else id = this._id;
-    await mongoose.model('Registration').deleteMany({ acceptedEntityId: id }).exec();
+    await mongoose.model('Application').deleteMany({ acceptedEntityId: id }).exec();
     await mongoose.model('Item').deleteMany({ manufacturer: id }).exec();
     next();
   } catch (err) {
-    console.error(`Error occurred while deleting related records for manufacturer ID ${id}: ${err.message}`);
+    debug(`Error occurred while deleting related records for manufacturer ID ${id}: ${err.message}`);
     next(err);
   }
 });

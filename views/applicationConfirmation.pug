@@ -1,0 +1,14 @@
+extends layout
+
+block content
+  div.application-confirmation-container
+    header.application-confirmation-header
+      h1 Thank you #{name},
+      p Your form has been submitted and is awaiting review.
+    section.application-confirmation-how-to-view
+      h2 To review your application
+      ol 
+        li Save your application id: #[strong #{formId}]
+        li Enter the id in #[strong #[em Find Application input]] found in the primary navigation.
+      h3
+        a(href=statusLink) Status Quick Link

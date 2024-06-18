@@ -1,10 +1,10 @@
 import asyncHandler from 'express-async-handler';
 import Item from '../models/item/Item.js';
 import Manufacturer from '../models/manufacturer/Manufacturer.js';
-import Registration from '../models/registration/Registration.js';
+import Application from '../models/application/Application.js';
 
 const manufacturerCount = Manufacturer.countDocuments({}).exec();
-const registrationAggregation = Registration.aggregate([
+const applicationAggregation = Application.aggregate([
   {
     $facet: {
       pendingManufacturers: [
@@ -17,12 +17,12 @@ const registrationAggregation = Registration.aggregate([
         { $group: { _id: null, count: { $sum: 1 } } },
         { $project: { _id: 0, count: 1 } },
       ],
-      acceptedRegistrations: [
+      acceptedApplications: [
         { $match: { status: 'accepted' } },
         { $group: { _id: null, count: { $sum: 1 } } },
         { $project: { _id: 0, count: 1 } },
       ],
-      rejectedRegistrations: [
+      rejectedApplications: [
         { $match: { status: 'rejected' } },
         { $group: { _id: null, count: { $sum: 1 } } },
         { $project: { _id: 0, count: 1 } },
@@ -35,11 +35,11 @@ const registrationAggregation = Registration.aggregate([
         $ifNull: [{ $arrayElemAt: ['$pendingManufacturers.count', 0] }, 0],
       },
       totalPendingItems: { $ifNull: [{ $arrayElemAt: ['$pendingItems.count', 0] }, 0] },
-      totalAcceptedRegistrations: {
-        $ifNull: [{ $arrayElemAt: ['$acceptedRegistrations.count', 0] }, 0],
+      totalAcceptedApplications: {
+        $ifNull: [{ $arrayElemAt: ['$acceptedApplications.count', 0] }, 0],
       },
-      totalRejectedRegistrations: {
-        $ifNull: [{ $arrayElemAt: ['$rejectedRegistrations.count', 0] }, 0],
+      totalRejectedApplications: {
+        $ifNull: [{ $arrayElemAt: ['$rejectedApplications.count', 0] }, 0],
       },
     },
   },
@@ -85,8 +85,8 @@ const indexController = {
     const [
       totalManufacturers,
       [{ totalItems, totalCategories, totalTypes, totalMadeIn, totalStock }],
-      [{ totalPendingManufacturers, totalPendingItems, totalAcceptedRegistrations, totalRejectedRegistrations }],
-    ] = await Promise.all([manufacturerCount, itemAggregation, registrationAggregation]);
+      [{ totalPendingManufacturers, totalPendingItems, totalAcceptedApplications, totalRejectedApplications }],
+    ] = await Promise.all([manufacturerCount, itemAggregation, applicationAggregation]);
 
     res.render('index', {
       title: 'Home',
@@ -98,8 +98,8 @@ const indexController = {
       totalStock,
       totalPendingManufacturers,
       totalPendingItems,
-      totalAcceptedRegistrations,
-      totalRejectedRegistrations,
+      totalAcceptedApplications,
+      totalRejectedApplications,
     });
   }),
 };

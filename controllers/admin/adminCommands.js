@@ -1,9 +1,9 @@
 import asyncHandler from 'express-async-handler';
 
-import Registration from '../../models/registration/Registration.js';
+import Application from '../../models/application/Application.js';
 import mongoose from 'mongoose';
 import { capitalize, dataTransform, setRes } from '../../config/utils.js';
-import { validateRegistrationDirect } from '../../validation/index.js';
+import { validateApplicationDirect } from '../../validation/index.js';
 const getMongooseModel = (modelName) => mongoose.model(capitalize(modelName));
 
 const formToModelData = (key, data) => dataTransform[key]?.formToModel(data);
@@ -24,7 +24,7 @@ const entityHandlers = {
     return setRes(res, 200, { alert: `${entityType} successfully deleted`, redirect: '/' });
   }),
   update: asyncHandler(async (req, res, next) => {
-    const result = await validateRegistrationDirect(req, res, next);
+    const result = await validateApplicationDirect(req, res, next);
     if (!result.success)
       return setRes(res, 400, {
         redirect: `/${req.body.entityType}/update/${req.body.entityId}`,
@@ -36,7 +36,7 @@ const entityHandlers = {
     const EntityModel = getMongooseModel(entityType);
     if (!EntityModel) return setRes(res, 404, { alert: `Failed to find entity model of type: ${entityType}` });
     let modelData;
-    if (EntityModel.modelName === 'Registration') modelData = { data: req.body };
+    if (EntityModel.modelName === 'Application') modelData = { data: req.body };
     else modelData = formToModelData(dataKey, req.body);
     const updatedEntity = await EntityModel.findByIdAndUpdate(entityId, modelData, {
       new: true,
@@ -46,48 +46,48 @@ const entityHandlers = {
   }),
 };
 
-// Encapsulates registration review logic
-const registrationHandlers = {
-  accept: async (registration, res) => {
+// Encapsulates application review logic
+const applicationHandlers = {
+  accept: async (application, res) => {
     try {
-      const modelData = formToModelData(registration.type, registration.data);
-      const entity = await entityHandlers.create(registration.type, modelData);
-      if (!entity) throw new Error(`Invalid entity created in registrationHandlers.accept`);
-      registration.status = 'accepted';
-      registration.dataLink = entity.url;
-      registration.acceptedEntityId = entity.id;
-      await registration.save();
+      const modelData = formToModelData(application.type, application.data);
+      const entity = await entityHandlers.create(application.type, modelData);
+      if (!entity) throw new Error(`Invalid entity created in applicationHandlers.accept`);
+      application.status = 'accepted';
+      application.dataLink = entity.url;
+      application.acceptedEntityId = entity.id;
+      await application.save();
       return setRes(res, 201, {
-        alert: 'Registration successfully accepted',
+        alert: 'Application successfully accepted',
         redirect: entity.url,
       });
     } catch (err) {
-      return setRes(res, 500, { alert: 'Error accepting registration', errors: [err] });
+      return setRes(res, 500, { alert: 'Error accepting application', errors: [err] });
     }
   },
-  reject: async (registration, rejectionReason, res) => {
+  reject: async (application, rejectionReason, res) => {
     try {
-      registration.status = 'rejected';
-      registration.rejectionReason = rejectionReason || 'No reason provided';
-      await registration.save();
-      return setRes(res, 200, { alert: `${registration.type} registration successfully rejected` });
+      application.status = 'rejected';
+      application.rejectionReason = rejectionReason || 'No reason provided';
+      await application.save();
+      return setRes(res, 200, { alert: `${application.type} application successfully rejected` });
     } catch (err) {
-      return setRes(res, 500, { alert: `Error rejecting registration`, errors: [err] });
+      return setRes(res, 500, { alert: `Error rejecting application`, errors: [err] });
     }
   },
   review: asyncHandler(async (req, res, next) => {
-    const { registrationId, registrationCommand, rejectionReason } = req.body;
-    const registration = await Registration.findById(registrationId).exec();
-    if (!registration) return setRes(res, 404, { alert: `Registration with id: ${registrationId} could not be found` });
-    if (registrationCommand === 'accept') return await registrationHandlers.accept(registration, res);
-    if (registrationCommand === 'reject') return await registrationHandlers.reject(registration, rejectionReason, res);
-    return setRes(res, 404, { alert: `${registrationCommand} not found.` });
+    const { applicationId, applicationCommand, rejectionReason } = req.body;
+    const application = await Application.findById(applicationId).exec();
+    if (!application) return setRes(res, 404, { alert: `Application with id: ${applicationId} could not be found` });
+    if (applicationCommand === 'accept') return await applicationHandlers.accept(application, res);
+    if (applicationCommand === 'reject') return await applicationHandlers.reject(application, rejectionReason, res);
+    return setRes(res, 404, { alert: `${applicationCommand} not found.` });
   }),
 };
 
 // Used by adminController to provide authenticated command execution.
 const adminCommands = new Map([
-  ['reviewRegistration', registrationHandlers.review],
+  ['reviewApplication', applicationHandlers.review],
   ['deleteEntity', entityHandlers.delete],
   ['updateEntity', entityHandlers.update],
 ]);

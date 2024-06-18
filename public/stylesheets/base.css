@@ -81,6 +81,7 @@ button:hover {
   width: 100%;
   gap: 1em;
 }
+.button-group > .link-button,
 .button-group > *{
   flex: 1;
 }
@@ -271,10 +272,10 @@ button#primaryNavHamburgerToggle {
 .primary-nav-logo-link {
   text-align: center;
 }
-.primary-nav-search-registration {
+.primary-nav-search-application {
   width: 100%;
 }
-.registration-query-button {
+.application-query-button {
   font-weight: 900;
   padding: 0.5em;
   font-size: 1.5rem;
@@ -644,15 +645,15 @@ form#itemDetailOptionsForm {
 
 
 /* #endregion */
-/* #region Registration Confirmation */
-.registration-confirmation-container {
+/* #region Application Confirmation */
+.application-confirmation-container {
   display: flex;
   flex-direction: column;
   gap: 1em;
 }
 /* #endregion */
-/* #region Register Form */
-.register-form {
+/* #region Apply Form */
+.apply-form {
   display: flex;
   flex-direction: column;
   gap: 0.5em;
@@ -670,7 +671,7 @@ form#itemDetailOptionsForm {
   border-bottom: 2px solid var(--color-gray-graphite-darker);
   width: 75%;
 }
-.register-form-inputs-container {
+.apply-form-inputs-container {
   display: flex;
   flex-direction: column;
   gap: 1em;
@@ -684,13 +685,13 @@ form#itemDetailOptionsForm {
 }
 
 /* #endregion */
-/* #region Registration Status */
-.registration-status-container {
+/* #region Application Status */
+.application-status-container {
   display: flex;
   flex-direction: column;
   gap: 0.5em;
 }
-.registration-status-header {
+.application-status-header {
   display: flex;
   flex-direction: column;
   border-bottom: 1px solid var(--color-gray-graphite-darker);
@@ -699,19 +700,19 @@ form#itemDetailOptionsForm {
   word-wrap: break-word;
 }
 
-.registration-status-body {
+.application-status-body {
   display: flex;
   flex-direction: column;
   gap: 1em;
 }
-.registration-status-data-sections-container {
+.application-status-data-sections-container {
   display: flex;
   flex-wrap: wrap;
   /* flex-direction: column; */
   max-width: 95%;
   gap: 1em;
 }
-.registration-status-data-section {
+.application-status-data-section {
   display: flex;
   flex-direction: column;
 }
@@ -722,14 +723,14 @@ form#itemDetailOptionsForm {
   max-width: max-content;
   gap: 0.25em;
 }
-form#registration-review-form > .grouped-radio-buttons >  .custom-radio-label-wrapper > input#acceptRegistration[type='radio']:checked + .custom-radio-button::after {
+form#application-review-form > .grouped-radio-buttons >  .custom-radio-label-wrapper > input#acceptApplication[type='radio']:checked + .custom-radio-button::after {
   background-color: var(--color-green);
 }
 
-form#registration-review-form > .grouped-radio-buttons >.custom-radio-label-wrapper > input#rejectRegistration[type='radio']:checked + .custom-radio-button::after {
+form#application-review-form > .grouped-radio-buttons >.custom-radio-label-wrapper > input#rejectApplication[type='radio']:checked + .custom-radio-button::after {
   background-color: var(--color-red);
 }
-.registration-status-other-container {
+.application-status-other-container {
   display: flex;
   flex-direction: column;
   width: fit-content;

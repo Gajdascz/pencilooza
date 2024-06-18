@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import { COMPANY_STRUCTURES, COMPANY_ROLES } from '../../../public/javascripts/utils/constants.js';
 const Schema = mongoose.Schema;
 
-const ManufacturerRegistrationSchema = new Schema({
+const ManufacturerApplicationSchema = new Schema({
   company: {
     name: { type: String, required: true, maxLength: 100, minLength: 3 },
     ref: { type: String, required: true, maxLength: 10, minLength: 3, unique: true },
@@ -34,4 +34,4 @@ const ManufacturerRegistrationSchema = new Schema({
   },
 });
 
-export default ManufacturerRegistrationSchema;
+export default ManufacturerApplicationSchema;

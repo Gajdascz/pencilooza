@@ -1,9 +1,9 @@
 import asyncHandler from 'express-async-handler';
 import { checkSchema, validationResult } from 'express-validator';
-import schemaMfrRegistration from './definitions/schemaMfrRegistration.js';
+import schemaMfrApplication from './definitions/schemaMfrApplication.js';
 
 const schemas = {
-  manufacturer: schemaMfrRegistration,
+  manufacturer: schemaMfrApplication,
 };
 const parseValidationErrors = (errorsArray) =>
   errorsArray.reduce((acc, err) => {
@@ -12,11 +12,11 @@ const parseValidationErrors = (errorsArray) =>
     return acc;
   }, []);
 
-const validateRegistrationMiddleware = asyncHandler(async (req, res, next) => {
+const validateApplicationMiddleware = asyncHandler(async (req, res, next) => {
   const schemaKey = req.body.dataKey?.trim().toLowerCase();
   const schema = schemas[schemaKey];
   if (!schema)
-    throw new Error(`Validation Schema with schemaKey: ${schemaKey} not found (validateRegistrationMiddleware)`);
+    throw new Error(`Validation Schema with schemaKey: ${schemaKey} not found (validateApplicationMiddleware)`);
   await Promise.all(checkSchema(schema).map((validation) => validation.run(req)));
   const errors = validationResult(req);
   if (!errors.isEmpty()) req.body.errors = parseValidationErrors(errors.array());
@@ -24,12 +24,12 @@ const validateRegistrationMiddleware = asyncHandler(async (req, res, next) => {
   return next();
 });
 
-const validateRegistrationDirect = async (req) => {
+const validateApplicationDirect = async (req) => {
   try {
     const schemaKey = req.body.dataKey?.trim().toLowerCase();
     const schema = schemas[schemaKey];
     if (!schema)
-      throw new Error(`Validation Schema with schemaKey: ${schemaKey} not found (validateRegistrationDirect)`);
+      throw new Error(`Validation Schema with schemaKey: ${schemaKey} not found (validateApplicationDirect)`);
     await Promise.all(checkSchema(schema).map((validation) => validation.run(req)));
     const errors = validationResult(req);
     return errors.isEmpty() ? { success: true } : { success: false, errors: parseValidationErrors(errors.array()) };
@@ -41,4 +41,4 @@ const validateRegistrationDirect = async (req) => {
   }
 };
 
-export { validateRegistrationMiddleware, validateRegistrationDirect };
+export { validateApplicationMiddleware, validateApplicationDirect };

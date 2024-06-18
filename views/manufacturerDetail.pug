@@ -1,15 +1,7 @@
 extends layout
 
 block scripts
-  script.
-    document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector('form#manufacturer-detail-form');
-    form.addEventListener('submit', async (e) => {
-      const formData = new FormData(form);
-      form.setAttribute('action',formData.get('manufacturerDetailCommand'));
-      });
-    });
-
+  script(type="module", src="/scripts/initManufacturerDetailForm.js") 
 
 block content
   include mixins/labelValue
@@ -29,8 +21,8 @@ block content
           +labelValue('ein:', company.ein)
         if note
           +labelValue('note:', note)
-        if registrationLink
-          a(href=registrationLink) Registration Submission 
+        if applicationLink
+          a(href=applicationLink) Application Submission 
       section.contact-info
         h2 Contact
         +labelValue('representative:', repInfo)

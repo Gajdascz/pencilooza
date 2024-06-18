@@ -1,0 +1,41 @@
+extends layout
+
+block scripts
+  script(type="module", src="/scripts/requestRejectionReason.js") 
+
+block content
+  include mixins/labelValue 
+  include mixins/inputField
+  include mixins/adminForm
+  include mixins/customRadio
+  include mixins/hiddenField
+  div.application-status-container
+    header.application-status-header
+      h1 #{type.charAt(0).toUpperCase() + type.slice(1)} Application: #{id}
+      p #[em Save the application code to access this application]
+      +labelValue('submitted:',createdAt)
+      h2.application-status-status status: 
+        span(class=`${status}-status`) #{status.charAt(0).toUpperCase() + status.slice(1)}
+      if status === 'rejected'
+        +labelValue('reason:',rejectionReason)
+      else if status === 'accepted'
+        a(href=dataLink) Your application has been accepted! Click this link to view your profile.
+    section.application-status-body
+      div.application-status-data-sections-container
+        each sectionData,sectionName in dataSections
+          div.application-status-data-section 
+            h3 #{sectionName.charAt(0).toUpperCase() + sectionName.slice(1)}
+            each value,label in sectionData
+              +labelValue(`${label}:`,value)
+      div.application-status-other-container
+        div.button-group
+          a(href=`/application/update/${id}`).link-button Edit
+          a(href=`/application/delete/${id}`).link-button.danger-button Delete
+        if status === 'pending'
+          +adminForm('application-review-form', 'reviewApplication', false)
+            +hiddenField('application-id','applicationId',id)
+            +hiddenField('rejection-reason','rejectionReason')
+            div.grouped-radio-buttons
+              +customRadio('Accept','applicationCommand', 'acceptApplication', 'accept', {checked: status === 'accepted', disabled: status !== 'pending'})
+              +customRadio('Reject','applicationCommand', 'rejectApplication', 'reject', {checked: status === 'rejected', disabled: status !== 'pending'})
+

@@ -30,7 +30,7 @@ const fetchAdminCommand = (body) =>
   });
 
 const fetchValidate = (body) =>
-  fetch('/registration/validate', {
+  fetch('/application/validate', {
     method: 'POST',
     headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
     body,
@@ -89,7 +89,7 @@ const handleFormSubmit = async (e) => {
 
     location.reload();
   } catch (err) {
-    console.error(`Error in adminForm handleFormSubmit: ${err}`);
+    debug(`Error in adminForm handleFormSubmit: ${err}`);
   }
 };
 
@@ -99,11 +99,10 @@ const validateForm = async (e) => {
     const { searchParamsInstance } = parseSubmission(form);
     const response = await fetchValidate(searchParamsInstance);
     const json = await response.json();
-    console.log(json);
     if (json.success) return updateFormValidation([], true);
     if (json.errors?.length > 0) return updateFormValidation(json.errors, false);
   } catch (err) {
-    console.error(`Error in adminForm validateForm: ${err}`);
+    debug(`Error in adminForm validateForm: ${err}`);
   }
 };
 
@@ -112,5 +111,5 @@ document.addEventListener('DOMContentLoaded', () => {
   const validateBtn = form.querySelector('.validate-button');
   if (validateBtn) validateBtn.addEventListener('click', validateForm);
   if (form) form.addEventListener('submit', handleFormSubmit);
-  else console.error(`adminForm imported but no form.admin-element found on the page`);
+  else debug(`adminForm imported but no form.admin-element found on the page`);
 });

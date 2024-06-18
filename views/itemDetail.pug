@@ -1,142 +1,8 @@
 extends layout
 
 block scripts
-  script.
-    const basePpu = !{basePpu};
-    const cache = {
-      selected: {
-        quantityPricing: !{JSON.stringify(defaultSelected.quantityPricing)},
-        options: !{JSON.stringify(defaultSelected.options)}
-      },
-      // updates (overwrites) cached data
-      updateSelectedQuantityPricing: (quantity,ppuDiff) => cache.selected.quantityPricing = {quantity,ppuDiff},
-      updateSelectedOptions: (groupName,optionName,ppuDiff,link) => (cache.selected.options = cache.selected.options.map(group => group.groupName === groupName ? {...group, option: {optionName,ppuDiff,link}}: group)),
-      // returns parsed cached data (String -> Number)
-      getSelectedQuantityPricing: () => ({quantity: +cache.selected.quantityPricing.quantity, ppuDiff: +cache.selected.quantityPricing.ppuDiff}),
-      getSelectedOptions: () => cache.selected.options.map(selected => ({...selected, option: {optionName: selected.option.optionName, ppuDiff: +selected.option.ppuDiff, link: selected.option.link}})),
-      // returns the sum of all the selected option's cost modifiers
-      getCurrentOptionsCostModifier: () => Math.round(cache.getSelectedOptions().reduce((acc,curr) => (acc += curr.option.ppuDiff),0)*100)/100,
-      // returns the current ppu based on options
-      getCurrentPpu: () => {
-        const {ppuDiff} = cache.getSelectedQuantityPricing();
-        const totalOptionCostModifier = cache.getCurrentOptionsCostModifier();
-        return Math.round((basePpu + ppuDiff + totalOptionCostModifier)*100)/100;
-      },
-      // returns the total of the order
-      getCurrentTotal: () => {
-        const currentPpu = cache.getCurrentPpu();
-        const {quantity} = cache.getSelectedQuantityPricing();
-        return Math.round((currentPpu*quantity)*100)/100;
-      },
-      getAllCurrent: () => ({
-        quantityPricing: cache.getSelectedQuantityPricing(),
-        options: cache.getSelectedOptions(),
-        optionsCostModifier: cache.getCurrentOptionsCostModifier(),
-        ppu: cache.getCurrentPpu(),
-        total: cache.getCurrentTotal()
-      }),
-      // sets the cache to the original default data provided
-      reset: () => {
-        cache.selected.quantityPricing =  !{JSON.stringify(defaultSelected.quantityPricing)};
-        cache.selected.options = !{JSON.stringify(defaultSelected.options)};
-      }
-    };
-    const viewManager = {
-      updateTotals: ({quantity,ppu,total}) => {
-        document.querySelector('span.total-quantity').textContent = quantity;
-        document.querySelector('span.total-ppu').textContent=`$${ppu}`;
-        document.querySelector('span.total-order').textContent=`$${total}`;
-      },
-      updateSelectedList: ({quantityPricing, optionGroups, optionsCostModifier}) => {
-        const selectedOptionsList = document.querySelector('ul.selected-options-list');
-        const selectedOptionsReferencesList = document.querySelector('ul.selected-options-references-list');
-        selectedOptionsList.textContent = '';
-        selectedOptionsReferencesList.textContent = '';
-        const selectedQuantityLi = document.createElement('li');
-        selectedQuantityLi.classList.add('selected-option-li');
-        selectedQuantityLi.textContent = `quantity: $${quantityPricing.ppuDiff}`
-        selectedOptionsList.append(selectedQuantityLi)
-        optionGroups.forEach(group => {
-          const optCostLi = document.createElement('li');
-          optCostLi.classList.add('selected-option-li');
-          optCostLi.textContent = `${group.groupName}: $${group.option.ppuDiff}`; 
-          selectedOptionsList.append(optCostLi);
-          if(group.option.link) {
-            const optLinkLi = document.createElement('li');
-            optLinkLi.setAttribute('data-group',group.groupName);
-            const anchor = document.createElement('a');
-            anchor.setAttribute('href',group.option.link);
-            anchor.textContent=group.option.optionName;
-            anchor.classList.add('selected-option-link');
-            optLinkLi.append(anchor);
-            selectedOptionsReferencesList.append(optLinkLi);
-          }
-        })
-        document.querySelector('.total-options-modifier').textContent= `$${Math.round((optionsCostModifier+quantityPricing.ppuDiff)*100)/100}`;  
-      },
-      updateMenuSelection: ({groupName,optionName,ppuDiff}, optionElements) => {
-        document.querySelector(`input#${groupName}SelectedOption`).value = optionName;
-        document.querySelector(`input#${groupName}SelectedOptionPpuDiff`).value = ppuDiff;
-        document.querySelector(`button#${groupName}SelectToggle`).textContent= optionName;    
-        for(const optionElement of optionElements) {
-          if(optionElement.textContent === optionName) optionElement.classList.add('selected-option');
-          else  optionElement.classList.remove('selected-option');
-        }
-      },
-      updateAll: () => {
-        const {quantityPricing,options,optionsCostModifier,ppu,total} = cache.getAllCurrent();
-        viewManager.updateTotals({quantity:quantityPricing.quantity, ppu, total, optionsCostModifier})
-        viewManager.updateSelectedList({quantityPricing,optionGroups:options,optionsCostModifier});
-      }
-    }
-    const dropdownController = {
-      current: null,
-      setCurrent: (menuContainer) => {
-        dropdownController.current = { 
-          container: menuContainer,
-          isExpanded: menuContainer.getAttribute('aria-expanded') === 'true',
-          toggleButton: menuContainer.querySelector('.dropdown-toggle'),
-          optionList: menuContainer.querySelector('.dropdown-menu-option-list'),
-          options: menuContainer.querySelectorAll('[role="option"]'),
-        }
-      },
-      close: (e) => {
-        const {container, toggleButton, optionList} = dropdownController.current;
-        container.setAttribute('aria-expanded',false);
-        toggleButton.setAttribute('aria-expanded',false);
-        optionList.style.display = 'none';
-        document.removeEventListener('click',dropdownController.closeListener);
-        dropdownController.current = null;
-      },
-      closeListener: (e) => {
-        const {optionList, toggleButton, isExpanded} = dropdownController.current;
-        if(e.target === toggleButton && !isExpanded) return;
-        if(optionList.contains(e.target)) return;
-        dropdownController.close();
-      },
-      open: (e) => {
-        dropdownController.setCurrent(e.target.parentElement);
-        const {container, toggleButton, optionList} = dropdownController.current;
-        container.setAttribute('aria-expanded',true);
-        toggleButton.setAttribute('aria-expanded',true);
-        optionList.style.display = 'flex';
-        document.addEventListener('click',dropdownController.closeListener);
-      },
-      selectOption: (e,{groupName,optionName,ppuDiff,link}) => {
-        e.preventDefault()
-        if(groupName === 'quantity') cache.updateSelectedQuantityPricing(optionName,ppuDiff);
-        else cache.updateSelectedOptions(groupName,optionName,ppuDiff,link)
-        viewManager.updateMenuSelection({groupName,optionName,ppuDiff}, e.target.parentElement.children);
-        viewManager.updateAll();
-      },
-      toggle: (e) => {
-        e.preventDefault();
-        if(!dropdownController.current) dropdownController.open(e);
-        else dropdownController.close(e);        
-      }
-    }
-    viewManager.updateAll(); 
-    
+  script(type="module", src="/scripts/itemDetail/index.js") 
+
 block content
   include mixins/hiddenField
   div.item-detail-container 
@@ -164,32 +30,57 @@ block content
           span.span-label Manufacturer:
           a(href=manufacturer.url)  #{manufacturer.company.name}
         li.item-detail-base-ppu 
-          span.span-label BasePPU: 
+          span(data-base-ppu=`${basePpu}`).span-label BasePPU: 
           |   $#{basePpu}
     section.item-detail-options
       form(id='itemDetailOptionsForm', method='POST')
         h2.item-detail-options-form-header Options
         div.item-detail-options-inputs-container
-          div(role='combobox' aria-expanded=false aria-owns='dropdown-list' aria-haspopup='listbox').dropdown-container
+          div(role='combobox' aria-expanded=false aria-owns='dropdown-list' aria-haspopup='listbox' data-for-menu-id='quantitySelectToggle').dropdown-container
             +hiddenField('quantitySelectedOption')
             +hiddenField('quantitySelectedOptionPpuDiff')
             div.dropdown-container-label-toggle-wrapper 
               h3.dropdown-container-label Quantity
-              button(aria-controls='dropdown-list' id='quantitySelectToggle' aria-haspopup=true aria-expanded=false onClick='dropdownController.toggle(event)').dropdown-toggle= defaultSelected.quantityPricing.quantity
+              button(
+                aria-controls='dropdown-list'
+                id='quantitySelectToggle'
+                aria-haspopup=true
+                aria-expanded=false
+              ).dropdown-toggle= defaultSelected.quantityPricing.quantity
               ul(rule='listbox' id='dropdown-list' tabindex='-1' style='display:none;').dropdown-menu-option-list
                 for price in quantityPricing
-                  li(role='option' class=defaultSelected.quantityPricing.quantity === price.quantity ? 'selected-option' : '' tabindex='0' onClick=`dropdownController.selectOption(event,{groupName:'quantity', optionName:'${price.quantity}',ppuDiff:'${price.ppuDiff}'})`).dropdown-menu-option= price.quantity
+                  li(
+                    role='option'
+                    class=defaultSelected.quantityPricing.quantity === price.quantity ? 'selected-option' : ''
+                    tabindex='0' 
+                    data-group-name='quantity'
+                    data-option-name=`${price.quantity}`
+                    data-ppu-diff=`${price.ppuDiff}`
+                  ).dropdown-menu-option= price.quantity
           if optionGroups.length
             each optionGroup in optionGroups
-              div(role='combobox' aria-expanded=false aria-owns='dropdown-list' aria-haspopup='listbox').dropdown-container
+              div(role='combobox' aria-expanded=false aria-owns='dropdown-list' aria-haspopup='listbox' data-for-menu-id=`${optionGroup.groupName+'SelectToggle'}`).dropdown-container
                 +hiddenField(`${optionGroup.groupName}SelectedOption`)
                 +hiddenField(`${optionGroup.groupName}SelectedOptionPpuDiff`)
                 div.dropdown-container-label-toggle-wrapper
                   h3.dropdown-container-label #{optionGroup.groupName.charAt(0).toUpperCase() + optionGroup.groupName.slice(1)}
-                  button(aria-controls='dropdown-list' id=optionGroup.groupName+'SelectToggle' aria-haspopup=true aria-expanded=false onClick='dropdownController.toggle(event)').dropdown-toggle= defaultSelected.options.find((selected) => selected.groupName === optionGroup.groupName).option.optionName
+                  button(
+                    aria-controls='dropdown-list'
+                    id=optionGroup.groupName+'SelectToggle'
+                    aria-haspopup=true
+                    aria-expanded=false
+                  ).dropdown-toggle= defaultSelected.options.find((selected) => selected.groupName === optionGroup.groupName).option.optionName
                   ul(rule='listbox' id='dropdown-list' tabindex='-1' style='display: none;').dropdown-menu-option-list
                     for option in optionGroup.options
-                      li(role='option' class=defaultSelected.options.some(selected => selected.option.optionName === option.optionName) ? 'selected-option' : '' tabindex='0' onClick=`dropdownController.selectOption(event,{groupName:'${optionGroup.groupName}', optionName: '${option.optionName}', ppuDiff: '${option.ppuDiff}', link: '${option.link ? option.link : ''}'})`).dropdown-menu-option= option.optionName
+                      li(
+                        role='option' 
+                        class=defaultSelected.options.some(selected => selected.option.optionName === option.optionName) ? 'selected-option' : '' 
+                        tabindex='0'
+                        data-group-name=`${optionGroup.groupName}`
+                        data-option-name=`${option.optionName}` 
+                        data-ppu-diff=`${option.ppuDiff}`
+                        data-link= `${option.link ? option.link : ''}`
+                      ).dropdown-menu-option= option.optionName
       aside.selected-options-overview
         div.selected-options-costs
           h3.selected-options-header Selected

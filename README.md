@@ -1,8 +1,11 @@
 # Pencilooza
 
-Pencilooza is a pencil themed web application that allows 'manufacturers' to submit registrations which are then managed through authorized CRUD operations. This was created as part of [The Odin Project Curriculum]() which provided me with an introduction to back end development using the Express framework.
+Created as part of [The Odin Project Curriculum](https://www.theodinproject.com/lessons/nodejs-inventory-application), Pencilooza is a mock inventory/application management application intended to provide foundational experience and knowledge in creating and structuring an express application. Some of the core concepts include routing, form sanitization and validation, Mongoose/MongoDB communication and management, and much more.
+**Live Preview:** [Deployed using Railway]()
 
 ## Created With
+
+### Core
 
 - [**JavaScript**](https://ecma-international.org/publications-and-standards/standards/): Core language.
 - [**HTML5**](https://html.spec.whatwg.org/multipage/): DOM structuring.

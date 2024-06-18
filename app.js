@@ -5,10 +5,13 @@ import cookieParser from 'cookie-parser';
 import logger from 'morgan';
 import mongoose from 'mongoose';
 import createDebug from 'debug';
+import compression from 'compression';
+import helmet from 'helmet';
+import RateLimit from 'express-rate-limit';
 import { configDotenv } from 'dotenv';
 
 import indexRouter from './routes/index.js';
-import registrationRouter from './routes/registration.js';
+import applicationRouter from './routes/application.js';
 import manufacturerRouter from './routes/manufacturer.js';
 import itemRouter from './routes/item.js';
 import adminController from './controllers/admin/adminController.js';
@@ -19,6 +22,7 @@ mongoose.set('strictQuery', false);
 const app = express();
 const __dirname = import.meta.dirname;
 const debug = createDebug('pencilooza:app');
+// const rateLimit = RateLimit({ windowMs: 1 * 60 * 1000, max: 50 });
 const main = async () => await mongoose.connect(process.env.MONGO_URL);
 main().catch((err) => debug(err));
 
@@ -26,6 +30,9 @@ main().catch((err) => debug(err));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
+// app.use(rateLimit);
+app.use(compression());
+app.use(helmet());
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -33,7 +40,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/registration', registrationRouter);
+app.use('/application', applicationRouter);
 app.use('/manufacturer', manufacturerRouter);
 app.use('/item', itemRouter);
 

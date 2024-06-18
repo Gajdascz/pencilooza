@@ -14,22 +14,21 @@ nav.primary-nav
         li
           a(href="/item") Items
         li
-          a(href="/registration") Registrations 
+          a(href="/application") Applications 
     section.primary-nav-link-section
-      h3.primary-nav-link-section-header Register
+      h3.primary-nav-link-section-header Applications
       ul.primary-nav-link-section-ul
         li
-          a(href="/registration/create/manufacturer") Manufacturer  
-        li
-          p(style='text-decoration: line-through;') Item
-    form(method='POST' action='/registration' id='search-registration-form').primary-nav-search-registration
-      +inputWithButton('registration-search-query','registrationSearchQuery',
+          a(href="/application/create/manufacturer") Manufacturer  
+
+    form(method='POST' action='/application' id='search-application-form').primary-nav-search-application
+      +inputWithButton('application-search-query','applicationSearchQuery',
         { 
           labelIsHidden:false, 
-          labelText:'Find Registration',
+          labelText:'Find Application',
           labelClass:'primary-nav-link-section-header',
-          inputPlaceholder: 'Registration id',
-          buttonClass:'registration-query-button',
+          inputPlaceholder: 'Application id',
+          buttonClass:'application-query-button',
           buttonText:'›',
           buttonType:'submit'
         }
@@ -38,32 +37,4 @@ nav.primary-nav
     section.primary-nav-footer-section
       p &copy; 2024 Nolan Gajdascz
       a(href="https://github.com/Gajdascz" rel='noopener noreferrer' target='_blank') GitHub
-
-
-script.
-  document.addEventListener('DOMContentLoaded', () => {
-    const form = document.querySelector('form#search-registration-form');
-    const errorMsg = document.querySelector('p.search-error-message');
-    const navToggle = document.querySelector('button#primaryNavHamburgerToggle')
-    const navContent = document.querySelector('.primary-nav-content-container')
-    const backdrop = document.createElement('span');
-    backdrop.classList.add('backdrop');
-    navToggle.addEventListener('click', (e)=>{
-      const isExpanding = navToggle.getAttribute('aria-expanded') === 'false';
-      if(isExpanding) {
-        navToggle.setAttribute('aria-expanded','true')
-        document.body.append(backdrop)
-      } else {
-        navToggle.setAttribute('aria-expanded','false')
-        backdrop.remove();
-      }
-    })
-    const mediaQueryBreakPoint = window.matchMedia('(min-width: 725px)'); 
-    const handleBreakpoint = (e) => {
-      if(e.matches) {
-        navToggle.setAttribute('aria-expanded',false);
-        backdrop.remove();
-      }
-    }
-    mediaQueryBreakPoint.addEventListener('change',handleBreakpoint)
-  });
+  script(type="module", src="/scripts/primaryNav.js") 
