@@ -35,6 +35,26 @@ Created as part of [The Odin Project Curriculum](https://www.theodinproject.com/
   </ol>
   </details>
 
+<details>
+<summary>
+<h4>Form UI Updates</h4>
+</summary>
+
+- **Problem:** Update the client-facing user interface based on server-sided validation results.
+- **Solution:**
+<ol style='list-style-type:number;'>
+<li>Create your template with fields that have unique ids for targeting.</li>
+<li>Create a client side script to use these unique ids to select and update the form fields.</li>
+<li>POST the form data to the server for validation and parsing.</li>
+<li>Validate the input and parse the errors to connect a field selector (the unique id created for targeting in step 1) to the error message.</li>
+<li>Pass the parsed validation errors to the client-side script created in step 2 by using one of the following methods:</li>
+<ul>
+<li>Pass the errors to the template directly through res.render and embed the errors in a hidden element for the client side scripts to handle.</li>
+<li>Use AJAX to send the data to the validation endpoint with a fetch POST request and await the response. Use the response to either update the UI by calling the client side script directly, or pass the data to a redirected route by creating a form, injecting the data into inputs and posting the data to the redirect route</li>
+</ul>
+</ol>
+</details>
+
 ## Learning Outcome
 
 <details><summary>Express/Node</summary>
