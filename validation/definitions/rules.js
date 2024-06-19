@@ -12,13 +12,16 @@ const escapeRemove = {
     options: (str) => str.replace(/&[^\s;]+;/g, ''),
   },
 };
+
+const getOptional = (is = false) => (is ? { options: { nullable: true, checkFalsy: true } } : false);
+
 // #endregion
 
 // #region Rule Definitions
 const strByLength = (fieldSelector, { min = -Infinity, max = Infinity, optional = false } = {}) => ({
   trim: true,
   isLength: { options: { min, max } },
-  optional,
+  ...getOptional(optional),
   ...errorMessage(fieldSelector, genericMessages.inRange(min, max, 'characters')),
   ...escapeRemove,
 });
@@ -35,12 +38,12 @@ const strByFormat = (fieldSelector, formatStrRegEx, formatStrExample, { optional
   return rules;
 };
 const strBySelection = (fieldSelector, providedOptions, { optional = false } = {}) => ({
-  optional,
+  ...getOptional(optional),
   isIn: { options: [providedOptions], ...errorMessage(fieldSelector, genericMessages.inProvidedOptions()) },
 });
 const numberByRange = (fieldSelector, { min = -Infinity, max = Infinity, optional = false } = {}) => ({
   trim: true,
-  optional,
+  ...getOptional(optional),
   isInt: { options: { min, max } },
   ...errorMessage(fieldSelector, genericMessages.inRange(min, max)),
   ...escapeRemove,
@@ -49,19 +52,20 @@ const numberByRange = (fieldSelector, { min = -Infinity, max = Infinity, optiona
 const email = (fieldSelector, { optional = false } = {}) => ({
   trim: true,
   isEmail: true,
-  optional,
+  ...getOptional(optional),
   ...errorMessage(fieldSelector, genericMessages.hasFormat('name@domain.ext')),
   ...escapeRemove,
 });
 const phone = (fieldSelector, { optional = false } = {}) => ({
   trim: true,
-  optional,
+  ...getOptional(optional),
   isLength: { options: { min: 10, max: 12 }, ...errorMessage(fieldSelector, genericMessages.inRange(10, 12)) },
   ...escapeRemove,
 });
 const website = (fieldSelector, { optional = false } = {}) => ({
   trim: true,
-  optional,
+  optional: optional ? { options: { nullable: true, checkFalsy: true } } : false,
+  ...getOptional(optional),
   isURL: {
     options: { protocols: ['https'], require_protocol: true, validate_length: true },
     ...errorMessage(fieldSelector, genericMessages.includes('https protocol and a valid length')),
@@ -71,7 +75,7 @@ const website = (fieldSelector, { optional = false } = {}) => ({
 const shorthandReference = (fieldSelector, { min = 3, max = 10, optional = false } = {}) => ({
   trim: true,
   toUpperCase: true,
-  optional,
+  ...getOptional(optional),
   isLength: {
     options: { min, max },
     ...errorMessage(fieldSelector, genericMessages.inRange(min, max, 'characters')),
@@ -89,7 +93,7 @@ const ein = (fieldSelector, { optional = false } = {}) =>
 const countryCode = (fieldSelector, { optional = false } = {}) => ({
   trim: true,
   isISO31661Alpha2: true,
-  optional,
+  ...getOptional(optional),
   ...errorMessage(fieldSelector, genericMessages.hasFormat('ISO 031661 Alpha-2, eg. US')),
   ...escapeRemove,
 });
@@ -97,7 +101,7 @@ const countryCode = (fieldSelector, { optional = false } = {}) => ({
 const postalCode = (fieldSelector, { optional = false } = {}) => ({
   trim: true,
   // express-validator isPostalCode kept throwing error "Invalid locale 'undefined'" despite setting it to 'any'
-  optional,
+  ...getOptional(optional),
   matches: {
     options: [/^[\d-]{3,10}$/],
     ...errorMessage(fieldSelector, genericMessages.inRange(3, 10, 'digits')),
