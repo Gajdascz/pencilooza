@@ -22,7 +22,7 @@ mongoose.set('strictQuery', false);
 const app = express();
 const __dirname = import.meta.dirname;
 const debug = createDebug('pencilooza:app');
-// const rateLimit = RateLimit({ windowMs: 1 * 60 * 1000, max: 50 });
+const rateLimit = RateLimit({ windowMs: 1 * 60 * 1000, max: 50 });
 const main = async () => await mongoose.connect(process.env.MONGO_URL);
 main().catch((err) => debug(err));
 
@@ -30,7 +30,7 @@ main().catch((err) => debug(err));
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
-// app.use(rateLimit);
+app.use(rateLimit);
 app.use(compression());
 app.use(helmet());
 app.use(logger('dev'));
