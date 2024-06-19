@@ -87,8 +87,6 @@ ItemSchema.virtual('url').get(function () {
   return `/item/${this._id}`;
 });
 
-ItemSchema.index({ category: 1, type: 1 });
-
 ItemSchema.method('getProcessedData', async function () {
   const getPpuDiff = (costModifier) => Math.round(this.basePpu * costModifier * 100) / 100;
   const populateRefs = async (refs) => {

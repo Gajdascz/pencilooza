@@ -8,14 +8,7 @@
 
 title Data Models
 
-class quantityPricing schema {
-  + basePpu: Number
-  + retail: Number
-  + bulk_factors: [{quantity,costModifier}]
-  == Virtual ==
-  + getBulkPrices: [{quantity,costModifier}]
-  + getSuggestedRetail: Number
-}
+
 class OptionGroups schema {
   + groupName String
   + refs: [String]
@@ -24,35 +17,31 @@ class OptionGroups schema {
 class Item model {
   + category: String
   + skuPrefix: String
+  + sku: String
   + type: String
   + name: String
   + description: String
   + stock: Number
   + madeIn: String
   + manufacturer: Manufacturer[1]
-  + quantityPricing: quantityPricing
-  + optionGroups: OptionGroups
-  + timeCreated: Date
-  + timeUpdated: Date
+  + quantityPricing: Object
+  + optionGroups: [OptionGroups]
+  --
+  + getProcessedData(): Object
   == Virtual ==
   + url: String
 }
 
-
-class Contact schema {
-  + website: String
-  + location: String
-  + email: String
-  + Phone: String
-}
 class Manufacturer model {
-  + name: String
-  + description: String
-  + contact: Contact
-  + timeCreated: Date
-  + timeUpdated: Date
+  + company: Object
+  + contact: Object
+  + location: Object
+  + rep: Object
+  + other: Object
   == Virtual ==
   + url: String
+  + fullAddress: String
+  + repInfo: String
 }
 class SkuCounter model {
   + prefix: String
@@ -62,9 +51,8 @@ class SkuCounter model {
   == Virtual ==
   current: String
 }
-Contact --* Manufacturer
+
 Item  -- "1" Manufacturer
-quantityPricing --* Item
 OptionGroups --* Item
 Item .> SkuCounter : uses
 
