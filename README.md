@@ -2,7 +2,7 @@
 
 Created as part of [The Odin Project Curriculum](https://www.theodinproject.com/lessons/nodejs-inventory-application), Pencilooza is a pencil-themed mock application management web app. Users can submit 'manufacturer' applications which are then managed by the administrator. Once an application is submitted, only the administrator can review (accept or reject), create, delete, and update the data. Completing this project allowed me to integrate and explore essential web development concepts.
 
-**Live Preview:** [Deployed using Railway]()
+**Live Preview:** [Deployed using Railway](https://pencilooza-production.up.railway.app)
 
 ## Challenges
 
