@@ -1,4 +1,4 @@
-const getErrorMessage = (errTxt) => {
+const getErrorMessageElement = (errTxt) => {
   const el = document.createElement('span');
   el.classList.add('error-message', 'input-field-wrapper-error-message');
   el.textContent = errTxt;
@@ -17,14 +17,18 @@ const setValid = (inputField) => {
   inputField.classList.remove('pending');
   inputField.nextSibling.textContent = '';
 };
-const setInvalid = (inputField, errorMsg) => {
+const setInvalid = (inputField, errorMsgs) => {
   inputField.classList.add('invalid');
   inputField.classList.remove('valid');
   inputField.classList.remove('pending');
-  inputField.nextSibling.textContent = '';
-  inputField.nextSibling.append(getErrorMessage(errorMsg)); // Selects div.input-field-wrapper-errors-container from inputField mixin
+  const errContainer = inputField.nextSibling;
+  errorMsgs.forEach((msg) => errContainer.append(getErrorMessageElement(msg)));
 };
-const findError = (id, errors) => errors.find((err) => err.selector === id);
+const getErrorMessages = (id, errors) =>
+  errors.reduce((acc, curr) => {
+    if (curr.selector === id) acc.push(curr.msg);
+    return acc;
+  }, []);
 
 const updateFormValidation = (errors, success = false) => {
   const inputFields = document.querySelectorAll('.input-field-wrapper-field');
@@ -32,8 +36,9 @@ const updateFormValidation = (errors, success = false) => {
   if (success) return inputFields.forEach(setValid);
   if (errors.length > 0)
     return inputFields.forEach((field) => {
-      const err = findError(field.id, errors);
-      if (err) setInvalid(field, err.msg);
+      field.nextSibling.textContent = '';
+      const errMsgs = getErrorMessages(field.id, errors);
+      if (errMsgs && errMsgs.length > 0) setInvalid(field, errMsgs);
       else setValid(field);
     });
 };

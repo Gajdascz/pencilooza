@@ -34,7 +34,6 @@ const render = {
       entityType: 'manufacturer',
       dataKey: 'manufacturer',
       entityId: id,
-      errors: errors.length > 0 ? JSON.parse(errors) : errors,
       isUpdate: true,
       ...data,
     });
@@ -76,8 +75,8 @@ const manufacturerController = {
     render.update(res, manufacturer.id, req.body.errors, mfrDataTransform.modelToForm(manufacturer));
   }),
   postUpdate: asyncHandler(async (req, res, next) => {
-    const { errors, fieldData } = req.body;
-    render.update(res, req.params.id, errors, fieldData);
+    const { errors } = req.body;
+    render.update(res, req.params.id, errors, req.body);
   }),
 };
 export default manufacturerController;

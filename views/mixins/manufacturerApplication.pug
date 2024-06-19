@@ -12,15 +12,10 @@ mixin manufacturerApplication(data)
       email, phone, website,
       note
     } = data
-    let validationResult;
-    if(success && success === true) validationResult = 'success';
-    else if (errors && errors.length > 0) validationResult = errors;
-    else validationResult = 'yetToBeValidated';
   
   +hiddenField('entity-type','entityType',value=entityType)
   +hiddenField('data-key','dataKey',value=dataKey ? dataKey : entityType)
   +hiddenField('entity-id','entityId',value=entityId)
-  +hiddenField('validation-result','validationResult',value=validationResult)
 
   header.form-header
     h1= title

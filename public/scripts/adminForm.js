@@ -94,7 +94,9 @@ const handleFormSubmit = async (e) => {
 };
 
 const validateForm = async (e) => {
-  const form = document.querySelector('.admin-form');
+  let form = null;
+  if (e.target.tagName === 'FORM') form = e.target;
+  else form = document.querySelector('.admin-form');
   try {
     const { searchParamsInstance } = parseSubmission(form);
     const response = await fetchValidate(searchParamsInstance);
@@ -112,4 +114,9 @@ document.addEventListener('DOMContentLoaded', () => {
   if (validateBtn) validateBtn.addEventListener('click', validateForm);
   if (form) form.addEventListener('submit', handleFormSubmit);
   else debug(`adminForm imported but no form.admin-element found on the page`);
+  const runValidate = document.querySelector('span[data-run-validate="true"]');
+  if (!runValidate) return;
+  const errors = runValidate.dataset.errors;
+  if (errors === 'false') return updateFormValidation([], true);
+  else return updateFormValidation(JSON.parse(errors), false);
 });

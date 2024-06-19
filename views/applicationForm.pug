@@ -17,6 +17,8 @@ block content
       email, phone, website,
       note
     }
+  if errors || success
+    span(style='display:none;',data-run-validate='true' data-errors=errors ? errors : 'false')
   if isUpdate
     +adminForm('applicationForm', 'updateEntity')
       case dataKey

@@ -2,7 +2,7 @@
 import mongoose from 'mongoose';
 import createDebug from 'debug';
 import Item from '../../models/item/Item.js';
-import Manufacturer from '../../models/manufacturer/Manufacturer.js';
+import Manufacturer from '../../models/Manufacturer.js';
 import manufacturers from './manufacturer/index.js';
 import 'dotenv/config';
 
@@ -177,7 +177,6 @@ const scriptController = {
   process: async () => {
     log.bh('Processing Manufacturer Data');
     for (const mfr of manufacturers) {
-      debug(mfr);
       const { manufacturerInfo, productGroups } = mfr;
       log.sgh(manufacturerInfo.company.name);
       const mfrModelMsg = `Building Manufacturer Model`;
