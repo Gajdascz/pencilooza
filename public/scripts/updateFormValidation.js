@@ -43,4 +43,12 @@ const updateFormValidation = (errors, success = false) => {
     });
 };
 
+document.addEventListener('DOMContentLoaded', () => {
+  const runValidate = document.querySelector('span[data-run-validate="true"]');
+  if (!runValidate) return;
+  const errors = runValidate.dataset.errors;
+  if (errors === 'false') return updateFormValidation([], true);
+  else return updateFormValidation(JSON.parse(errors), false);
+});
+
 export { updateFormValidation };

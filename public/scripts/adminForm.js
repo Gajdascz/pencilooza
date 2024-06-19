@@ -114,9 +114,4 @@ document.addEventListener('DOMContentLoaded', () => {
   if (validateBtn) validateBtn.addEventListener('click', validateForm);
   if (form) form.addEventListener('submit', handleFormSubmit);
   else debug(`adminForm imported but no form.admin-element found on the page`);
-  const runValidate = document.querySelector('span[data-run-validate="true"]');
-  if (!runValidate) return;
-  const errors = runValidate.dataset.errors;
-  if (errors === 'false') return updateFormValidation([], true);
-  else return updateFormValidation(JSON.parse(errors), false);
 });

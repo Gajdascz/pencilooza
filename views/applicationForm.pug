@@ -1,6 +1,7 @@
 extends layout 
 
-
+block scripts 
+  script(type="module", src="/scripts/updateFormValidation.js") 
 
 block content
   include mixins/inputField
@@ -17,6 +18,7 @@ block content
       email, phone, website,
       note
     }
+    console.log(errors)
   if errors || success
     span(style='display:none;',data-run-validate='true' data-errors=errors ? errors : 'false')
   if isUpdate
