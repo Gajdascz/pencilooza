@@ -2,7 +2,7 @@
 
 Created as part of [The Odin Project Curriculum](https://www.theodinproject.com/lessons/nodejs-inventory-application), Pencilooza is a pencil-themed mock application management web app. Users can submit 'manufacturer' applications which are then managed by the administrator. Once an application is submitted, only the administrator can review (accept or reject), create, delete, and update the data. Completing this project allowed me to integrate and explore essential web development concepts.
 
-**Live Preview:** [Deployed using Railway](https://pencilooza-production.up.railway.app)
+
 
 ## Challenges
 
@@ -82,6 +82,7 @@ Created as part of [The Odin Project Curriculum](https://www.theodinproject.com/
 - **Asynchronous Queries and Error Handling:** Gained practical knowledge in handling asynchronous database queries, managing errors and exceptions, and general Mongoose usage.
 - **Population Script:** Created a script to populate the database with structured default data.
 - **Aggregation Framework:** Utilized MongoDB's aggregation framework to query specific data of documents.
+
 </details>
 
 <details><summary>Model-View-Controller (MVC) Architecture</summary>
@@ -89,6 +90,7 @@ Created as part of [The Odin Project Curriculum](https://www.theodinproject.com/
 - **Model:** Manages data schema properties.
 - **View:** Provides templates rendered using model data.
 - **Controller:** Interfaces between model and view, handling input/requests to retrieve data from the model and render views.
+
 </details>
 
 <details><summary>Pug</summary>
@@ -97,12 +99,13 @@ Created as part of [The Odin Project Curriculum](https://www.theodinproject.com/
 - Created reuseable Mixins to streamline and normalize HTML element creation.
 - Learned how to decouple and refactor inline-javascript from templates to improve security, code modularity, and project organization.
 - Learned about Interpolation and how it can be used to access server-side data directly in client-side inline-JavaScript.
+
 </details>
 
 <details><summary>Other</summary>
 
-- Deployed the application using [Railway](https://railway.app/), which provides a robust and intuitive platform for fullstack app deployment.
 - [Created a UML Class diagram](/public/documents/models.pu) using [plantUML](https://plantuml.com/) to plan the general structure of the document Models.
+
 </details>
 
 ## Improvements
@@ -125,6 +128,7 @@ Created as part of [The Odin Project Curriculum](https://www.theodinproject.com/
 - [**MongoDB**](https://mongodb.com/): Non-relational database management system.
 - [**pug**](https://pugjs.org/): JavaScript template engine.
 - [**mongoose**](https://mongoosejs.com/): MongoDB Object Data Manager (ODM).
+
 </details>
 
 <details><summary>Libraries</summary>
@@ -132,7 +136,7 @@ Created as part of [The Odin Project Curriculum](https://www.theodinproject.com/
 - [**debug**](https://github.com/debug-js/debug/): Provides console debugging based on application environment and namespaces.
 - [**dotenv**](https://github.com/motdotla/dotenv/): Loads environment variables from .env\* file(s) into process.env.
 - [**express-application-generator**](https://github.com/expressjs/generator#readme): Generates file structure and boilerplate for an Express application.
-- [**cookie-parser**](https://github.com/expressjs/cookie-parser): Parses cookie headers and populates the req.cookise with an object keyed by the cookie names.
+- [**cookie-parser**](https://github.com/expressjs/cookie-parser): Parses cookie headers and populates the req.cookies with an object keyed by the cookie names.
 - [**morgan**](https://github.com/expressjs/morgan): HTTP request logger.
 - [**http-errors**](https://github.com/jshttp/http-errors): Used to create HTTP errors for node web applications.
 - [**helmet**](https://helmetjs.github.io/): Helps secure Express applications by setting HTTP response headers.
@@ -140,12 +144,12 @@ Created as part of [The Odin Project Curriculum](https://www.theodinproject.com/
 - [**express-async-handler**](https://github.com/Abazhenov/express-async-handler): Handles exceptions for asynchronous express route handlers.
 - [**express-rate-limit**](https://github.com/express-rate-limit/express-rate-limit): Limits repeated requests to public APIs and/or endpoints.
 - [**express-validator**](https://express-validator.github.io/docs/): Wraps [validator.js](https://github.com/validatorjs/validator.js) to provide validation and sanitization of express requests.
+
 </details>
 
 <details><summary>Development and Deployment</summary>
 
 - [**PlantUML**](https://plantuml.com/): Diagram tool.
-- [**Railway**](https://railway.app/): Infrastructure platform for managing, monitoring, and deploying full-stack web applications.
 - [**MongoDB Atlas**](https://www.mongodb.com/): Cloud database service that automates deployment, scaling, and management of MongoDB clusters.
 - [**ESLint**](https://eslint.org/): Static JavaScript code analyzer.
 - [**ESLint Config Standard**](https://github.com/standard/eslint-config-standard): Enforces JavaScript Standard Style code syntax rules through ESLint.
@@ -153,10 +157,13 @@ Created as part of [The Odin Project Curriculum](https://www.theodinproject.com/
 - [**Prettier**](https://prettier.io/): Code formatter to enforce consistency.
 - [**GitHub**](https://github.com/): Remote repository hosting.
 - [**Git**](https://git-scm.com/): Version control and source code management.
+
 </details>
 
 ## License
 
-Copyright © 2024 Nolan Gajdascz | GitHub
+MIT
 
-This project is licensed under the GNU General Public License v3.0 - see the LICENSE file for details.
+Copyright © 2024-2025 Nolan Gajdascz | [GitHub](https://github.com/gajdascz)
+
+
