@@ -1,5 +1,5 @@
 import asyncHandler from 'express-async-handler';
-import Item from '../src/models/item/Item.js';
+import Item from '../models/item/Item.js';
 
 const itemController = {
   getList: asyncHandler(async (req, res, next) => {

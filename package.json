@@ -8,10 +8,10 @@
   "type": "module",
   "scripts": {
     "lint": "eslint --fix --ext .js",
-    "start": "node ./bin/www",
-    "startDev": "node --watch ./bin/www",
+    "start": "node ./src/bin/www",
+    "startDev": "node --watch ./src/bin/www",
     "startDebug": "DEBUG=pencilooza:* npm run startDev",
-    "repopulateDb": "DEBUG=pencilooza:populatedb node ./config/data/populatedb.js --reset"
+    "repopulateDb": "DEBUG=pencilooza:populatedb node ./src/config/data/populatedb.js --reset"
   },
   "dependencies": {
     "compression": "^1.7.4",

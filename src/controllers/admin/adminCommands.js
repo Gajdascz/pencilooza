@@ -1,9 +1,9 @@
 import asyncHandler from 'express-async-handler';
 
-import Application from '../../src/models/Application.js';
+import Application from '../../models/Application.js';
 import mongoose from 'mongoose';
 import { capitalize, dataTransform, setRes } from '../../config/utils.js';
-import { validateApplicationDirect } from '../../src/validation/index.js';
+import { validateApplicationDirect } from '../../validation/index.js';
 const getMongooseModel = (modelName) => mongoose.model(capitalize(modelName));
 
 const formToModelData = (key, data) => dataTransform[key]?.formToModel(data);
