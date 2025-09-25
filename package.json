@@ -14,28 +14,28 @@
     "repopulateDb": "DEBUG=pencilooza:populatedb node ./src/config/data/populatedb.js --reset"
   },
   "dependencies": {
-    "compression": "^1.7.4",
-    "cookie-parser": "~1.4.4",
+    "compression": "^1.8.1",
+    "cookie-parser": "~1.4.7",
     "debug": "~2.6.9",
-    "dotenv": "^16.4.5",
-    "express": "~4.16.1",
+    "dotenv": "^16.6.1",
+    "express": "~4.16.4",
     "express-async-handler": "^1.2.0",
-    "express-rate-limit": "^7.2.0",
-    "express-validator": "^7.1.0",
-    "helmet": "^7.1.0",
+    "express-rate-limit": "^7.5.1",
+    "express-validator": "^7.2.1",
+    "helmet": "^7.2.0",
     "http-errors": "~1.6.3",
-    "luxon": "^3.4.4",
-    "mongoose": "^8.4.0",
+    "luxon": "^3.7.2",
+    "mongoose": "^8.18.2",
     "morgan": "~1.9.1",
     "pug": "2.0.0-beta11"
   },
   "devDependencies": {
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^9.1.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^9.1.2",
     "eslint-config-standard": "^17.1.0",
     "eslint-plugin-n": "^16.6.2",
-    "eslint-plugin-promise": "^6.1.1",
-    "globals": "^15.3.0",
-    "prettier": "^3.2.5"
+    "eslint-plugin-promise": "^6.6.0",
+    "globals": "^15.15.0",
+    "prettier": "^3.6.2"
   }
 }
