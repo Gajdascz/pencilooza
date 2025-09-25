@@ -2,7 +2,7 @@
 
 Pencilooza is a pencil-themed mock application management web app. Users can submit 'manufacturer' applications which are then managed by the administrator. Once an application is submitted, only the administrator can review (accept or reject), create, delete, and update the data. Completing this project allowed me to integrate and explore essential web development concepts.
 
-
+**[Live Preview](https://pencilooza-production-c09f.up.railway.app/)**
 
 ## Challenges
 
@@ -53,6 +53,7 @@ Pencilooza is a pencil-themed mock application management web app. Users can sub
   <li>Use AJAX to send the data to the validation endpoint with a fetch POST request and await the response. Use the response to either update the UI by calling the client side script directly, or pass the data to a redirected route by creating a form, injecting the data into inputs and posting the data to the redirect route</li>
   </ul>
   </ol>
+  
 </details>
 
 ## Learning Outcome
@@ -151,6 +152,7 @@ Pencilooza is a pencil-themed mock application management web app. Users can sub
 
 - [**PlantUML**](https://plantuml.com/): Diagram tool.
 - [**MongoDB Atlas**](https://www.mongodb.com/): Cloud database service that automates deployment, scaling, and management of MongoDB clusters.
+- [**Railway**](https://railway.com): Full stack infrastructure as a service provider.
 - [**ESLint**](https://eslint.org/): Static JavaScript code analyzer.
 - [**ESLint Config Standard**](https://github.com/standard/eslint-config-standard): Enforces JavaScript Standard Style code syntax rules through ESLint.
 - [**ESLint Config Prettier**](https://github.com/prettier/eslint-config-prettier): Turns off conflicting and/or unnecessary ESLint rules for Prettier.
